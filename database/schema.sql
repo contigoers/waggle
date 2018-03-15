@@ -42,7 +42,7 @@ CREATE TABLE `dogs` (
   `photo` VARCHAR(150) NULL DEFAULT NULL,
   `org_id` INTEGER NULL DEFAULT NULL,
   `description` VARCHAR(500) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `org_id`, `breed`)
+  PRIMARY KEY (`id`)
 );
 
 -- ---
@@ -85,7 +85,7 @@ CREATE TABLE `favoritedogs` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   `user_id` INTEGER NULL DEFAULT NULL,
   `dog_id` INTEGER NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `user_id`, `dog_id`)
+  PRIMARY KEY (`id`)
 );
 
 -- ---
@@ -99,7 +99,7 @@ CREATE TABLE `contacts(maybe)` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   `name` VARCHAR(30) NULL DEFAULT NULL,
   `org_id` INTEGER NULL DEFAULT NULL,
-  `address` VARCHAR(150) NULL DEFAULT NULL,
+  `address` VARCHAR(50) NULL DEFAULT NULL,
   `city` VARCHAR(50) NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
