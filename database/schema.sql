@@ -114,7 +114,7 @@ ALTER TABLE `dogs` ADD FOREIGN KEY (breed) REFERENCES `breed` (`id`);
 ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (dog_id) REFERENCES `dogs` (`id`);
-ALTER TABLE `contacts(maybe)` ADD FOREIGN KEY (org_id) REFERENCES `breed` (`id`);
+ALTER TABLE `contacts(maybe)` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 
 -- ---
 -- Table Properties
