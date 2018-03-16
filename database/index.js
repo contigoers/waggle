@@ -14,6 +14,13 @@ if (config.mySql) {
   });
 }
 
+const getOrgDogs = async (orgID) => {
+  return await knex.column(knex.raw('dogs.*'))
+  .where
+};
+
+
+
 module.exports = {
 
 };
