@@ -37,10 +37,14 @@
 		<type label="SET" length="1" sql="SET" quote=""/>
 		<type label="Bit" length="0" sql="bit" quote=""/>
 	</group>
-</datatypes><table x="24" y="21" name="users">
+</datatypes><table x="200" y="145" name="adopters">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="user_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
 <row name="name" null="1" autoincrement="0">
 <datatype>VARCHAR(50)</datatype>
 <default>NULL</default></row>
@@ -55,9 +59,10 @@
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
+<part>user_id</part>
 </key>
 </table>
-<table x="22" y="177" name="dogs">
+<table x="558" y="177" name="dogs">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -105,25 +110,18 @@
 <part>breed</part>
 </key>
 </table>
-<table x="204" y="427" name="orgs">
+<table x="229" y="337" name="orgs">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="contacts(maybe)" row="org_id" />
-</row>
+<default>NULL</default></row>
 <row name="name" null="1" autoincrement="0">
-<datatype>VARCHAR(50)</datatype>
-<default>NULL</default></row>
-<row name="location" null="1" autoincrement="0">
-<datatype>INTEGER(5)</datatype>
-<default>NULL</default></row>
-<row name="contact" null="1" autoincrement="0">
 <datatype>VARCHAR(50)</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="204" y="263" name="breed">
+<table x="710" y="229" name="breed">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -136,13 +134,13 @@
 <key type="INDEX" name="">
 </key>
 </table>
-<table x="204" y="77" name="favoritedogs">
+<table x="365" y="155" name="favoritedogs">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="user_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
+<default>NULL</default><relation table="adopters" row="id" />
 </row>
 <row name="dog_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -154,27 +152,37 @@
 <part>dog_id</part>
 </key>
 </table>
-<table x="360" y="205" name="contacts(maybe)">
+<table x="53" y="185" name="users">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="name" null="1" autoincrement="0">
-<datatype>VARCHAR(30)</datatype>
+<row name="username" null="1" autoincrement="0">
+<datatype>VARCHAR(20)</datatype>
+<default>NULL</default></row>
+<row name="password" null="1" autoincrement="0">
+<datatype>VARCHAR(20)</datatype>
+<default>NULL</default></row>
+<row name="email" null="1" autoincrement="0">
+<datatype>VARCHAR(50)</datatype>
 <default>NULL</default></row>
 <row name="org_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default></row>
+<default>NULL</default><relation table="orgs" row="id" />
+</row>
 <row name="address" null="1" autoincrement="0">
-<datatype>VARCHAR(150)</datatype>
+<datatype>VARCHAR(50)</datatype>
 <default>NULL</default></row>
 <row name="city" null="1" autoincrement="0">
-<datatype>VARCHAR(50)</datatype>
+<datatype>VARCHAR(30)</datatype>
+<default>NULL</default></row>
+<row name="new field" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="zipcode" null="1" autoincrement="0">
+<datatype>INTEGER(5)</datatype>
 <default>NULL</default></row>
 <row name="phone" null="1" autoincrement="0">
 <datatype>VARCHAR(15)</datatype>
-<default>NULL</default></row>
-<row name="email" null="1" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
