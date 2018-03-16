@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
 
 import List from './components/List';
 
@@ -10,20 +9,6 @@ class App extends React.Component {
     this.state = {
       items: [],
     };
-  }
-
-  componentDidMount() {
-    $.ajax({
-      url: '/items',
-      success: (data) => {
-        this.setState({
-          items: data,
-        });
-      },
-      error: (err) => {
-        console.log('err', err);
-      },
-    });
   }
 
   render() {
