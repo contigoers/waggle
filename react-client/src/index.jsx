@@ -30,12 +30,14 @@ class App extends React.Component {
   }
 
   render() {
-    return (<div>
-      <h1>Item List</h1>
-      <List items={this.state.items} />
-      <img src="http://i.imgur.com/3jf51.jpg" />
-      <img src={this.state.pic} />
-    </div>);
+    return (
+      <div>
+        <h1>Item List</h1>
+        <List items={this.state.items} />
+        <img src="http://i.imgur.com/3jf51.jpg" alt="it's a dog" />
+        <img src={this.state.pic} alt="Loading..." />
+      </div>
+    );
   }
 }
 
