@@ -16,6 +16,7 @@ class App extends React.Component {
       <div>
         <h1>Item List</h1>
         <List items={this.state.items} />
+        <img src="http://i.imgur.com/3jf51.jpg" alt="it's a dog" />
       </div>
     );
   }
