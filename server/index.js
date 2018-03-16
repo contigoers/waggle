@@ -1,25 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const Koa = require('koa');
+const bodyParser = require('koa-bodyparser');
+const serve = require('koa-static');
 
-// const items = require('../database-mysql');
+const app = new Koa();
+app.use(bodyParser());
 
+app.use(serve(`${__dirname}/../react-client/dist`));
 
-const app = express();
-
-app.use(express.static(`${__dirname}/../react-client/dist`));
-app.use(bodyParser.json());
-
-
-// app.get('/items', (req, res) => {
-//   items.selectAll((err, data) => {
-//     if (err) {
-//       res.sendStatus(500);
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// });
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log('listening on port 3000!');
+app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${3000}!`);
 });
