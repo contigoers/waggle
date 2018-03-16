@@ -20,16 +20,16 @@ const getOrgDogs = async (orgId) => {
     .where(knex.raw(`dogs.org_id = ${orgId} and dogs.breed_id = breed.id`))
 };
 
-const getOrganizations = async () => {
+const getAllOrganizations = async () => {
   return await knex.column(knex.raw('users.address, users.city, users.id, users.zipcode, users.phone, users.email, orgs.name')).select()
     .from(knex.raw('users, orgs'))
     .where(knex.raw('users.org_id = orgs.id'))
 };
 
 const getAdopterDogs = async (adopterId) => {
-  return await knex.column(knex.raw('dogs.*')).select()
-    .from(knex.raw('favoritedogs, dogs'))
-    .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id`))
+  return await knex.column(knex.raw('dogs.*, breed.name')).select()
+    .from(knex.raw('favoritedogs, dogs, breed'))
+    .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id and dogs.breed_id = breed.id`))
 };
 
 const createDog = async (dog, orgId, breedId) => {
@@ -51,7 +51,7 @@ const createDog = async (dog, orgId, breedId) => {
 
 module.exports = {
   getOrgDogs,
-  getOrganizations,
+  getAllOrganizations,
   getAdopterDogs,
   createDog
 };
