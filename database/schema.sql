@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS `dogs`;
 CREATE TABLE `dogs` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   `name` INTEGER(50) NULL DEFAULT NULL,
-  `breed` INTEGER NULL DEFAULT NULL,
+  `breed_id` INTEGER NULL DEFAULT NULL,
   `gender` ENUM NULL DEFAULT NULL,
   `size` ENUM NULL DEFAULT NULL,
   `temperament` ENUM NULL DEFAULT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `dogs` (
   `photo` VARCHAR(150) NULL DEFAULT NULL,
   `org_id` INTEGER NULL DEFAULT NULL,
   `description` VARCHAR(500) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `org_id`, `breed`)
+  PRIMARY KEY (`id`, `org_id`, `breed_id`)
 );
 
 -- ---
@@ -75,8 +75,7 @@ DROP TABLE IF EXISTS `breed`;
 CREATE TABLE `breed` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-KEY ()
+  PRIMARY KEY (`id`)
 );
 
 -- ---
@@ -88,9 +87,9 @@ DROP TABLE IF EXISTS `favoritedogs`;
     
 CREATE TABLE `favoritedogs` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `user_id` INTEGER NULL DEFAULT NULL,
+  `adopter_id` INTEGER NULL DEFAULT NULL,
   `dog_id` INTEGER NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `user_id`, `dog_id`)
+  PRIMARY KEY (`id`, `adopter_id`, `dog_id`)
 );
 
 -- ---
@@ -108,7 +107,6 @@ CREATE TABLE `users` (
   `org_id` INTEGER NULL DEFAULT NULL,
   `address` VARCHAR(50) NULL DEFAULT NULL,
   `city` VARCHAR(30) NULL DEFAULT NULL,
-  `new field` INTEGER NULL DEFAULT NULL,
   `zipcode` INTEGER(5) NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `org_id`)
@@ -120,9 +118,9 @@ CREATE TABLE `users` (
 
 ALTER TABLE `adopters` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
 
-ALTER TABLE `dogs` ADD FOREIGN KEY (breed) REFERENCES `breed` (`id`);
+ALTER TABLE `dogs` ADD FOREIGN KEY (breed_id) REFERENCES `breed` (`id`);
 ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
-ALTER TABLE `favoritedogs` ADD FOREIGN KEY (user_id) REFERENCES `adopters` (`id`);
+ALTER TABLE `favoritedogs` ADD FOREIGN KEY (adopter_id) REFERENCES `adopters` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (dog_id) REFERENCES `dogs` (`id`);
 ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 
