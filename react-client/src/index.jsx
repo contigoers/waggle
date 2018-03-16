@@ -12,12 +12,11 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-      <div>
+    return (<div>
         <h1>Item List</h1>
         <List items={this.state.items} />
-      </div>
-    );
+        <img src="http://i.imgur.com/3jf51.jpg" />
+      </div>);
   }
 }
 
