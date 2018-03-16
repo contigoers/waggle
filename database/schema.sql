@@ -1,3 +1,9 @@
+DROP DATABASE IF EXISTS waggle;
+
+CREATE DATABASE waggle;
+
+USE waggle;
+
 -- ---
 -- Globals
 -- ---
@@ -17,8 +23,11 @@ CREATE TABLE `users` (
   `name` VARCHAR(50) NULL DEFAULT NULL,
   `pets` BINARY NULL DEFAULT NULL,
   `zipcode` INTEGER(5) NULL DEFAULT NULL,
-  `house` ENUM NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `house_type` ENUM NULL DEFAULT NULL,
+  `username` VARCHAR(25) NOT NULL,
+  'password' VARCHAR(60) NOT NULL,
+  `org_id` INTEGER NULL DEFAULT 0,
+  PRIMARY KEY (`id`,`org_id`)
 );
 
 -- ---
@@ -38,7 +47,7 @@ CREATE TABLE `dogs` (
   `age` INTEGER(2) NULL DEFAULT NULL,
   `fixed` BINARY NULL DEFAULT NULL,
   `medical` BINARY NULL DEFAULT NULL,
-  `energy` ENUM NULL DEFAULT NULL,
+  `energy_level` ENUM NULL DEFAULT NULL,
   `photo` VARCHAR(150) NULL DEFAULT NULL,
   `org_id` INTEGER NULL DEFAULT NULL,
   `description` VARCHAR(500) NULL DEFAULT NULL,
@@ -109,7 +118,7 @@ CREATE TABLE `contacts(maybe)` (
 -- ---
 -- Foreign Keys 
 -- ---
-
+ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `dogs` ADD FOREIGN KEY (breed) REFERENCES `breed` (`id`);
 ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
