@@ -1,3 +1,9 @@
+DROP DATABASE IF EXISTS waggle;
+
+CREATE DATABASE waggle;
+
+USE waggle;
+
 -- ---
 -- Globals
 -- ---
@@ -39,7 +45,7 @@ CREATE TABLE `dogs` (
   `age` INTEGER(2) NULL DEFAULT NULL,
   `fixed` BINARY NULL DEFAULT NULL,
   `medical` BINARY NULL DEFAULT NULL,
-  `energy` ENUM NULL DEFAULT NULL,
+  `energy_level` ENUM NULL DEFAULT NULL,
   `photo` VARCHAR(150) NULL DEFAULT NULL,
   `org_id` INTEGER NULL DEFAULT NULL,
   `description` VARCHAR(500) NULL DEFAULT NULL,
@@ -113,6 +119,7 @@ CREATE TABLE `users` (
 -- ---
 
 ALTER TABLE `adopters` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
+
 ALTER TABLE `dogs` ADD FOREIGN KEY (breed) REFERENCES `breed` (`id`);
 ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (user_id) REFERENCES `adopters` (`id`);
@@ -146,3 +153,4 @@ ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 -- ('','','');
 -- INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`,`new field`,`zipcode`,`phone`) VALUES
 -- ('','','','','','','','','','');
+
