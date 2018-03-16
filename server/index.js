@@ -1,6 +1,5 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
-const items = require('../database-mysql');
 const serve = require('koa-static');
 
 const app = new Koa();
