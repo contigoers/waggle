@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS waggle;
+DROP DATABASE IF EXISTS waggl;
 
-CREATE DATABASE waggle;
+CREATE DATABASE waggl;
 
-USE waggle;
+USE waggl;
 
 -- ---
 -- Globals
