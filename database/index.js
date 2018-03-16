@@ -1,19 +1,15 @@
-const config = require('./config.example.js');
 
-let knex;
+const config = {
+  client: process.env.CLIENT || 'pg',
+  connection: process.env.DATABASE_URL,
+};
 
-if (config.mySql) {
-  knex = require('knex')({
-    client: 'mysql',
-    connection: config.mySql,
-  });
-} else {
-  knex = require('knex')({
-    client: 'pg',
-    connection: process.env.DATABASE_URL,
-    ssl: true,
-  });
+if (config.client === 'pg') {
+  config.ssl = true;
 }
+
+const knex = require('knex')(config);
+
 
 const getOrgDogs = orgId => knex.column(knex.raw('dogs.*, breed.name')).select()
   .from(knex.raw('dogs, breed'))
@@ -23,9 +19,9 @@ const getAllOrganizations = () => knex.column(knex.raw('users.address, users.cit
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id'));
 
-const getAdopterDogs = adopterId => knex.column(knex.raw('dogs.*, breed.name')).select()
-  .from(knex.raw('favoritedogs, dogs, breed'))
-  .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id and dogs.breed_id = breed.id`));
+const getAdopterDogs = adopterId => knex.column(knex.raw('dogs.*')).select()
+  .from(knex.raw('favoritedogs, dogs'))
+  .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id`));
 
 const createDog = (dog, orgId, breedId) => knex('dogs').insert({
   name: dog.name,
