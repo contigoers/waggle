@@ -1,8 +1,13 @@
-const knex = require('knex')({
+const config = {
   client: process.env.CLIENT || 'pg',
   connection: process.env.DATABASE_URL,
-  ssl: true,
-});
+};
+
+if (config.client === 'pg') {
+  config.ssl = true;
+}
+
+const knex = require('knex')(config);
 
 
 const getOrgDogs = orgId => knex.column(knex.raw('dogs.*, breed.name')).select()
