@@ -32,13 +32,6 @@ const getAdopterDogs = async (adopterId) => {
     .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id`))
 };
 
-const getUserPosts = (userId) => {
-  return knex.column(knex.raw('posts.*, users.username')).select()
-    .from(knex.raw('posts, users'))
-    .where(knex.raw(`posts.user_id = ${userId}`))
-    .orderBy('votes', 'desc');
-};
-
 const createDog = async (dog, orgId, breedId) => {
   return await knex('dogs').insert({
     name: dog.name,
