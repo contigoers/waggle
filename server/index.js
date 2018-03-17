@@ -36,6 +36,18 @@ router.post('/createDog', async (ctx) => {
   }
 });
 
+router.get('/orgInfo', async (ctx) => {
+  const query = await ctx.request.body;
+  if (query.orgName) {
+    const orgId = await db.searchOrgsByName(query.orgName);
+  } else if (query.orgId) {
+    const orgId = query.orgId;
+  }
+  const orgProfile = await db.getOrgProfile(orgId);
+  const orgDogs = await db.getOrgDogs(orgId);
+  
+});
+
 app
   .use(router.routes())
   .use(router.allowedMethods());
