@@ -19,11 +19,11 @@ USE waggl;
 DROP TABLE IF EXISTS `users`;
     
 CREATE TABLE `users` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `username` VARCHAR(20) NULL DEFAULT NULL,
-  `password` VARCHAR(20) NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
   `email` VARCHAR(50) NULL DEFAULT NULL,
-  `org_id` INTEGER NULL DEFAULT NULL,
+  `org_id` INTEGER NULL DEFAULT 0,
   `address` VARCHAR(50) NULL DEFAULT NULL,
   `city` VARCHAR(30) NULL DEFAULT NULL,
   `zipcode` INTEGER(5) NULL DEFAULT NULL,
@@ -39,11 +39,11 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `adopters`;
     
 CREATE TABLE `adopters` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `user_id` INTEGER NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `user_id` INTEGER NOT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
-  `pets` BINARY NULL DEFAULT NULL,
-  `house_type` ENUM NULL DEFAULT NULL,
+  `pets` BINARY NULL DEFAULT 0,
+  `house_type` ENUM('house', 'apartment', 'other') NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `user_id`)
 );
 
@@ -97,9 +97,9 @@ CREATE TABLE `dogs` (
 DROP TABLE IF EXISTS `favoritedogs`;
     
 CREATE TABLE `favoritedogs` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `adopter_id` INTEGER NULL DEFAULT NULL,
-  `dog_id` INTEGER NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `adopter_id` INTEGER NOT NULL,
+  `dog_id` INTEGER NOT NULL,
   PRIMARY KEY (`id`, `adopter_id`, `dog_id`)
 );
 
