@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Button } from 'antd';
+import './styles.scss';
 import axios from 'axios';
 // import { Button } from 'antd';
 import List from './components/List';
@@ -32,6 +34,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Button>Hi</Button>
         <h1>Item List</h1>
         <List items={this.state.items} />
         <img src="http://i.imgur.com/3jf51.jpg" alt="it's a dog" />
