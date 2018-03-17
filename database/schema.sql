@@ -84,8 +84,8 @@ CREATE TABLE `dogs` (
   `medical` BINARY NULL DEFAULT 0, -- boolean for medical needs
   `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
   `photo` VARCHAR(150) NULL DEFAULT NULL, -- string input
-  `org_id` INTEGER NULL DEFAULT NULL, -- foreign key integer
   `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
+  `org_id` INTEGER NULL DEFAULT NULL, -- foreign key integer
   PRIMARY KEY (`id`, `org_id`, `breed_id`)
 );
 
