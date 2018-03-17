@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS waggle;
+DROP DATABASE IF EXISTS waggl;
 
-CREATE DATABASE waggle;
+CREATE DATABASE waggl;
 
-USE waggle;
+USE waggl;
 
 -- ---
 -- Globals
@@ -24,7 +24,7 @@ CREATE TABLE `adopters` (
   `name` VARCHAR(50) NULL DEFAULT NULL,
   `pets` BINARY NULL DEFAULT NULL,
   `zipcode` INTEGER(5) NULL DEFAULT NULL,
-  `house` ENUM NULL DEFAULT NULL,
+  `house_type` ENUM NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `user_id`)
 );
 
@@ -37,8 +37,8 @@ DROP TABLE IF EXISTS `dogs`;
     
 CREATE TABLE `dogs` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `name` INTEGER(50) NULL DEFAULT NULL,
-  `breed_id` INTEGER NULL DEFAULT NULL,
+  `name` VARCHAR(50) NULL DEFAULT NULL,
+  `breed` VARCHAR(50) NULL DEFAULT NULL,
   `gender` ENUM NULL DEFAULT NULL,
   `size` ENUM NULL DEFAULT NULL,
   `temperament` ENUM NULL DEFAULT NULL,
@@ -65,18 +65,6 @@ CREATE TABLE `orgs` (
   PRIMARY KEY (`id`)
 );
 
--- ---
--- Table 'breed'
--- 
--- ---
-
-DROP TABLE IF EXISTS `breed`;
-    
-CREATE TABLE `breed` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `name` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-);
 
 -- ---
 -- Table 'favoritedogs'
@@ -117,8 +105,6 @@ CREATE TABLE `users` (
 -- ---
 
 ALTER TABLE `adopters` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
-
-ALTER TABLE `dogs` ADD FOREIGN KEY (breed_id) REFERENCES `breed` (`id`);
 ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (adopter_id) REFERENCES `adopters` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (dog_id) REFERENCES `dogs` (`id`);
@@ -145,8 +131,11 @@ ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 -- ('','','','','','','','','','','','','');
 -- INSERT INTO `orgs` (`id`,`name`) VALUES
 -- ('','');
--- INSERT INTO `breed` (`id`,`name`) VALUES
--- ('','');
+-- INSERT INTO `breed` (`name`) VALUES
+-- (''),
+-- (''),
+-- ('');
+
 -- INSERT INTO `favoritedogs` (`id`,`user_id`,`dog_id`) VALUES
 -- ('','','');
 -- INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`,`new field`,`zipcode`,`phone`) VALUES
