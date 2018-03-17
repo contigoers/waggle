@@ -1,5 +1,5 @@
-import {} from "antd";
 import React from 'react';
+import {} from 'antd';
 import ListItem from './ListItem';
 
 const List = props => (

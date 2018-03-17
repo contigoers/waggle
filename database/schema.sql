@@ -57,7 +57,8 @@ DROP TABLE IF EXISTS `orgs`;
 CREATE TABLE `orgs` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `user_id` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `user_id`)
 );
 
 -- ---
@@ -68,19 +69,23 @@ CREATE TABLE `orgs` (
 DROP TABLE IF EXISTS `dogs`;
     
 CREATE TABLE `dogs` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `name` VARCHAR(50) NULL DEFAULT NULL,
-  `breed` VARCHAR(50) NULL DEFAULT NULL,
-  `gender` ENUM NULL DEFAULT NULL,
-  `size` ENUM NULL DEFAULT NULL,
-  `temperament` ENUM NULL DEFAULT NULL,
-  `age` INTEGER(2) NULL DEFAULT NULL,
-  `fixed` BINARY NULL DEFAULT NULL,
-  `medical` BINARY NULL DEFAULT NULL,
-  `energy_level` ENUM NULL DEFAULT NULL,
-  `photo` VARCHAR(150) NULL DEFAULT NULL,
-  `org_id` INTEGER NULL DEFAULT NULL,
-  `description` VARCHAR(500) NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT, 
+  `name` VARCHAR(50) NOT NULL, -- string not null
+  `breed` VARCHAR(50) NULL DEFAULT NULL, -- (primary breed) string (should be enum but we're not putting in ten million enum cases) ideally filtered search from file
+  `mix` BINARY NULL DEFAULT 0; -- is mix 
+  `male` BINARY NULL DEFAULT NULL, -- enum m/f
+  `size` ENUM('tiny', 'small', 'medium', 'large', 'giant') NULL DEFAULT NULL, -- enum tiny/small/medium/large/giant
+  `aggressive` BINARY NULL DEFAULT 0, 
+  `anxious ` BINARY NULL DEFAULT 0,
+  `lifestage` ENUM('puppy', 'adolescent', 'adult', 'senior') NULL DEFAULT NULL, --life stage enum (puppy/adolescent/adult/senior)
+  `age` INTEGER(2) NULL DEFAULT NULL, -- optional integer input
+  `fixed` BINARY NULL DEFAULT NULL, -- boolean
+  `diet` BINARY NULL DEFAULT 0, -- boolean for dietary needs
+  `medical` BINARY NULL DEFAULT 0, -- boolean for medical needs
+  `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
+  `photo` VARCHAR(150) NULL DEFAULT NULL, -- string input
+  `org_id` INTEGER NULL DEFAULT NULL, -- foreign key integer
+  `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
   PRIMARY KEY (`id`, `org_id`, `breed_id`)
 );
 
@@ -98,7 +103,6 @@ CREATE TABLE `favoritedogs` (
   PRIMARY KEY (`id`, `adopter_id`, `dog_id`)
 );
 
-
 -- ---
 -- Foreign Keys 
 -- ---
@@ -108,6 +112,7 @@ ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (adopter_id) REFERENCES `adopters` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (dog_id) REFERENCES `dogs` (`id`);
 ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
+ALTER TABLE `orgs` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
 
 -- ---
 -- Table Properties
