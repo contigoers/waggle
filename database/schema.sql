@@ -12,6 +12,26 @@ USE waggl;
 -- SET FOREIGN_KEY_CHECKS=0;
 
 -- ---
+-- Table 'users'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `users`;
+    
+CREATE TABLE `users` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `email` VARCHAR(50) NULL DEFAULT NULL,
+  `org_id` INTEGER NULL DEFAULT 0,
+  `address` VARCHAR(50) NULL DEFAULT NULL,
+  `city` VARCHAR(30) NULL DEFAULT NULL,
+  `zipcode` INTEGER(5) NULL DEFAULT NULL,
+  `phone` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `org_id`)
+);
+
+-- ---
 -- Table 'adopters'
 -- 
 -- ---
@@ -19,37 +39,12 @@ USE waggl;
 DROP TABLE IF EXISTS `adopters`;
     
 CREATE TABLE `adopters` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `user_id` INTEGER NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `user_id` INTEGER NOT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
-  `pets` BINARY NULL DEFAULT NULL,
-  `zipcode` INTEGER(5) NULL DEFAULT NULL,
-  `house_type` ENUM NULL DEFAULT NULL,
+  `pets` BINARY NULL DEFAULT 0,
+  `house_type` ENUM('house', 'apartment', 'other') NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `user_id`)
-);
-
--- ---
--- Table 'dogs'
--- 
--- ---
-
-DROP TABLE IF EXISTS `dogs`;
-    
-CREATE TABLE `dogs` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `name` VARCHAR(50) NULL DEFAULT NULL,
-  `breed` VARCHAR(50) NULL DEFAULT NULL,
-  `gender` ENUM NULL DEFAULT NULL,
-  `size` ENUM NULL DEFAULT NULL,
-  `temperament` ENUM NULL DEFAULT NULL,
-  `age` INTEGER(2) NULL DEFAULT NULL,
-  `fixed` BINARY NULL DEFAULT NULL,
-  `medical` BINARY NULL DEFAULT NULL,
-  `energy_level` ENUM NULL DEFAULT NULL,
-  `photo` VARCHAR(150) NULL DEFAULT NULL,
-  `org_id` INTEGER NULL DEFAULT NULL,
-  `description` VARCHAR(500) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `org_id`, `breed_id`)
 );
 
 -- ---
@@ -62,9 +57,37 @@ DROP TABLE IF EXISTS `orgs`;
 CREATE TABLE `orgs` (
   `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `user_id` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `user_id`)
 );
 
+-- ---
+-- Table 'dogs'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `dogs`;
+    
+CREATE TABLE `dogs` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT, 
+  `name` VARCHAR(50) NOT NULL, -- string not null
+  `breed` VARCHAR(50) NULL DEFAULT NULL, -- (primary breed) string (should be enum but we're not putting in ten million enum cases) ideally filtered search from file
+  `mix` BINARY NULL DEFAULT 0; -- is mix 
+  `male` BINARY NULL DEFAULT NULL, -- enum m/f
+  `size` ENUM('tiny', 'small', 'medium', 'large', 'giant') NULL DEFAULT NULL, -- enum tiny/small/medium/large/giant
+  `aggressive` BINARY NULL DEFAULT 0, 
+  `anxious ` BINARY NULL DEFAULT 0,
+  `lifestage` ENUM('puppy', 'adolescent', 'adult', 'senior') NULL DEFAULT NULL, --life stage enum (puppy/adolescent/adult/senior)
+  `age` INTEGER(2) NULL DEFAULT NULL, -- optional integer input
+  `fixed` BINARY NULL DEFAULT NULL, -- boolean
+  `diet` BINARY NULL DEFAULT 0, -- boolean for dietary needs
+  `medical` BINARY NULL DEFAULT 0, -- boolean for medical needs
+  `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
+  `photo` VARCHAR(150) NULL DEFAULT NULL, -- string input
+  `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
+  `org_id` INTEGER NULL DEFAULT NULL, -- foreign key integer
+  PRIMARY KEY (`id`, `org_id`, `breed_id`)
+);
 
 -- ---
 -- Table 'favoritedogs'
@@ -74,30 +97,10 @@ CREATE TABLE `orgs` (
 DROP TABLE IF EXISTS `favoritedogs`;
     
 CREATE TABLE `favoritedogs` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `adopter_id` INTEGER NULL DEFAULT NULL,
-  `dog_id` INTEGER NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `adopter_id` INTEGER NOT NULL,
+  `dog_id` INTEGER NOT NULL,
   PRIMARY KEY (`id`, `adopter_id`, `dog_id`)
-);
-
--- ---
--- Table 'users'
--- 
--- ---
-
-DROP TABLE IF EXISTS `users`;
-    
-CREATE TABLE `users` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `username` VARCHAR(20) NULL DEFAULT NULL,
-  `password` VARCHAR(20) NULL DEFAULT NULL,
-  `email` VARCHAR(50) NULL DEFAULT NULL,
-  `org_id` INTEGER NULL DEFAULT NULL,
-  `address` VARCHAR(50) NULL DEFAULT NULL,
-  `city` VARCHAR(30) NULL DEFAULT NULL,
-  `zipcode` INTEGER(5) NULL DEFAULT NULL,
-  `phone` VARCHAR(15) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `org_id`)
 );
 
 -- ---
@@ -109,6 +112,7 @@ ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (adopter_id) REFERENCES `adopters` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (dog_id) REFERENCES `dogs` (`id`);
 ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
+ALTER TABLE `orgs` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
 
 -- ---
 -- Table Properties
