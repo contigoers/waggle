@@ -23,7 +23,7 @@ const getAdopterDogs = adopterId => knex.column(knex.raw('dogs.*')).select()
   .from(knex.raw('favoritedogs, dogs'))
   .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id`));
 
-const createDog = (dog, orgId, breedId) => knex('dogs').insert({
+const createDog = dog => knex('dogs').insert({
   name: dog.name,
   gender: dog.gender,
   size: dog.size,
@@ -34,8 +34,8 @@ const createDog = (dog, orgId, breedId) => knex('dogs').insert({
   energy_level: dog.energy_level,
   photo: dog.photo,
   description: dog.description,
-  breed_id: breedId,
-  org_id: orgId,
+  breed: dog.breed,
+  org_id: dog.org_id,
 }).orderBy('id', 'asc');
 
 module.exports = {

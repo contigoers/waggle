@@ -19,7 +19,6 @@ class App extends React.Component {
   getRandomPic() {
     axios.get('/picture')
       .then((response) => {
-        console.log(response);
         this.setState({
           pic: response.data,
         });
