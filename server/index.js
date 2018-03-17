@@ -1,15 +1,16 @@
 const Koa = require('koa');
-const Router = require('koa-router');
+const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
 const serve = require('koa-static');
 const randomPuppy = require('random-puppy');
 const db = require('../database/index');
 
 const app = new Koa();
-const router = new Router();
-app.use(bodyParser());
 
-app.use(serve(`${__dirname}/../react-client/dist`));
+app
+  .use(serve(`${__dirname}/../react-client/dist`))
+  .use(bodyParser())
+  .use(router.routes());
 
 router.get('/picture', async (ctx) => {
   // ctx.router available
@@ -53,6 +54,6 @@ app
   .use(router.allowedMethods());
 
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`listening on port ${3000}!`);
+app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${process.env.PORT}!`);
 });
