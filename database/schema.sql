@@ -12,6 +12,26 @@ USE waggl;
 -- SET FOREIGN_KEY_CHECKS=0;
 
 -- ---
+-- Table 'users'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `users`;
+    
+CREATE TABLE `users` (
+  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `username` VARCHAR(20) NULL DEFAULT NULL,
+  `password` VARCHAR(20) NULL DEFAULT NULL,
+  `email` VARCHAR(50) NULL DEFAULT NULL,
+  `org_id` INTEGER NULL DEFAULT NULL,
+  `address` VARCHAR(50) NULL DEFAULT NULL,
+  `city` VARCHAR(30) NULL DEFAULT NULL,
+  `zipcode` INTEGER(5) NULL DEFAULT NULL,
+  `phone` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`, `org_id`)
+);
+
+-- ---
 -- Table 'adopters'
 -- 
 -- ---
@@ -23,9 +43,21 @@ CREATE TABLE `adopters` (
   `user_id` INTEGER NULL DEFAULT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
   `pets` BINARY NULL DEFAULT NULL,
-  `zipcode` INTEGER(5) NULL DEFAULT NULL,
   `house_type` ENUM NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `user_id`)
+);
+
+-- ---
+-- Table 'orgs'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `orgs`;
+    
+CREATE TABLE `orgs` (
+  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `name` VARCHAR(50) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 );
 
 -- ---
@@ -53,20 +85,6 @@ CREATE TABLE `dogs` (
 );
 
 -- ---
--- Table 'orgs'
--- 
--- ---
-
-DROP TABLE IF EXISTS `orgs`;
-    
-CREATE TABLE `orgs` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `name` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-);
-
-
--- ---
 -- Table 'favoritedogs'
 -- 
 -- ---
@@ -80,25 +98,6 @@ CREATE TABLE `favoritedogs` (
   PRIMARY KEY (`id`, `adopter_id`, `dog_id`)
 );
 
--- ---
--- Table 'users'
--- 
--- ---
-
-DROP TABLE IF EXISTS `users`;
-    
-CREATE TABLE `users` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `username` VARCHAR(20) NULL DEFAULT NULL,
-  `password` VARCHAR(20) NULL DEFAULT NULL,
-  `email` VARCHAR(50) NULL DEFAULT NULL,
-  `org_id` INTEGER NULL DEFAULT NULL,
-  `address` VARCHAR(50) NULL DEFAULT NULL,
-  `city` VARCHAR(30) NULL DEFAULT NULL,
-  `zipcode` INTEGER(5) NULL DEFAULT NULL,
-  `phone` VARCHAR(15) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `org_id`)
-);
 
 -- ---
 -- Foreign Keys 
