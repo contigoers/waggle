@@ -13,20 +13,19 @@ app
   .use(router.routes());
 
 router.get('/picture', async (ctx) => {
-  // ctx.router available
   await randomPuppy()
     .then((url) => {
       ctx.body = url;
     });
 });
 
-router.post('/createDog', async (ctx) => {
-  const dog = ctx.request.body;
+router.post('/addOrgDog', async (ctx) => {
   try {
-    await db.createDog(dog);
+    const dog = await db.createDog(ctx.request.body);
     ctx.status = 201;
     ctx.body = {
       status: 'success',
+      data: dog,
     };
   } catch (err) {
     ctx.status = 400;
@@ -37,16 +36,68 @@ router.post('/createDog', async (ctx) => {
   }
 });
 
-router.get('/orgInfo', async (ctx) => {
-  const query = await ctx.request.body;
-  if (query.orgName) {
-    const orgId = await db.searchOrgsByName(query.orgName);
-  } else if (query.orgId) {
-    const orgId = query.orgId;
+// render organization profile and dogs by org ID or name
+router.get('/orgInfo/:type/:data', async (ctx) => {
+  const query = await ctx.params;
+  // type will be either orgName or orgId
+  let orgId;
+  if (query.type === 'orgName') {
+    orgId = await db.searchOrgsByName(query.data);
+  } else if (query.type === 'orgId') {
+    orgId = +query.data;
   }
   const orgProfile = await db.getOrgProfile(orgId);
   const orgDogs = await db.getOrgDogs(orgId);
-  
+  ctx.body = {
+    status: 'success',
+    orgProfile,
+    orgDogs,
+  };
+});
+
+router.post('/searchOrgDogs', async (ctx) => {
+  const query = ctx.request.body;
+  // const test = {
+  //   orgId: query.orgId,
+  // };
+  try {
+    const dogs = await db.searchOrgDogs(query);
+    if (dogs.length) {
+      ctx.status = 201;
+      ctx.body = {
+        status: 'success',
+        data: dogs,
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'Something went wrong.',
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
+router.get('/adopterInfo', async (ctx) => {
+  try {
+    const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
+    ctx.body = {
+      status: 'success',
+      adopterProfile,
+    };
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
 });
 
 app

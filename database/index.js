@@ -47,9 +47,15 @@ const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, 
   .where(knex.raw(`users.org_id = ${orgId} and orgs.id = ${orgId} and orgs.user_id = users.id`));
 
 // get all dogs associated with organization by org id
-const getOrgDogs = orgId => knex.column(knex.raw('dogs.*, orgs.name')).select()
+const getOrgDogs = orgId => knex.raw(`
+  SELECT dogs.*, orgs.name
+  FROM dogs, orgs
+  WHERE dogs.org_id = ${orgId} and orgs.id = ${orgId}`);
+
+// search dogs within organization by org id and other parameters
+const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.name')).select()
   .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.org_id = ${orgId} and orgs.id = ${orgId}`));
+  .where(knex.raw(`dogs.org_id = ${query.orgId} and orgs.id = ${query.orgId}`));
 
 // get dog by id
 const getDogById = dogId => knex.column(knex.raw('*')).select()
@@ -121,5 +127,6 @@ module.exports = {
   checkCredentials,
   searchOrgsByName,
   getDogById,
+  searchOrgDogs,
 };
 
