@@ -1,5 +1,122 @@
 @import '~antd/dist/antd.css';
+$primary: #cd5360;
+$primary-dark: #972036;
 
-h1 {
-  color: green;
+#app {
+  height: 100%;
+}
+
+.body {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 100% 10% 1fr 10%;
+}
+
+.splash > img {
+  width: 100%;
+}
+
+.splash-items {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.splash-item {
+  text-align: center;
+  color: white;
+  background: transparent;
+}
+
+.company-name {
+  font-size: 70px;
+}
+
+.adopt-button {
+  margin-top: 10px;
+  font-size: 30px;
+  padding: 6px 15px;
+  border: 3px solid $primary;
+  border-radius: 50px;
+  &:hover {
+    border-color: $primary-dark;
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    outline: none;
+  }
+}
+
+.down-icon {
+  font-size: 24px;
+}
+
+.nav-bar {
+  display: grid;
+  grid-template-columns: 10% 10% 10% 10%;
+  background: $primary;
+  color: white;
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2); 
+  z-index: 1;
+}
+
+.logo-div > img {
+  margin-left: 20px;
+}
+
+
+.nav-item {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    color: $primary-dark;
+    cursor: pointer;
+  }
+}
+
+.content {
+  background: #f5f5f5;
+}
+
+.content-div {
+  margin: 2%;
+  padding: 3%;
+  background: white;
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+  border-radius: 2px;
+  min-height: 500px;
+}
+
+.loader {
+  color: $primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  font-size: 80px;
+}
+
+img {
+  width: 454px;
+}
+
+.footer {
+  background: $primary;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button.ant-btn {
+  width: 300px;
 }
