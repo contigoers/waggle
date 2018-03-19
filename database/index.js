@@ -35,7 +35,7 @@ const createUser = async (user, username, password) => {
     await knex('adopters').insert({
       name: user.name,
       pets: user.pets,
-      house_type: user.house_type,
+      house_type: user.houseType,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
   } else if (user.type === 'organization') {
@@ -67,10 +67,10 @@ const createDog = dog => knex('dogs').insert({
   fixed: dog.isFixed,
   diet: dog.hasDiet,
   medical: dog.hasMedical,
-  energy_level: dog.energy_level,
+  energy_level: dog.energyLevel,
   photo: dog.photo,
   description: dog.description,
-  org_id: dog.org_id,
+  org_id: dog.orgId,
 }).orderBy('id', 'asc');
 
 // get dog by id
