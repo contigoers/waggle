@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -14,7 +14,7 @@ import Test from './components/Test';
 
 import reducers from './reducers';
 
-class App extends React.Component {
+class App extends Component {
   static scrollToNav() {
     scroller.scrollTo('nav-bar', {
       duration: 800,
@@ -103,7 +103,11 @@ const createStoreWithMiddleware = applyMiddleware()(createStore);
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
-    <App />
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" component={App} />
+      </Switch>
+    </BrowserRouter>
   </Provider>
   , document.getElementById('app'),
 );
