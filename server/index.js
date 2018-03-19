@@ -83,6 +83,42 @@ router.post('/register', async (ctx) => {
   }
 });
 
+// for now this does not use bcypt/oauth/passport, will address later
+router.post('/login', async (ctx) => {
+  try {
+    const users = await db.checkCredentials(ctx.request.body.username);
+    if (users.length) {
+      const userInfo = users[0];
+      if (ctx.request.body.password === userInfo.password) { // need to fix later
+        ctx.status = 201;
+        ctx.body = {
+          status: 'success',
+          message: 'successful login!',
+          userInfo,
+        };
+      } else {
+        ctx.status = 401;
+        ctx.body = {
+          status: 'error',
+          message: 'invalid password!',
+        };
+      }
+    } else {
+      ctx.status = 401;
+      ctx.body = {
+        status: 'error',
+        message: 'username does not exist!',
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
 // render organization profile and dogs by org ID or name
 router.get('/orgInfo/:type/:data', async (ctx) => {
   const query = await ctx.params;
