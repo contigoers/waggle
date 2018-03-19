@@ -22,7 +22,6 @@
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
-    "node-sass": "^4.7.2",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "webpack": "^2.2.1"
@@ -38,6 +37,7 @@
     "koa-static": "^4.0.2",
     "lodash": "^4.17.5",
     "mysql": "^2.13.0",
+    "node-sass": "^4.7.2",
     "random-puppy": "^1.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
