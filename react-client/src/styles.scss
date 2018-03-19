@@ -83,16 +83,16 @@ $primary-dark: #972036;
   }
 }
 
-.content {
-  background: #f5f5f5;
+.content-divs:nth-child(odd) {
+  background: white;
 }
 
-.content-div {
-  margin: 2%;
+.content-divs:nth-child(even) {
+  background: #fafafa;
+}
+
+.content-divs {
   padding: 3%;
-  background: white;
-  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
-  border-radius: 2px;
   min-height: 500px;
 }
 
