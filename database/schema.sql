@@ -42,7 +42,7 @@ CREATE TABLE `adopters` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `user_id` INTEGER NOT NULL,
   `name` VARCHAR(50) NULL DEFAULT NULL,
-  `pets` BINARY NULL DEFAULT 0,
+  `pets` BOOLEAN DEFAULT FALSE,
   `house_type` ENUM('house', 'apartment', 'other') NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `orgs`;
     
 CREATE TABLE `orgs` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NULL DEFAULT NULL,
+  `org_name` VARCHAR(50) NULL DEFAULT NULL,
   `user_id` INTEGER NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
@@ -72,20 +72,20 @@ CREATE TABLE `dogs` (
   `id` INTEGER NOT NULL AUTO_INCREMENT, 
   `name` VARCHAR(50) NOT NULL, -- string not null
   `breed` VARCHAR(50) NULL DEFAULT NULL, -- (primary breed) string (should be enum but we're not putting in ten million enum cases) ideally filtered search from file
-  `mix` BINARY NULL DEFAULT 0, -- is mix 
-  `male` BINARY NULL DEFAULT NULL, -- enum m/f
+  `mix` BOOLEAN DEFAULT FALSE, -- is mix 
+  `male` BOOLEAN DEFAULT FALSE, -- enum m/f
   `size` ENUM('tiny', 'small', 'medium', 'large', 'giant') NULL DEFAULT NULL, -- enum tiny/small/medium/large/giant
-  `aggressive` BINARY NULL DEFAULT 0, 
-  `anxious` BINARY NULL DEFAULT 0,
+  `aggressive` BOOLEAN DEFAULT FALSE, 
+  `anxious` BOOLEAN DEFAULT FALSE,
   `lifestage` ENUM('puppy', 'adolescent', 'adult', 'senior') NULL DEFAULT NULL,
   `age` INTEGER(2) NULL DEFAULT NULL, -- optional integer input
-  `fixed` BINARY NULL DEFAULT NULL, -- boolean
-  `diet` BINARY NULL DEFAULT 0, -- boolean for dietary needs
-  `medical` BINARY NULL DEFAULT 0, -- boolean for medical needs
+  `fixed` BOOLEAN DEFAULT FALSE, -- boolean
+  `diet` BOOLEAN DEFAULT FALSE, -- boolean for dietary needs
+  `medical` BOOLEAN DEFAULT FALSE, -- boolean for medical needs
   `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
   `photo` VARCHAR(150) NULL DEFAULT NULL, -- string input
   `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
-  `org_id` INTEGER NULL DEFAULT NULL, -- foreign key integer
+  `org_id` INTEGER NOT NULL, -- foreign key integer
   PRIMARY KEY (`id`)
 );
 
@@ -133,7 +133,7 @@ ALTER TABLE `orgs` ADD FOREIGN KEY (user_id) REFERENCES `users` (`id`);
 -- ('','','','','','');
 -- INSERT INTO `dogs` (`id`,`name`,`breed`,`gender`,`size`,`temperament`,`age`,`fixed`,`medical`,`energy`,`photo`,`org_id`,`description`) VALUES
 -- ('','','','','','','','','','','','','');
-INSERT INTO `orgs` (`id`,`name`) VALUES
+INSERT INTO `orgs` (`id`,`org_name`) VALUES
 (1, 'DEFAULT - FOR ADOPTERS');
 -- INSERT INTO `breed` (`name`) VALUES
 -- (''),
