@@ -1,5 +1,10 @@
 @import '~antd/dist/antd.css';
+$background: red;
 
 h1 {
-  color: green;
+  color: $background;
+}
+
+button.ant-btn {
+  width: 300px;
 }
