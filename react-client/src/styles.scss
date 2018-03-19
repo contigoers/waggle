@@ -11,6 +11,7 @@ $primary: #cd5360;
   grid-template-rows: 10% 1fr 10%;
 }
 
+
 .nav-bar {
   display: grid;
   grid-template-columns: 10% 10% 10% 10%;
@@ -19,6 +20,11 @@ $primary: #cd5360;
   box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2); 
   z-index: 1;
 }
+
+.logo-div > img {
+  margin-left: 20px;
+}
+
 
 .nav-item {
   font-size: 20px;

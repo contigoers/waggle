@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import axios from 'axios';
-import { Spin, Icon } from 'antd';
+import { Icon } from 'antd';
 import './styles.scss';
 import List from './components/List';
 import Test from './components/Test';
@@ -41,7 +41,7 @@ class App extends React.Component {
       <div className="body">
         <div className="nav-bar">
           <div className="logo-div nav-item">
-            Logo
+            <img src="https://i.imgur.com/YiJcCHt.png" alt="waggle-logo" />
           </div>
           <div className="home-div nav-item">
             Home
