@@ -19,14 +19,61 @@ router.get('/picture', async (ctx) => {
     });
 });
 
-router.post('/addOrgDog', async (ctx) => {
+router.post('/createOrgDog', async (ctx) => {
   try {
     const dog = await db.createDog(ctx.request.body);
     ctx.status = 201;
     ctx.body = {
       status: 'success',
-      data: dog,
+      dog,
     };
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
+router.post('/addFaveDog', async (ctx) => {
+  try {
+    await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
+    const faveDog = await db.getDogById(ctx.request.body.dogId);
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+      faveDog,
+    };
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
+// for now this does not use bcypt/oauth/passport, will address later
+router.post('/register', async (ctx) => {
+  const hash = ctx.request.body.password; // need to fix later
+  try {
+    const data = await db.createUser(ctx.request.body, ctx.request.body.username, hash);
+    if (data === 'already exists!') {
+      ctx.status = 409;
+      ctx.body = {
+        status: 'error',
+        message: 'username already exists!',
+      };
+    } else {
+      const users = await db.checkCredentials(ctx.request.body.username);
+      const userInfo = users[0];
+      ctx.status = 201;
+      ctx.body = {
+        status: 'success',
+        userInfo,
+      };
+    }
   } catch (err) {
     ctx.status = 400;
     ctx.body = {
@@ -55,6 +102,25 @@ router.get('/orgInfo/:type/:data', async (ctx) => {
   };
 });
 
+router.get('/adopterInfo', async (ctx) => {
+  try {
+    const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
+    const adopterFavoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
+    ctx.body = {
+      status: 'success',
+      adopterProfile,
+      adopterFavoriteDogs,
+    };
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
+// filtered search for specific dogs within an organization
 router.post('/searchOrgDogs', async (ctx) => {
   const query = ctx.request.body;
   // const test = {
@@ -66,31 +132,15 @@ router.post('/searchOrgDogs', async (ctx) => {
       ctx.status = 201;
       ctx.body = {
         status: 'success',
-        data: dogs,
+        dogs,
       };
     } else {
       ctx.status = 400;
       ctx.body = {
         status: 'error',
-        message: 'Something went wrong.',
+        message: 'No dogs in this organization!',
       };
     }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.',
-    };
-  }
-});
-
-router.get('/adopterInfo', async (ctx) => {
-  try {
-    const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
-    ctx.body = {
-      status: 'success',
-      adopterProfile,
-    };
   } catch (err) {
     ctx.status = 400;
     ctx.body = {
