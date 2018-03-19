@@ -1,5 +1,6 @@
 @import '~antd/dist/antd.css';
 $primary: #cd5360;
+$primary-dark: #972036;
 
 #app {
   height: 100%;
@@ -8,9 +9,41 @@ $primary: #cd5360;
 .body {
   height: 100%;
   display: grid;
-  grid-template-rows: 10% 1fr 10%;
+  grid-template-rows: 100% 10% 1fr 10%;
 }
 
+.splash > img {
+  width: 100%;
+}
+
+.company-name {
+  display: inline;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  padding: 0 20px;
+  border: 3px solid $primary;
+  border-radius: 50px;
+  background: transparent;
+  color: white;
+  &:hover {
+    border-color: $primary-dark;
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    outline: none;
+  }
+}
+
+.down-icon {
+  font-size: 24px;
+  margin-bottom: 10%;
+}
 
 .nav-bar {
   display: grid;
@@ -32,7 +65,7 @@ $primary: #cd5360;
   justify-content: center;
   align-items: center;
   &:hover {
-    color: #972036;
+    color: $primary-dark;
   }
 }
 
@@ -55,6 +88,7 @@ $primary: #cd5360;
   justify-content: center;
   align-items: center;
   min-height: 500px;
+  font-size: 80px;
 }
 
 img {
