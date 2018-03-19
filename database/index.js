@@ -11,6 +11,7 @@ if (config.client === 'pg') {
 const knex = require('knex')(config);
 
 /* ********************* TESTED AND APPROVED DB QUERIES YAY! ********************************* */
+
 // creates user and creates either adopter profile or organization profile
 const createUser = async (user, username, password) => {
   const query = await knex.select().from('users')
@@ -34,15 +35,15 @@ const createUser = async (user, username, password) => {
     await knex('adopters').insert({
       name: user.name,
       pets: user.pets,
-      house_type: user.house_type,
+      house_type: user.houseType,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
   } else if (user.type === 'organization') {
     await knex('orgs').insert({
-      name: user.name,
+      org_name: user.name,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
-    const orgId = await knex.select('id').from('orgs').where('name', user.name);
+    const orgId = await knex.select('id').from('orgs').where('org_name', user.name);
     await knex('users').where('id', userId[0].id).update('org_id', orgId[0].id);
   }
   return knex('users').select().where('id', userId[0].id);
@@ -51,14 +52,6 @@ const createUser = async (user, username, password) => {
 // get user by username (login)
 const checkCredentials = username => knex.select().from('users')
   .where(knex.raw(`LOWER(username) = LOWER('${username}')`));
-
-/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
-
-// add favorite dog
-const addFavoriteDog = (adopterId, dogId) => knex('favoritedogs').insert({
-  adopter_id: adopterId,
-  dog_id: dogId,
-}).orderBy('id', 'asc');
 
 // add new dog to database
 const createDog = dog => knex('dogs').insert({
@@ -77,14 +70,16 @@ const createDog = dog => knex('dogs').insert({
   energy_level: dog.energyLevel,
   photo: dog.photo,
   description: dog.description,
-  org_id: dog.org_id,
+  org_id: dog.orgId,
 }).orderBy('id', 'asc');
 
-/* Find in database methods */
+// get dog by id
+const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
+  .from(knex.raw('dogs, orgs'))
+  .where(knex.raw(`dogs.id = ${dogId} and dogs.org_id = orgs.id`));
 
-const getAdopterProfile = adopterId => knex.column(knex.raw('users.address, users.city, users.id, users.zipcode, users.phone, users.email, adopters.*')).select()
-  .from(knex.raw('users, adopters'))
-  .where(knex.raw(`users.id = adopters.user_id and adopters.id = ${adopterId}`));
+// get organization ID from organization name query
+const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
 const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.id, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
@@ -92,32 +87,45 @@ const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, 
 
 // get all dogs associated with organization by org id
 const getOrgDogs = orgId => knex.raw(`
-  SELECT dogs.*, orgs.name
+  SELECT dogs.*, orgs.org_name
   FROM dogs, orgs
   WHERE dogs.org_id = ${orgId} and orgs.id = ${orgId}`);
 
-// search dogs within organization by org id and other parameters
-const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.org_id = ${query.orgId} and orgs.id = ${query.orgId}`));
+const getAdopterProfile = adopterId => knex.column(knex.raw('users.address, users.city, users.id, users.zipcode, users.phone, users.email, adopters.*')).select()
+  .from(knex.raw('users, adopters'))
+  .where(knex.raw(`users.id = adopters.user_id and adopters.id = ${adopterId}`));
 
-// get dog by id
-const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.id = ${dogId} and dogs.org_id = orgs.id`));
+// get all dogs adopter has favorited
+const getFavoriteDogs = adopterId => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
+  .from(knex.raw('favoritedogs, dogs, orgs'))
+  .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id and orgs.id = dogs.org_id`));
+
+// add favorite dog
+const addFavoriteDog = async (adopterId, dogId) => {
+  const query = await knex.select().from('favoritedogs')
+    .where('adopter_id', adopterId).andWhere('dog_id', dogId);
+  if (query.length) {
+    return 'already exists!';
+  }
+  await knex('favoritedogs').insert({
+    adopter_id: adopterId,
+    dog_id: dogId,
+  }).orderBy('id', 'asc');
+  return getFavoriteDogs(adopterId);
+};
 
 // get all organizations in orgs
 const getAllOrganizations = () => knex.column(knex.raw('users.address, users.city, users.id, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id and orgs.user_id = users.id'));
 
-// get all dogs adopter has favorited
-const getFavoriteDogs = adopterId => knex.column(knex.raw('dogs.*, orgs.name')).select()
-  .from(knex.raw('favoritedogs, dogs, orgs'))
-  .where(knex.raw(`favoritedogs.adopter_id = ${adopterId} and dogs.id = favoritedogs.dog_id and orgs.id = dogs.org_id`));
+/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-// get organization ID from organization name query
-const searchOrgsByName = orgName => knex('orgs').select('id').where('name', orgName);
+
+// search dogs within organization by org id and other parameters
+const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
+  .from(knex.raw('dogs, orgs'))
+  .where(knex.raw(`dogs.org_id = ${query.orgId} and orgs.id = ${query.orgId}`));
 
 module.exports = {
   getAdopterProfile,
