@@ -9,6 +9,7 @@ import './styles.scss';
 import List from './components/List';
 import Test from './components/Test';
 import reducers from './reducers';
+import NavBar from './components/NavBar';
 
 class App extends React.Component {
   static scrollToNav() {
@@ -59,22 +60,9 @@ class App extends React.Component {
           </div>
           <img src="https://i.imgur.com/K41ODje.jpg" alt="" />
         </div>
-        <div name="nav-bar" className="nav-bar">
-          <div className="logo-div nav-item">
-            <img src="https://i.imgur.com/p1VwVM9.png" alt="waggl-logo" />
-          </div>
-          <div className="home-div nav-item">
-            Home
-          </div>
-          <div className="find-dog-div nav-item">
-            Find A Dog
-          </div>
-          <div className="about-div nav-item">
-            About Us
-          </div>
-        </div>
+        <NavBar />
         <div className="content">
-          <div className="content-div">
+          <div className="content-divs">
             {
               this.state.pic.length ?
                 <div>
@@ -85,6 +73,33 @@ class App extends React.Component {
                 </div> :
                 <Icon type="loading" className="loader" spin />
             }
+          </div>
+          <div className="content-divs">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fermentum odio urna,
+            id faucibus arcu egestas id. In viverra laoreet purus vitae porttitor. Etiam nisl dui,
+            commodo non aliquet in, tincidunt eget massa. Sed dictum dui sit amet sem ultrices
+            egestas. Cras quis est cursus, ullamcorper enim eget, facilisis quam. Aliquam semper
+            nunc ac consequat ultrices. Ut congue magna enim. Maecenas elit dui, lacinia vitae orci
+            in, dapibus finibus orci. Integer aliquam nisi nec urna interdum, et pharetra dolor
+            gravida. Proin eu leo pharetra, euismod lorem quis, auctor erat.
+          </div>
+          <div className="content-divs">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fermentum odio urna,
+            id faucibus arcu egestas id. In viverra laoreet purus vitae porttitor. Etiam nisl dui,
+            commodo non aliquet in, tincidunt eget massa. Sed dictum dui sit amet sem ultrices
+            egestas. Cras quis est cursus, ullamcorper enim eget, facilisis quam. Aliquam semper
+            nunc ac consequat ultrices. Ut congue magna enim. Maecenas elit dui, lacinia vitae orci
+            in, dapibus finibus orci. Integer aliquam nisi nec urna interdum, et pharetra dolor
+            gravida. Proin eu leo pharetra, euismod lorem quis, auctor erat.
+          </div>
+          <div className="content-divs">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fermentum odio urna,
+            id faucibus arcu egestas id. In viverra laoreet purus vitae porttitor. Etiam nisl dui,
+            commodo non aliquet in, tincidunt eget massa. Sed dictum dui sit amet sem ultrices
+            egestas. Cras quis est cursus, ullamcorper enim eget, facilisis quam. Aliquam semper
+            nunc ac consequat ultrices. Ut congue magna enim. Maecenas elit dui, lacinia vitae orci
+            in, dapibus finibus orci. Integer aliquam nisi nec urna interdum, et pharetra dolor
+            gravida. Proin eu leo pharetra, euismod lorem quis, auctor erat.          
           </div>
         </div>
         <div className="footer">
