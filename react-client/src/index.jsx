@@ -61,7 +61,7 @@ class App extends React.Component {
         </div>
         <div name="nav-bar" className="nav-bar">
           <div className="logo-div nav-item">
-            <img src="https://i.imgur.com/YiJcCHt.png" alt="waggle-logo" />
+            <img src="https://i.imgur.com/p1VwVM9.png" alt="waggl-logo" />
           </div>
           <div className="home-div nav-item">
             Home
