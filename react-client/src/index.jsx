@@ -49,20 +49,25 @@ class App extends React.Component {
     return (
       <div className="body">
         <div className="splash">
-          <button className="company-name" onClick={() => { App.scrollToNav(); }} >
-            waggle <Icon className="down-icon" type="down" />
-          </button>
+          <div className="splash-items">
+            <div className="company-name splash-item">
+              waggl
+            </div>
+            <button className="adopt-button splash-item" onClick={() => { App.scrollToNav(); }} >
+              Adopt a new best friend <Icon className="down-icon" type="down" />
+            </button>
+          </div>
           <img src="https://i.imgur.com/K41ODje.jpg" alt="" />
         </div>
         <div name="nav-bar" className="nav-bar">
           <div className="logo-div nav-item">
-            <img src="https://i.imgur.com/YiJcCHt.png" alt="waggle-logo" />
+            <img src="https://i.imgur.com/p1VwVM9.png" alt="waggl-logo" />
           </div>
           <div className="home-div nav-item">
             Home
           </div>
           <div className="find-dog-div nav-item">
-            Find My Dog
+            Find A Dog
           </div>
           <div className="about-div nav-item">
             About Us

@@ -16,25 +16,39 @@ $primary-dark: #972036;
   width: 100%;
 }
 
-.company-name {
-  display: inline;
+.splash-items {
+  display: block;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 50px;
-  padding: 0 20px;
+}
+
+.splash-item {
+  text-align: center;
+  color: white;
+  background: transparent;
+}
+
+.company-name {
+  font-size: 70px;
+}
+
+.adopt-button {
+  margin-top: 10px;
+  font-size: 30px;
+  padding: 6px 15px;
   border: 3px solid $primary;
   border-radius: 50px;
-  background: transparent;
-  color: white;
   &:hover {
     border-color: $primary-dark;
     cursor: pointer;
   }
+
   &:focus {
     outline: none;
   }
+
   &:active {
     outline: none;
   }
@@ -42,7 +56,6 @@ $primary-dark: #972036;
 
 .down-icon {
   font-size: 24px;
-  margin-bottom: 10%;
 }
 
 .nav-bar {
@@ -66,6 +79,7 @@ $primary-dark: #972036;
   align-items: center;
   &:hover {
     color: $primary-dark;
+    cursor: pointer;
   }
 }
 
