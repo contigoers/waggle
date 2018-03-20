@@ -18,4 +18,4 @@ const toggleRegistrationModal = (state, action) => {
   }
 };
 
-export { toggleRegistrationModal };
+export default { toggleRegistrationModal };
