@@ -6,6 +6,9 @@ import {
   Modal,
 } from 'antd';
 
+import AdopterRegistration from './AdopterRegistration';
+import OrgRegistration from './OrgRegistration';
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -69,9 +72,7 @@ class Login extends Component {
             </Button>,
           ]}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <AdopterRegistration />
         </Modal>
         <Modal
           id="org"
@@ -85,9 +86,7 @@ class Login extends Component {
             </Button>,
           ]}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <OrgRegistration />
         </Modal>
       </div>
     );
