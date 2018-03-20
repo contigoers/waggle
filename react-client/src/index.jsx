@@ -9,6 +9,7 @@ import './styles.scss';
 import reducers from './reducers';
 import NavBar from './components/NavBar';
 import Landing from './components/Landing';
+import Search from './components/Search';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
@@ -18,6 +19,7 @@ ReactDOM.render(
       <div>
         <NavBar />
         <Switch>
+          <Route path="/search" component={Search} />
           <Route path="/" component={Landing} />
         </Switch>
       </div>

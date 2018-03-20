@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 import { scroller } from 'react-scroll';
 
@@ -30,10 +31,10 @@ class NavBar extends Component {
             <img src="https://i.imgur.com/p1VwVM9.png" alt="waggl-logo" />
           </div>
           <div className="home-div nav-item">
-            Home
+            <Link to="/">Home</Link>
           </div>
           <div className="find-dog-div nav-item">
-            Find A Dog
+            <Link to="/search">Find A Dog</Link>
           </div>
           <div className="about-div nav-item">
             About Us

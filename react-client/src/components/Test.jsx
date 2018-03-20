@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button } from 'antd';
-import sendMessage from '../actions/actionCreators';
+import { sendMessage } from '../actions/actionCreators';
 
 class Test extends React.Component {
   handleButtonPress() {
