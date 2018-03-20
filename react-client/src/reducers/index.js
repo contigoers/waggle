@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import showMessage from './reducer_show-message';
 import randomDogPic from './random-dog-pic';
-import { toggleRegistrationModal } from './registrationReducers';
+import toggleRegistrationModal from './registrationReducers';
 
 const rootReducer = combineReducers({
   contents: showMessage,
