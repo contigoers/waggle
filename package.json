@@ -33,7 +33,9 @@
     "knex": "^0.14.4",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-passport": "^4.0.1",
     "koa-router": "^7.4.0",
+    "koa-session": "^5.5.1",
     "koa-static": "^4.0.2",
     "lodash": "^4.17.5",
     "mysql": "^2.13.0",
@@ -42,9 +44,10 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.7",
-    "react-router-redux": "^4.0.8",
+    "react-router-dom": "^4.0.0",
     "react-scroll": "^1.7.7",
     "redux": "^3.7.2",
+    "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0"
   }
 }
