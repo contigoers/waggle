@@ -6,6 +6,7 @@ const passport = require('koa-passport');
 const serve = require('koa-static');
 const randomPuppy = require('random-puppy');
 const db = require('../database/index');
+require('./passport-auth')(passport);
 
 const app = new Koa();
 app.keys = ['supersecret'];
@@ -13,26 +14,10 @@ app.keys = ['supersecret'];
 app
   .use(serve(`${__dirname}/../react-client/dist`))
   .use(bodyParser())
-  .use(router.routes());
-
-// PASSPORT STUFF - TO DO
-//   .use(session(app))
-//   .use(passport.initialize())
-//   .use(passport.session());
-
-// passport.use(new FacebookStrategy(
-//   {
-//     // insert FB OAuth stuff here
-//   },
-
-// ));
-
-// passport.serializeUser((user, done) => {
-//   done(null, user);
-// });
-// passport.deserializeUser((user, done) => {
-//   done(null, user);
-// });
+  .use(router.routes())
+  .use(session(app))
+  .use(passport.initialize())
+  .use(passport.session());
 
 router.get('/picture', async (ctx) => {
   await randomPuppy()
@@ -119,11 +104,10 @@ router.post('/register', async (ctx) => {
       };
     } else {
       const users = await db.checkCredentials(ctx.request.body.username);
-      const userInfo = users[0];
       ctx.status = 201;
       ctx.body = {
         status: 'success',
-        userInfo,
+        userInfo: users[0],
       };
     }
   } catch (err) {
