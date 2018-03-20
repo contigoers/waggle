@@ -1,37 +1,45 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
 // import Select, { Form, Input, Checkbox, InputNumber, TextArea } from 'antd'; // Upload
-import { Form, Row, Input, Select, Checkbox, InputNumber } from 'antd';
+import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 class TestForm extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //   };
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: {}
+    };
+    // this.handleSubmit = this.handleSubmit.bind(this),
+    // this.onChange = this.onChange.bind(this)
+  }
+
 
   onChange(e) {
-    this.setState({});
+    //this.setState({});
     console.log('change', e);
   }
 
-  handleSubmit(e) {
-    this.setState({});
+  handleSubmit(e) { // call validatefields/getvalues somewhere?
+    //this.setState({});
     console.log('submit', e);
   }
 
-  compareToFirstPassword(password) {
-    this.setState({});
-    console.log(password, 'comparing to first password');
+  onSubmit() {
+    console.log('submitting');
   }
+
+  // compareToFirstPassword(password) {
+  //   this.setState({});
+  //   console.log(password, 'comparing to first password');
+  // }
 
   render() {
     return (
       <div style={{ margin: 50 }}>
-        <Form layout="inline" onSubmit={this.handleSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
           <Row>
             <Form.Item label="Name">
               <Input style={{ width: 300 }} />
@@ -44,7 +52,6 @@ class TestForm extends React.Component {
                 showSearch
                 style={{ width: 300 }}
                 onChange={this.onChange}
-                // optionFilterProp="children"
               >
                 <Option value="null"> Unknown </Option>
                 <Option value="pug"> Pug </Option>
@@ -141,10 +148,15 @@ class TestForm extends React.Component {
               <TextArea rows={4} style={{ width: 600 }} />
             </Form.Item>
           </Row>
+          <Row>
+            <Button type="primary" htmlType="submit"> Submit </Button>
+          </Row>
         </Form>
       </div>
     );
   }
 }
 
-export default TestForm;
+const RealTestForm = Form.create()(TestForm);
+
+export default RealTestForm;
