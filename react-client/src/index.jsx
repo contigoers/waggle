@@ -11,6 +11,7 @@ import reducers from './reducers';
 import NavBar from './components/NavBar';
 import Splash from './components/Splash';
 import Landing from './components/Landing';
+import Signup from './components/Signup';
 import Search from './components/Search';
 import Footer from './components/Footer';
 
@@ -23,6 +24,7 @@ ReactDOM.render(
         <Route exact path="/" component={Splash} />
         <NavBar />
         <Switch>
+          <Route path="/signup" component={Signup} />
           <Route path="/search" component={Search} />
           <Route path="/" component={Landing} />
         </Switch>
