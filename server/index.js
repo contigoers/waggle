@@ -1,16 +1,38 @@
 const Koa = require('koa');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
+const session = require('koa-session');
+const passport = require('koa-passport');
 const serve = require('koa-static');
 const randomPuppy = require('random-puppy');
 const db = require('../database/index');
 
 const app = new Koa();
+app.keys = ['supersecret'];
 
 app
   .use(serve(`${__dirname}/../react-client/dist`))
   .use(bodyParser())
   .use(router.routes());
+
+// PASSPORT STUFF - TO DO
+//   .use(session(app))
+//   .use(passport.initialize())
+//   .use(passport.session());
+
+// passport.use(new FacebookStrategy(
+//   {
+//     // insert FB OAuth stuff here
+//   },
+
+// ));
+
+// passport.serializeUser((user, done) => {
+//   done(null, user);
+// });
+// passport.deserializeUser((user, done) => {
+//   done(null, user);
+// });
 
 router.get('/picture', async (ctx) => {
   await randomPuppy()
@@ -25,6 +47,15 @@ router.get('/allOrgInfo', async (ctx) => {
   ctx.body = {
     status: 'success',
     allOrgs,
+  };
+});
+
+// get all dogs
+router.get('/allDogInfo', async (ctx) => {
+  const allDogs = await db.getAllDogs();
+  ctx.body = {
+    status: 'success',
+    allDogs,
   };
 });
 

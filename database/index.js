@@ -119,6 +119,10 @@ const getAllOrganizations = () => knex.column(knex.raw('users.address, users.cit
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id and orgs.user_id = users.id'));
 
+const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
+  .from(knex.raw('dogs, orgs'))
+  .where(knex.raw('orgs.id = dogs.org_id'));
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 
@@ -140,5 +144,6 @@ module.exports = {
   searchOrgsByName,
   getDogById,
   searchOrgDogs,
+  getAllDogs,
 };
 
