@@ -9,8 +9,8 @@ const sendMessage = () => (
   }
 );
 
-const updateRandomPic = async () => {
-  const url = await axios.get('/picture');
+// const updateRandomPic = async () => {
+//   const url = await axios.get('/picture');
 
   return {
     type: UPDATE_RANDOM_PIC,
