@@ -10,7 +10,7 @@ class TestForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: {}
+      // formData: {},
     };
     // this.handleSubmit = this.handleSubmit.bind(this),
     // this.onChange = this.onChange.bind(this)
@@ -18,18 +18,24 @@ class TestForm extends React.Component {
 
 
   onChange(e) {
-    //this.setState({});
+    this.setState({});
     console.log('change', e);
   }
 
+  onSubmit(e) {
+    e.preventDefault();
+//    this.setState({});
+    console.log('submitting');
+  }
+
   handleSubmit(e) { // call validatefields/getvalues somewhere?
-    //this.setState({});
+    // this.setState({});
     console.log('submit', e);
   }
 
-  onSubmit() {
-    console.log('submitting');
-  }
+  // handleBlur(e) {
+  // validate on un click
+  // }
 
   // compareToFirstPassword(password) {
   //   this.setState({});
@@ -37,18 +43,38 @@ class TestForm extends React.Component {
   // }
 
   render() {
+    console.log(this.props);
+    const { getFieldDecorator } = this.props.form;
     return (
       <div style={{ margin: 50 }}>
         <Form layout="inline" onSubmit={this.onSubmit}>
+
           <Row>
+
             <Form.Item label="Name">
-              <Input style={{ width: 300 }} />
+              {getFieldDecorator('name', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please provide name',
+                  },
+                ],
+              })(<Input style={{ width: 300 }} />)}
+
             </Form.Item>
+
           </Row>
 
           <Row>
+
             <Form.Item label="Breed">
-              <Select
+              {getFieldDecorator('breed', {
+                  rules: [{
+                    required: true,
+                    message: 'Please choose a breed',
+                  },
+                ],
+              })(<Select
                 showSearch
                 style={{ width: 300 }}
                 onChange={this.onChange}
@@ -62,68 +88,102 @@ class TestForm extends React.Component {
                 <Option value="shihtzu"> Shih Tzu </Option>
                 <Option value="pitbill"> Pit Bull </Option>
                 <Option value="greyhound"> Greyhound </Option>
-              </Select>
+              </Select>)}
+
             </Form.Item>
 
             <Form.Item label="Mix?">
-              <Checkbox />
+              {getFieldDecorator('mix', {
+                valuePropName: 'mixChecked',
+              })(<Checkbox />)}
+
             </Form.Item>
           </Row>
 
           <Row>
             <Form.Item label="Good">
-              <Select style={{ width: 200 }} onChange={this.onChange}>
+              {getFieldDecorator('isMale', {
+                  rules: [{
+                    required: true,
+                    message: 'Please choose an option',
+                  },
+                ],
+              })(<Select style={{ width: 200 }} onChange={this.onChange}>
                 <Option value="true"> boy </Option>
                 <Option value="false"> girl </Option>
                 <Option value="null"> Unknown </Option>
-              </Select>
+              </Select>)}
+
             </Form.Item>
 
             <Form.Item label="Fixed?">
-              <Select style={{ width: 300 }}>
+              {getFieldDecorator('isFixed', {
+                  rules: [{
+                    required: true,
+                    message: 'Please choose an option',
+                  },
+                ],
+              })(<Select style={{ width: 150 }}>
                 <Option value="true"> Yes </Option>
                 <Option value="false"> No </Option>
                 <Option value="null"> Unknown </Option>
-              </Select>
+              </Select>)}
             </Form.Item>
           </Row>
 
           <Row>
             <Form.Item label="Life stage">
-              <Select style={{ width: 300 }}>
+              {getFieldDecorator('lifestage', {
+                  rules: [{
+                    required: true,
+                    message: 'Please choose an option',
+                  },
+                ],
+              })(<Select style={{ width: 300 }}>
                 <Option value="puppy"> Puppy </Option>
                 <Option value="adolescent"> Adolescent </Option>
                 <Option value="adult"> Adult </Option>
                 <Option value="senior"> Senior </Option>
                 <Option value="null"> Unknown </Option>
-              </Select>
+              </Select>)}
             </Form.Item>
 
             <Form.Item label="Age">
-              <InputNumber min={0} max={99} />
+              {getFieldDecorator('age', {
+                })(<InputNumber min={0} max={99} />)}
             </Form.Item>
           </Row>
 
           <Row>
             <Form.Item label="Size">
-              <Select style={{ width: 300 }}>
+              {getFieldDecorator('size', {
+                  rules: [{
+                    required: true,
+                    message: 'Please choose an option',
+                  },
+                ],
+              })(<Select style={{ width: 300 }}>
                 <Option value="tiny"> Tiny </Option>
                 <Option value="small"> Small </Option>
                 <Option value="medium"> Medium </Option>
                 <Option value="large"> Large </Option>
                 <Option value="huge"> Huge </Option>
                 <Option value="null"> Unknown </Option>
-              </Select>
+              </Select>)}
             </Form.Item>
           </Row>
 
           <Row>
             <Form.Item label="Aggression">
-              <Checkbox />
+              {getFieldDecorator('aggressive', {
+                valuePropName: 'aggressiveChecked',
+              })(<Checkbox />)}
             </Form.Item>
 
             <Form.Item label="Anxiety">
-              <Checkbox />
+              {getFieldDecorator('anxiety', {
+                valuePropName: 'medicalChecked',
+              })(<Checkbox />)}
             </Form.Item>
           </Row>
 

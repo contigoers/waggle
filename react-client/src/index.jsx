@@ -13,22 +13,26 @@ import Splash from './components/Splash';
 import Landing from './components/Landing';
 import Search from './components/Search';
 import Footer from './components/Footer';
+import RealTestForm from './components/TestForm';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
-    <BrowserRouter>
-      <div>
-        <Route exact path="/" component={Splash} />
-        <NavBar />
-        <Switch>
-          <Route path="/search" component={Search} />
-          <Route path="/" component={Landing} />
-        </Switch>
-        <Footer />
-      </div>
-    </BrowserRouter>
-  </Provider>
+  <div>
+    <Provider store={createStoreWithMiddleware(reducers)}>
+      <BrowserRouter>
+        <div>
+          <Route exact path="/" component={Splash} />
+          <NavBar />
+          <Switch>
+            <Route path="/search" component={Search} />
+            <Route path="/" component={Landing} />
+          </Switch>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </Provider>
+    <RealTestForm />
+  </div>
   , document.getElementById('app'),
 );
