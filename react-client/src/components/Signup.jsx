@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Button,
   Row,
@@ -9,33 +10,9 @@ import {
 import AdopterRegistration from './AdopterRegistration';
 import OrgRegistration from './OrgRegistration';
 
+import { toggleRegistrationModal } from '../actions/registrationActions';
+
 class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      org: false,
-      adopter: false,
-      current: undefined,
-    };
-
-    this.toggleRegistration = this.toggleRegistration.bind(this);
-  }
-
-  toggleRegistration({ target: { id } }) {
-    if (id) {
-      this.setState({
-        [id]: true,
-        current: [id],
-      });
-    } else {
-      this.setState({
-        [this.state.current]: false,
-        current: undefined,
-      });
-    }
-  }
-
   render() {
     return (
       <div>
@@ -46,14 +23,14 @@ class Login extends Component {
         </Row>
         <Row justify="center">
           <Button
-            onClick={this.toggleRegistration}
+            onClick={this.props.toggleRegistrationModal}
             size="large"
             id="adopter"
             type="primary"
           >an adopter
           </Button>
           <Button
-            onClick={this.toggleRegistration}
+            onClick={this.props.toggleRegistrationModal}
             size="large"
             id="org"
             type="primary"
@@ -63,10 +40,10 @@ class Login extends Component {
         <Modal
           id="adopter"
           title="Register as an Adopter"
-          visible={this.state.adopter}
-          onCancel={this.toggleRegistration}
+          visible={this.props.adopter}
+          onCancel={this.props.toggleRegistrationModal}
           footer={[
-            <Button key="back" onClick={this.toggleRegistration}>Return</Button>,
+            <Button key="back" onClick={this.props.toggleRegistrationModal}>Return</Button>,
             <Button key="submit" type="primary" onClick={this.handleSubmit}>
               Submit
             </Button>,
@@ -77,10 +54,10 @@ class Login extends Component {
         <Modal
           id="org"
           title="Register as an Organization"
-          visible={this.state.org}
-          onCancel={this.toggleRegistration}
+          visible={this.props.org}
+          onCancel={this.props.toggleRegistrationModal}
           footer={[
-            <Button key="back" onClick={this.toggleRegistration}>Return</Button>,
+            <Button key="back" onClick={this.props.toggleRegistrationModal}>Return</Button>,
             <Button key="submit" type="primary" onClick={this.handleSubmit}>
               Submit
             </Button>,
@@ -93,7 +70,15 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = ({ registrationModal: { adopter, current, org } }) => (
+  {
+    org,
+    adopter,
+    current,
+  }
+);
+
+export default connect(mapStateToProps, { toggleRegistrationModal })(Login);
 
 // sign up w/ facebook option
 
