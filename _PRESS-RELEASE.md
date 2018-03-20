@@ -1,5 +1,5 @@
 # Project Name #
-
+Waggl
 <!-- 
 > This material was originally posted [here](http://www.quora.com/What-is-Amazons-approach-to-product-development-and-product-management). It is reproduced here for posterities sake.
 
@@ -18,27 +18,37 @@ Once the project moves into development, the press release can be used as a touc
  
 ## Heading ##
   > Name the product in a way the reader (i.e. your target customers) will understand.
+Waggl, a webapp for finding your new best friend.
 
 ## Sub-Heading ##
   > Describe who the market for the product is and what benefit they get. One sentence only underneath the title.
+This product is for anyone who is looking for a companion or an organization that is looking to find a new life for their dogs.
 
 ## Summary ##
   > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
+Many times people will turn towards breeders or puppy mill outlets when they want to get a new dog, because that is either the only method they know or it is the easiest. Well, we are looking to provide a new platform for finding your new soul-pup. This webapp aims to match rescue organizations with people looking to provide a cozy home for the dog that matches exactly what they are looking for whether it be size, breed, energy level, etc.
 
 ## Problem ##
   > Describe the problem your product solves.
+There are too many wonderful dogs who get no chance at adoption. If we make it convienient and avialable for people to search for the dog that fits their lifestyle, then we can work towards homing every dog.
 
 ## Solution ##
   > Describe how your product elegantly solves the problem.
+Our product allows for shelter organizations to list their dogs in detail so that users can filter for the dog that they have always wanted.
 
 ## Quote from You ##
   > A quote from a spokesperson in your company.
+"60% of shelter dogs are euthanized every year through no fault of their own. At Waggl, we are taking action on this. Our goal is to massively reduce those numbers by bringing two worlds together; two lives that never thought they needed each other so much."
 
 ## How to Get Started ##
   > Describe how easy it is to get started.
+For our adopters: After you login with your Facebook account, you will be searching for that new best friend in seconds.
+For our shelters: After we verify your organization, you will be able to list your dogs within minutes hassle-free using our suggested options.
 
 ## Customer Quote ##
   > Provide a quote from a hypothetical customer that describes how they experienced the benefit.
+"I always wanted a German Shepherd, but most of them are too energetic. My coworker told me about Waggl.com and within 5 minutes, I found a low energy, adult German Shepherd 4 miles from me. Within the next week, I was able to bring Ace into my home, and he has been so happy and relaxed here! I have told all my friends about Waggl incase they are looking for a new dog."
 
 ## Closing and Call to Action ##
   > Wrap it up and give pointers where the reader should go next.
+If you are looking to make a difference in the community and especially the canine community, say "No" to puppy mills and breeders, and bring a dog into your home that you know will match your personality.
