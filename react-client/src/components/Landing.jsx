@@ -1,37 +1,14 @@
 import React, { Component } from 'react';
-
-import axios from 'axios';
+import { connect } from 'react-redux';
 import { Icon } from 'antd';
 
-import List from './List';
 import Test from './Test';
 
+import { updateRandomPic } from '../actions/actionCreators';
 
 class Landing extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: [],
-      pic: '',
-    };
-  }
-
   componentDidMount() {
-    this.getRandomPic();
-  }
-
-  getRandomPic() {
-    axios.get('/picture')
-      .then((response) => {
-        setTimeout(() => {
-          this.setState({
-            pic: response.data,
-          });
-        }, 700);
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
+    this.props.updateRandomPic();
   }
 
   render() {
@@ -39,12 +16,11 @@ class Landing extends Component {
       <div className="body">
         <div className="content">
           <div className="content-divs">
-            {this.state.pic.length ?
+            <Test />
+            <img src="http://i.imgur.com/3jf51.jpg" alt="issa dog" />
+            {this.props.pic ?
               <div>
-                <Test />
-                <List items={this.state.items} />
-                <img src="http://i.imgur.com/3jf51.jpg" alt="issa dog" />
-                <img src={this.state.pic} alt="Loading..." />
+                <img src={this.props.pic} alt="Loading..." />
               </div> :
               <Icon type="loading" className="loader" spin />}
           </div>
@@ -84,4 +60,10 @@ class Landing extends Component {
   }
 }
 
-export default Landing;
+const mapStateToProps = state => (
+  {
+    pic: state.randomDogPic,
+  }
+);
+
+export default connect(mapStateToProps, { updateRandomPic })(Landing);
