@@ -12,10 +12,10 @@ const sendMessage = () => (
 // const updateRandomPic = async () => {
 //   const url = await axios.get('/picture');
 
-  return {
-    type: UPDATE_RANDOM_PIC,
-    payload: url.data,
-  };
-};
+//   return {
+//     type: UPDATE_RANDOM_PIC,
+//     payload: url.data,
+//   };
+// };
 
 export { TOGGLE_BUTTON, sendMessage, UPDATE_RANDOM_PIC, updateRandomPic };
