@@ -9,12 +9,12 @@ const sendMessage = () => (
   }
 );
 
-const updateRandomPic = () => {
-  const request = axios.get('/picture');
+const updateRandomPic = async () => {
+  const url = await axios.get('/picture');
 
   return {
     type: UPDATE_RANDOM_PIC,
-    payload: request.then(res => res.data),
+    payload: url.data,
   };
 };
 
