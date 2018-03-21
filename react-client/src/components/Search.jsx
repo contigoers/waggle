@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Menu, Dropdown, Checkbox, Slider, Switch } from 'antd';
+import { Button, Menu, Dropdown, AutoComplete, Checkbox, Slider, Switch, Icon } from 'antd';
 
 function onChange(e) {
   console.log(`checked = ${e.target.checked}`);
@@ -123,34 +123,27 @@ const ageMenu = (
   </Menu>
 );
 
+const AutoCompeleteBreed = (
+  <Menu>
+    <Menu.Item>
+      <AutoComplete
+        style={{ width: 400 }}
+        placeholder="Search By Breed"
+      />
+    </Menu.Item>
+  </Menu>
+);
+
 const Search = () =>
   (
     <div className="search-div">
       <div className="search-buttons">
         <Dropdown
-          overlay={breedMenu}
+          overlay={AutoCompeleteBreed}
           trigger={['click']}
         >
           <Button className="breed-button search-button">
-            Breed
-          </Button>
-        </Dropdown>
-
-        <Dropdown overlay={genderMenu} trigger={['click']}>
-          <Button className="gender-button search-button">
-            Gender
-          </Button>
-        </Dropdown>
-
-        <Dropdown overlay={sizeMenu} trigger={['click']}>
-          <Button className="size-button search-button">
-            Size
-          </Button>
-        </Dropdown>
-
-        <Dropdown overlay={ageMenu} trigger={['click']}>
-          <Button className="age-button search-button">
-            Age
+            Breed <Icon type="down" />
           </Button>
         </Dropdown>
       </div>
@@ -159,3 +152,29 @@ const Search = () =>
 
 export default Search;
 
+// <Dropdown
+//   overlay={AutoCompeleteBreed}
+//   trigger={['click']}
+// >
+//   <Button className="breed-button search-button">
+//     Breed <Icon type="down" />
+//   </Button>
+// </Dropdown>
+
+//   <Dropdown overlay={genderMenu} trigger={['click']}>
+//     <Button className="gender-button search-button">
+//       Gender
+//           </Button>
+//   </Dropdown>
+
+//   <Dropdown overlay={sizeMenu} trigger={['click']}>
+//     <Button className="size-button search-button">
+//       Size
+//           </Button>
+//   </Dropdown>
+
+//   <Dropdown overlay={ageMenu} trigger={['click']}>
+//     <Button className="age-button search-button">
+//       Age
+//           </Button>
+//   </Dropdown>
