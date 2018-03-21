@@ -253,4 +253,3 @@ export default CreateDogForm;
 // TODO: custom validation styling
 // TODO: format fields with columns (ughhh)
 // TODO: photo upload
-// TODO: pull in breeds list
