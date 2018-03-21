@@ -3,7 +3,6 @@ import { TOGGLE_REGISTRATION_MODAL } from '../actions/registrationActions';
 const defaultState = {
   org: false,
   adopter: false,
-  current: null,
 };
 
 const toggleRegistrationModal = (state, action) => {
@@ -13,14 +12,9 @@ const toggleRegistrationModal = (state, action) => {
         return {
           ...state,
           [action.id]: true,
-          current: action.id,
         };
       }
-      return {
-        ...state,
-        [state.current]: false,
-        current: undefined,
-      };
+      return defaultState;
     default:
       return defaultState;
   }

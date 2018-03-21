@@ -7,12 +7,35 @@ import {
   Modal,
 } from 'antd';
 
-import AdopterRegistration from './AdopterRegistration';
+import WrappedAdopterRegistration from './AdopterRegistration';
 import OrgRegistration from './OrgRegistration';
 
 import { toggleRegistrationModal } from '../actions/registrationActions';
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
+
+    this.saveFormRef = this.saveFormRef.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const { form } = this.formRef.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        form.resetFields();
+        this.props.toggleRegistrationModal({ target: {} });
+      }
+    });
+  }
+
+  saveFormRef(formRef) {
+    this.formRef = formRef;
+  }
+
   render() {
     return (
       <div>
@@ -37,29 +60,19 @@ class Login extends Component {
           >an organization
           </Button>
         </Row>
-        <Modal
-          id="adopter"
-          title="Register as an Adopter"
-          visible={this.props.adopter}
-          onCancel={this.props.toggleRegistrationModal}
-          footer={[
-            <Button key="back" onClick={this.props.toggleRegistrationModal}>Return</Button>,
-            <Button key="submit" type="primary" onClick={this.handleSubmit}>
-              Submit
-            </Button>,
-          ]}
-        >
-          <AdopterRegistration />
-        </Modal>
+        <WrappedAdopterRegistration
+          wrappedComponentRef={this.saveFormRef}
+          onSubmit={this.handleSubmit}
+        />
         <Modal
           id="org"
           title="Register as an Organization"
           visible={this.props.org}
           onCancel={this.props.toggleRegistrationModal}
           footer={[
-            <Button key="back" onClick={this.props.toggleRegistrationModal}>Return</Button>,
-            <Button key="submit" type="primary" onClick={this.handleSubmit}>
-              Submit
+            <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
+            <Button key="register" type="primary" onClick={this.handleSubmit}>
+              Register
             </Button>,
           ]}
         >
@@ -70,33 +83,11 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = ({ registrationModal: { adopter, current, org } }) => (
+const mapStateToProps = ({ registrationModal: { adopter, org } }) => (
   {
     org,
     adopter,
-    current,
   }
 );
 
 export default connect(mapStateToProps, { toggleRegistrationModal })(Login);
-
-// sign up w/ facebook option
-
-// all users
-//   username : string
-//   password : string
-//   password confirm : string
-//   email address : string (verify?)
-//   street address : string
-//   city : string
-//   zipcode : number
-//   phone # : numeric?
-//   organization/adopter: drop down
-
-// render on adopter signup
-//   name : string
-//   has pets : checkbox boolean
-//   home type : drop down (house, apartment, other)
-
-// render on organization signup
-//   org name
