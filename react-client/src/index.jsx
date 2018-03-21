@@ -19,23 +19,20 @@ import CreateDogForm from './components/CreateDogForm';
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
 ReactDOM.render(
-  <div>
-    <Provider store={createStoreWithMiddleware(reducers)}>
-      <BrowserRouter>
-        <div>
-          <Route exact path="/" component={Splash} />
-          <NavBar />
-          <Switch>
-            <Route path="/signup" component={Signup} />
-            <Route path="/search" component={Search} />
-            <Route path="/create" component={CreateDogForm} />
-            <Route path="/" component={Landing} />
-          </Switch>
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </Provider>
-    <CreateDogForm />
-  </div>
+  <Provider store={createStoreWithMiddleware(reducers)}>
+    <BrowserRouter>
+      <div>
+        <Route exact path="/" component={Splash} />
+        <NavBar />
+        <Switch>
+          <Route path="/signup" component={Signup} />
+          <Route path="/search" component={Search} />
+          <Route path="/create" component={CreateDogForm} />
+          <Route path="/" component={Landing} />
+        </Switch>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  </Provider>
   , document.getElementById('app'),
 );
