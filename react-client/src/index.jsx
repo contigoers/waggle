@@ -13,7 +13,6 @@ import Splash from './components/Splash';
 import Landing from './components/Landing';
 import Search from './components/Search';
 import Footer from './components/Footer';
-import RealTestForm from './components/TestForm';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -32,7 +31,6 @@ ReactDOM.render(
         </div>
       </BrowserRouter>
     </Provider>
-    <RealTestForm />
   </div>
   , document.getElementById('app'),
 );

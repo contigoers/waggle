@@ -6,61 +6,57 @@ import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
 
-class TestForm extends React.Component {
+class DogForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // formData: {},
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  // onChange(e) {
-  //   this.setState({});
-  //   console.log('change', e);
-  // }
-
   onSubmit(e) {
     e.preventDefault();
-    console.log(e.isMix, e.mixChecked);
-    console.log('THIS:', this);
     this.props.form.validateFieldsAndScroll({}, (errors, values) => {
       if (errors) {
-        // console.log('ERRORS ', errors);
         return errors;
       }
       this.setState(values, () => {
-        console.log('VALUES: ', values);
         const dog = {
-          name: values.name, // required
-          breed: values.breed === 'null' ? null : values.breed, // required
+          name: values.name,
+          breed: values.breed === 'null' ? null : values.breed,
           isMix: Boolean(values.isMix),
-          isMale: values.isMale === 'null' ? null : Boolean(values.isMale), // required
+          isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
           isAggressive: Boolean(values.isAggressive),
           isAnxious: Boolean(values.hasAnxiety),
-          lifestage: values.lifestage === 'null' ? null : values.lifestage, // required
+          lifestage: values.lifestage === 'null' ? null : values.lifestage,
           age: values.age || null,
-          size: values.size === 'null' ? null : values.size, // required
-          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed), // required
+          size: values.size === 'null' ? null : values.size,
+          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
           hasDiet: Boolean(values.hasDiet),
           hasMedical: Boolean(values.hasMedical),
-          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel, // required
+          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
           photo: values.photo || null,
           description: values.description || null,
         };
-        console.log('DOG VALUES,', dog);
+        return dog;
       });
       return true;
     });
   }
 
   // handleBlur(e) {
-  //   console.log();
+  // }
+
+  // handleFocus(e) {
   // }
 
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    // const formItemLayout = {
+    //   labelCol: { span: 6 },
+    //   //wrapperCol: { span: 14 },
+    // };
     // const formItemLayout = {
     //   labelCol: {
     //     xs: { span: 24 },
@@ -73,7 +69,7 @@ class TestForm extends React.Component {
     // };
     return (
       <div style={{ margin: 50 }}>
-        <Form layout="inline" onSubmit={this.onSubmit}>
+        <Form layout="horizontal" onSubmit={this.onSubmit}>
 
           <Row>
 
@@ -92,7 +88,6 @@ class TestForm extends React.Component {
           </Row>
 
           <Row>
-
             <Form.Item label="Breed">
               {getFieldDecorator('breed', {
                   rules: [{
@@ -104,6 +99,7 @@ class TestForm extends React.Component {
                 showSearch
                 style={{ width: 300 }}
                 onChange={this.onChange}
+                placeholder="Search breeds..."
               >
                 <Option value="null"> Unknown </Option>
                 <Option value="pug"> Pug </Option>
@@ -118,7 +114,7 @@ class TestForm extends React.Component {
 
             </Form.Item>
 
-            <Form.Item label="Mix?">
+            <Form.Item label="Mixed breed?">
               {getFieldDecorator('isMix', {
                 valuePropName: 'mixChecked',
               })(<Checkbox />)}
@@ -127,16 +123,16 @@ class TestForm extends React.Component {
           </Row>
 
           <Row>
-            <Form.Item label="Good">
+            <Form.Item label="Gender">
               {getFieldDecorator('isMale', {
                   rules: [{
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 200 }} onChange={this.onChange}>
-                <Option value="true"> boy </Option>
-                <Option value="false"> girl </Option>
+              })(<Select style={{ width: 200 }} onChange={this.onChange} placeholder="Select">
+                <Option value="true"> Good boy </Option>
+                <Option value="false"> Good girl </Option>
                 <Option value="null"> Unknown </Option>
               </Select>)}
 
@@ -149,7 +145,7 @@ class TestForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 150 }}>
+              })(<Select style={{ width: 150 }} placeholder="Select" >
                 <Option value="true"> Yes </Option>
                 <Option value="false"> No </Option>
                 <Option value="null"> Unknown </Option>
@@ -165,7 +161,7 @@ class TestForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 300 }}>
+              })(<Select style={{ width: 300 }} placeholder="Select">
                 <Option value="puppy"> Puppy </Option>
                 <Option value="adolescent"> Adolescent </Option>
                 <Option value="adult"> Adult </Option>
@@ -174,7 +170,7 @@ class TestForm extends React.Component {
               </Select>)}
             </Form.Item>
 
-            <Form.Item label="Age">
+            <Form.Item label="Age (if known)">
               {getFieldDecorator('age', {
                 })(<InputNumber min={0} max={99} />)}
             </Form.Item>
@@ -188,7 +184,7 @@ class TestForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 300 }}>
+              })(<Select style={{ width: 300 }} placeholder="Select">
                 <Option value="tiny"> Tiny </Option>
                 <Option value="small"> Small </Option>
                 <Option value="medium"> Medium </Option>
@@ -206,7 +202,7 @@ class TestForm extends React.Component {
                   required: true,
                   message: 'Please choose an option',
                 }],
-              })(<Select style={{ width: 300 }}>
+              })(<Select style={{ width: 300 }} placeholder="Select">
                 <Option value="low"> Low </Option>
                 <Option value="medium"> Medium </Option>
                 <Option value="high"> High </Option>
@@ -246,7 +242,7 @@ class TestForm extends React.Component {
           <Row>
             <Form.Item label="Photo">
               {getFieldDecorator('photo', {
-                })(<Input style={{ width: 500 }} placeholder="URL" />)}
+                })(<Input style={{ width: 500 }} placeholder="Photo URL" />)}
             </Form.Item>
           </Row>
 
@@ -264,6 +260,13 @@ class TestForm extends React.Component {
   }
 }
 
-const RealTestForm = Form.create()(TestForm);
+const CreateDogForm = Form.create()(DogForm);
 
-export default RealTestForm;
+export default CreateDogForm;
+
+// TODO: validate on blur
+// TODO: unfuck falsy validation/checkbox stuff in object
+// TODO: post request
+// TODO: custom validation styling
+// TODO: format fields with columns (ughhh)
+// TODO: photo upload
