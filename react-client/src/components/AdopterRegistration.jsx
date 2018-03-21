@@ -17,7 +17,7 @@ import { toggleRegistrationModal } from '../actions/registrationActions';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-const WrappedAdopterRegistration = Form.create()(class AdopterRegistration extends Component {
+const WrappedAdopterRegistration = Form.create()(class extends Component {
   constructor(props) {
     super(props);
 
@@ -91,7 +91,7 @@ const WrappedAdopterRegistration = Form.create()(class AdopterRegistration exten
         onCancel={this.props.toggleRegistrationModal}
         footer={[
           <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-          <Button key="register" type="primary" onClick={this.props.onSubmit}>
+          <Button id="adopter" key="register" type="primary" onClick={this.props.onSubmit}>
             Register
           </Button>,
         ]}

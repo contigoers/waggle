@@ -4,11 +4,10 @@ import {
   Button,
   Row,
   Col,
-  Modal,
 } from 'antd';
 
 import WrappedAdopterRegistration from './AdopterRegistration';
-import OrgRegistration from './OrgRegistration';
+import WrappedOrgRegistration from './OrgRegistration';
 
 import { toggleRegistrationModal } from '../actions/registrationActions';
 
@@ -16,24 +15,32 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.saveFormRef = this.saveFormRef.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    const { form } = this.formRef.props;
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-        form.resetFields();
-        this.props.toggleRegistrationModal({ target: {} });
-      }
-    });
-  }
+    let form;
 
-  saveFormRef(formRef) {
-    this.formRef = formRef;
+    if (e.target.id === 'org') {
+      ({ form } = this.orgRef.props);
+      form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          console.log('Received values of org form: ', values);
+          form.resetFields();
+          this.props.toggleRegistrationModal({ target: {} });
+        }
+      });
+    } else {
+      ({ form } = this.adopterRef.props);
+      form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          console.log('Received values of adopter form: ', values);
+          form.resetFields();
+          this.props.toggleRegistrationModal({ target: {} });
+        }
+      });
+    }
   }
 
   render() {
@@ -61,23 +68,13 @@ class Login extends Component {
           </Button>
         </Row>
         <WrappedAdopterRegistration
-          wrappedComponentRef={this.saveFormRef}
+          wrappedComponentRef={(adopterRef) => { this.adopterRef = adopterRef; }}
           onSubmit={this.handleSubmit}
         />
-        <Modal
-          id="org"
-          title="Register as an Organization"
-          visible={this.props.org}
-          onCancel={this.props.toggleRegistrationModal}
-          footer={[
-            <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-            <Button key="register" type="primary" onClick={this.handleSubmit}>
-              Register
-            </Button>,
-          ]}
-        >
-          <OrgRegistration />
-        </Modal>
+        <WrappedOrgRegistration
+          wrappedComponentRef={(orgRef) => { this.orgRef = orgRef; }}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
