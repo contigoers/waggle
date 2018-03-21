@@ -5,18 +5,15 @@ const defaultState = {
   adopter: false,
 };
 
-const toggleRegistrationModal = (state, action) => {
+const toggleRegistrationModal = (state = defaultState, action) => {
   switch (action.type) {
     case TOGGLE_REGISTRATION_MODAL:
-      if (action.id) {
-        return {
-          ...state,
-          [action.id]: true,
-        };
-      }
-      return defaultState;
+      return {
+        ...state,
+        [action.id]: !state[action.id],
+      };
     default:
-      return defaultState;
+      return state;
   }
 };
 

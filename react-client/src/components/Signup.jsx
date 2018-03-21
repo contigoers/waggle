@@ -16,19 +16,21 @@ class Login extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
     let form;
+    const { target: { id } } = e;
 
-    if (e.target.id === 'org') {
+    if (id === 'org') {
       ({ form } = this.orgRef.props);
       form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log('Received values of org form: ', values);
           form.resetFields();
-          this.props.toggleRegistrationModal({ target: {} });
+          this.props.toggleRegistrationModal(id);
         }
       });
     } else {
@@ -37,10 +39,14 @@ class Login extends Component {
         if (!err) {
           console.log('Received values of adopter form: ', values);
           form.resetFields();
-          this.props.toggleRegistrationModal({ target: {} });
+          this.props.toggleRegistrationModal(id);
         }
       });
     }
+  }
+
+  toggleModal(e) {
+    this.props.toggleRegistrationModal(e.target.id);
   }
 
   render() {
@@ -53,14 +59,14 @@ class Login extends Component {
         </Row>
         <Row justify="center">
           <Button
-            onClick={this.props.toggleRegistrationModal}
+            onClick={this.toggleModal}
             size="large"
             id="adopter"
             type="primary"
           >an adopter
           </Button>
           <Button
-            onClick={this.props.toggleRegistrationModal}
+            onClick={this.toggleModal}
             size="large"
             id="org"
             type="primary"
@@ -80,11 +86,4 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = ({ registrationModal: { adopter, org } }) => (
-  {
-    org,
-    adopter,
-  }
-);
-
-export default connect(mapStateToProps, { toggleRegistrationModal })(Login);
+export default connect(null, { toggleRegistrationModal })(Login);

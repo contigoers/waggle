@@ -28,6 +28,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     this.handleConfirmBlur = this.handleConfirmBlur.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   handleConfirmBlur({ target: { value } }) {
@@ -49,6 +50,10 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
       form.validateFields(['confirm'], { force: true });
     }
     callback();
+  }
+
+  toggleModal() {
+    this.props.toggleRegistrationModal('org');
   }
 
   render() {
@@ -88,9 +93,9 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
         id="org"
         title="Register as an Organization"
         visible={this.props.org}
-        onCancel={this.props.toggleRegistrationModal}
+        onCancel={this.toggleModal}
         footer={[
-          <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
+          <Button key="back" onClick={this.toggleModal}>Cancel</Button>,
           <Button id="org" key="register" type="primary" onClick={this.props.onSubmit}>
             Register
           </Button>,
@@ -168,10 +173,9 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = ({ registrationModal: { adopter, org } }) => (
+const mapStateToProps = ({ registrationModal: { org } }) => (
   {
     org,
-    adopter,
   }
 );
 
