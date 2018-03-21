@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import promise from 'redux-promise';
 
 import './styles.scss';
+import './search-styles.scss';
 
 import reducers from './reducers';
 import NavBar from './components/NavBar';
