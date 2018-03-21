@@ -22,16 +22,16 @@ class TestForm extends React.Component {
     console.log('change', e);
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-//    this.setState({});
-    console.log('submitting');
-  }
+  //   onSubmit(e) {
+  //     e.preventDefault();
+  // //    this.setState({});
+  //     console.log('submitting');
+  //   }
 
-  handleSubmit(e) { // call validatefields/getvalues somewhere?
-    // this.setState({});
-    console.log('submit', e);
-  }
+  //   handleSubmit(e) { // call validatefields/getvalues somewhere?
+  //     // this.setState({});
+  //     console.log('submit', e);
+  //   }
 
   // handleBlur(e) {
   // validate on un click
@@ -43,8 +43,17 @@ class TestForm extends React.Component {
   // }
 
   render() {
-    console.log(this.props);
     const { getFieldDecorator } = this.props.form;
+    // const formItemLayout = {
+    //   labelCol: {
+    //     xs: { span: 24 },
+    //     sm: { span: 8 },
+    //   },
+    //   wrapperCol: {
+    //     xs: { span: 24 },
+    //     sm: { span: 16 },
+    //   },
+    // };
     return (
       <div style={{ margin: 50 }}>
         <Form layout="inline" onSubmit={this.onSubmit}>
@@ -189,27 +198,32 @@ class TestForm extends React.Component {
 
           <Row>
             <Form.Item label="Dietary">
-              <Checkbox />
+              {getFieldDecorator('diet', {
+                  valuePropName: 'dietChecked',
+                })(<Checkbox />)}
             </Form.Item>
 
             <Form.Item label="Medical">
-              <Checkbox />
+              {getFieldDecorator('medical', {
+                valuePropName: 'medicalChecked',
+              })(<Checkbox />)}
             </Form.Item>
           </Row>
 
           <Row>
             <Form.Item label="Photo">
-              <Input style={{ width: 500 }} />
+              {getFieldDecorator('photo', {
+                })(<Input style={{ width: 500 }} placeholder="URL" />)}
             </Form.Item>
           </Row>
 
           <Row>
-            <Form.Item label="Description">
-              <TextArea rows={4} style={{ width: 600 }} />
+            <Form.Item style={{ marginTop: 10 }} label="Description">
+              {getFieldDecorator('description', {})(<TextArea rows={4} style={{ width: 600 }} />)}
             </Form.Item>
           </Row>
           <Row>
-            <Button type="primary" htmlType="submit"> Submit </Button>
+            <Button type="primary" htmlType="submit" style={{ marginTop: 20 }}> Submit </Button>
           </Row>
         </Form>
       </div>
