@@ -12,35 +12,52 @@ class TestForm extends React.Component {
     this.state = {
       // formData: {},
     };
-    // this.handleSubmit = this.handleSubmit.bind(this),
-    // this.onChange = this.onChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
+  // onChange(e) {
+  //   this.setState({});
+  //   console.log('change', e);
+  // }
 
-  onChange(e) {
-    this.setState({});
-    console.log('change', e);
+  onSubmit(e) {
+    e.preventDefault();
+    console.log(e.isMix, e.mixChecked);
+    console.log('THIS:', this);
+    this.props.form.validateFieldsAndScroll({}, (errors, values) => {
+      if (errors) {
+        // console.log('ERRORS ', errors);
+        return errors;
+      }
+      this.setState(values, () => {
+        console.log('VALUES: ', values);
+        const dog = {
+          name: values.name, // required
+          breed: values.breed === 'null' ? null : values.breed, // required
+          isMix: Boolean(values.isMix),
+          isMale: values.isMale === 'null' ? null : Boolean(values.isMale), // required
+          isAggressive: Boolean(values.isAggressive),
+          isAnxious: Boolean(values.hasAnxiety),
+          lifestage: values.lifestage === 'null' ? null : values.lifestage, // required
+          age: values.age || null,
+          size: values.size === 'null' ? null : values.size, // required
+          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed), // required
+          hasDiet: Boolean(values.hasDiet),
+          hasMedical: Boolean(values.hasMedical),
+          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel, // required
+          photo: values.photo || null,
+          description: values.description || null,
+        };
+        console.log('DOG VALUES,', dog);
+      });
+      return true;
+    });
   }
-
-  //   onSubmit(e) {
-  //     e.preventDefault();
-  // //    this.setState({});
-  //     console.log('submitting');
-  //   }
-
-  //   handleSubmit(e) { // call validatefields/getvalues somewhere?
-  //     // this.setState({});
-  //     console.log('submit', e);
-  //   }
 
   // handleBlur(e) {
-  // validate on un click
+  //   console.log();
   // }
 
-  // compareToFirstPassword(password) {
-  //   this.setState({});
-  //   console.log(password, 'comparing to first password');
-  // }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -68,7 +85,7 @@ class TestForm extends React.Component {
                     message: 'Please provide name',
                   },
                 ],
-              })(<Input style={{ width: 300 }} />)}
+              })(<Input onBlur={this.handleBlur} style={{ width: 300 }} />)}
 
             </Form.Item>
 
@@ -102,7 +119,7 @@ class TestForm extends React.Component {
             </Form.Item>
 
             <Form.Item label="Mix?">
-              {getFieldDecorator('mix', {
+              {getFieldDecorator('isMix', {
                 valuePropName: 'mixChecked',
               })(<Checkbox />)}
 
@@ -183,14 +200,30 @@ class TestForm extends React.Component {
           </Row>
 
           <Row>
+            <Form.Item label="Energy Level">
+              {getFieldDecorator('energyLevel', {
+                rules: [{
+                  required: true,
+                  message: 'Please choose an option',
+                }],
+              })(<Select style={{ width: 300 }}>
+                <Option value="low"> Low </Option>
+                <Option value="medium"> Medium </Option>
+                <Option value="high"> High </Option>
+                <Option value="null"> Unknown </Option>
+              </Select>)}
+            </Form.Item>
+          </Row>
+
+          <Row>
             <Form.Item label="Aggression">
-              {getFieldDecorator('aggressive', {
+              {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
               })(<Checkbox />)}
             </Form.Item>
 
             <Form.Item label="Anxiety">
-              {getFieldDecorator('anxiety', {
+              {getFieldDecorator('hasAnxiety', {
                 valuePropName: 'medicalChecked',
               })(<Checkbox />)}
             </Form.Item>
@@ -198,13 +231,13 @@ class TestForm extends React.Component {
 
           <Row>
             <Form.Item label="Dietary">
-              {getFieldDecorator('diet', {
+              {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
                 })(<Checkbox />)}
             </Form.Item>
 
             <Form.Item label="Medical">
-              {getFieldDecorator('medical', {
+              {getFieldDecorator('hasMedical', {
                 valuePropName: 'medicalChecked',
               })(<Checkbox />)}
             </Form.Item>
