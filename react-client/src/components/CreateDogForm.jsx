@@ -1,6 +1,6 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
-// import Select, { Form, Input, Checkbox, InputNumber, TextArea } from 'antd'; // Upload
+import axios from 'axios';
 import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
 
 const { Option } = Select;
@@ -20,53 +20,38 @@ class DogForm extends React.Component {
       if (errors) {
         return errors;
       }
-      this.setState(values, () => {
-        const dog = {
-          name: values.name,
-          breed: values.breed === 'null' ? null : values.breed,
-          isMix: Boolean(values.isMix),
-          isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
-          isAggressive: Boolean(values.isAggressive),
-          isAnxious: Boolean(values.hasAnxiety),
-          lifestage: values.lifestage === 'null' ? null : values.lifestage,
-          age: values.age || null,
-          size: values.size === 'null' ? null : values.size,
-          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
-          hasDiet: Boolean(values.hasDiet),
-          hasMedical: Boolean(values.hasMedical),
-          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
-          photo: values.photo || null,
-          description: values.description || null,
-        };
-        return dog;
-      });
-      return true;
+      const dog = {
+        name: values.name,
+        breed: values.breed === 'null' ? null : values.breed,
+        isMix: Boolean(values.isMix),
+        isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
+        isAggressive: Boolean(values.isAggressive),
+        isAnxious: Boolean(values.hasAnxiety),
+        lifestage: values.lifestage === 'null' ? null : values.lifestage,
+        age: values.age || null,
+        size: values.size === 'null' ? null : values.size,
+        isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
+        hasDiet: Boolean(values.hasDiet),
+        hasMedical: Boolean(values.hasMedical),
+        energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
+        photo: values.photo || null,
+        description: values.description || null,
+        orgId: null,
+      };
+      axios.post('/createOrgDog', dog)
+        .then((response) => {
+          alert('Successful addition of dog!');
+          return response;
+        })
+        .catch((error) => {
+          console.log('error adding dog', error);
+        });
+      return dog;
     });
   }
 
-  // handleBlur(e) {
-  // }
-
-  // handleFocus(e) {
-  // }
-
-
   render() {
     const { getFieldDecorator } = this.props.form;
-    // const formItemLayout = {
-    //   labelCol: { span: 6 },
-    //   //wrapperCol: { span: 14 },
-    // };
-    // const formItemLayout = {
-    //   labelCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 8 },
-    //   },
-    //   wrapperCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 16 },
-    //   },
-    // };
     return (
       <div style={{ margin: 50 }}>
         <Form layout="horizontal" onSubmit={this.onSubmit}>
@@ -270,3 +255,4 @@ export default CreateDogForm;
 // TODO: custom validation styling
 // TODO: format fields with columns (ughhh)
 // TODO: photo upload
+// TODO: pull in breeds list
