@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(20) NOT NULL,
-  `password` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
   `email` VARCHAR(50) NULL DEFAULT NULL,
   `org_id` INTEGER NULL DEFAULT NULL,
   `address` VARCHAR(50) NULL DEFAULT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `orgs` (
 DROP TABLE IF EXISTS `dogs`;
     
 CREATE TABLE `dogs` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT, 
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL, -- string not null
   `breed` VARCHAR(50) NULL DEFAULT NULL, -- (primary breed) string (should be enum but we're not putting in ten million enum cases) ideally filtered search from file
   `mix` BOOLEAN DEFAULT FALSE, -- is mix 
@@ -85,6 +85,7 @@ CREATE TABLE `dogs` (
   `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
   `photo` VARCHAR(150) NULL DEFAULT NULL, -- string input
   `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
+  `adopted` BOOLEAN DEFAULT FALSE,
   `org_id` INTEGER NOT NULL, -- foreign key integer
   PRIMARY KEY (`id`)
 );

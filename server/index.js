@@ -1,23 +1,33 @@
 const Koa = require('koa');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
-const session = require('koa-session');
 const passport = require('koa-passport');
+const session = require('koa-session');
 const serve = require('koa-static');
 const randomPuppy = require('random-puppy');
 const db = require('../database/index');
-require('./passport-auth')(passport);
 
 const app = new Koa();
+
+require('./passport-auth')(passport);
+
 app.keys = ['supersecret'];
+app.use(session(app));
 
 app
   .use(serve(`${__dirname}/../react-client/dist`))
-  .use(bodyParser())
-  .use(router.routes())
-  .use(session(app))
-  .use(passport.initialize())
-  .use(passport.session());
+  .use(bodyParser());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+const isLoggedIn = (ctx, next) => {
+  if (ctx.isAuthenticated()) {
+    return next();
+  }
+  return ctx.throw(401, 'You must be logged in!');
+  // ctx.redirect('/');  <---redirect to home page
+};
 
 router.get('/picture', async (ctx) => {
   await randomPuppy()
@@ -91,70 +101,6 @@ router.post('/addFaveDog', async (ctx) => {
   }
 });
 
-// for now this does not use bcypt/oauth/passport, will address later
-router.post('/register', async (ctx) => {
-  const hash = ctx.request.body.password; // need to fix later
-  try {
-    const data = await db.createUser(ctx.request.body, ctx.request.body.username, hash);
-    if (data === 'already exists!') {
-      ctx.status = 409;
-      ctx.body = {
-        status: 'error',
-        message: 'username already exists!',
-      };
-    } else {
-      const users = await db.checkCredentials(ctx.request.body.username);
-      ctx.status = 201;
-      ctx.body = {
-        status: 'success',
-        userInfo: users[0],
-      };
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.',
-    };
-  }
-});
-
-// for now this does not use bcypt/oauth/passport, will address later
-router.post('/login', async (ctx) => {
-  try {
-    const users = await db.checkCredentials(ctx.request.body.username);
-    if (users.length) {
-      const userInfo = users[0];
-      if (ctx.request.body.password === userInfo.password) { // need to fix later
-        ctx.status = 201;
-        ctx.body = {
-          status: 'success',
-          message: 'successful login!',
-          userInfo,
-        };
-      } else {
-        ctx.status = 401;
-        ctx.body = {
-          status: 'error',
-          message: 'invalid password!',
-        };
-      }
-    } else {
-      ctx.status = 401;
-      ctx.body = {
-        status: 'error',
-        message: 'username does not exist!',
-      };
-    }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.',
-    };
-  }
-});
-
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
@@ -202,36 +148,90 @@ router.get('/adopterInfo', async (ctx) => {
   }
 });
 
-// TO DO
-// filtered search for specific dogs within an organization
-// router.post('/searchOrgDogs', async (ctx) => {
-//   const query = ctx.request.body;
-//   // const test = {
-//   //   orgId: query.orgId,
-//   // };
-//   try {
-//     const dogs = await db.searchOrgDogs(query);
-//     if (dogs.length) {
-//       ctx.status = 201;
-//       ctx.body = {
-//         status: 'success',
-//         dogs,
-//       };
-//     } else {
-//       ctx.status = 400;
-//       ctx.body = {
-//         status: 'error',
-//         message: 'No dogs in this organization!',
-//       };
-//     }
-//   } catch (err) {
-//     ctx.status = 400;
-//     ctx.body = {
-//       status: 'error',
-//       message: err.message || 'Sorry, an error has occurred.',
-//     };
-//   }
-// });
+// for now this does not use JWT/FBoauth
+router.post('/register', passport.authenticate('local-signup'), (ctx) => {
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    user: ctx.state.user,
+  };
+
+  // const hash = ctx.request.body.password; // need to fix later
+  // try {
+  //   const data = await db.createUser(ctx.request.body, ctx.request.body.username, hash);
+  //   if (data === 'already exists!') {
+  //     ctx.status = 409;
+  //     ctx.body = {
+  //       status: 'error',
+  //       message: 'username already exists!',
+  //     };
+  //   } else {
+  //     const users = await db.checkCredentials(ctx.request.body.username);
+  //     ctx.status = 201;
+  //     ctx.body = {
+  //       status: 'success',
+  //       userInfo: users[0],
+  //     };
+  //   }
+  // } catch (err) {
+  //   ctx.status = 400;
+  //   ctx.body = {
+  //     status: 'error',
+  //     message: err.message || 'Sorry, an error has occurred.',
+  //   };
+  // }
+});
+
+// for now this does not use FB oauth/JWT
+router.post('/login', passport.authenticate('local-login'), (ctx) => {
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    user: ctx.state.user,
+  };
+  // try {
+  //   const users = await db.checkCredentials(ctx.request.body.username);
+  //   if (users.length) {
+  //     const userInfo = users[0];
+  //     if (ctx.request.body.password === userInfo.password) { // need to fix later
+  //       ctx.status = 201;
+  //       ctx.body = {
+  //         status: 'success',
+  //         message: 'successful login!',
+  //         userInfo,
+  //       };
+  //     } else {
+  //       ctx.status = 401;
+  //       ctx.body = {
+  //         status: 'error',
+  //         message: 'invalid password!',
+  //       };
+  //     }
+  //   } else {
+  //     ctx.status = 401;
+  //     ctx.body = {
+  //       status: 'error',
+  //       message: 'username does not exist!',
+  //     };
+  //   }
+  // } catch (err) {
+  //   ctx.status = 400;
+  //   ctx.body = {
+  //     status: 'error',
+  //     message: err.message || 'Sorry, an error has occurred.',
+  //   };
+  // }
+});
+
+router.post('/logout', isLoggedIn, async (ctx) => {
+  await ctx.logout();
+  ctx.status = 200;
+  ctx.body = {
+    status: 'success',
+    message: 'You have been logged out successfully!',
+  };
+  // ctx.redirect('/');  <---redirect to home page
+});
 
 app
   .use(router.routes())

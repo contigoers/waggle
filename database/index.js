@@ -43,7 +43,7 @@ const createUser = async (user, username, password) => {
       org_name: user.name,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
-    const orgId = await knex.select('id').from('orgs').where('org_name', user.name);
+    const orgId = await knex.select('id').from('orgs').where('user_id', userId[0].id);
     await knex('users').where('id', userId[0].id).update('org_id', orgId[0].id);
   }
   return knex('users').select().where('id', userId[0].id);
@@ -124,9 +124,9 @@ const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
   .from(knex.raw('dogs, orgs'))
   .where(knex.raw('orgs.id = dogs.org_id'));
 
-/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
-
 const getUserById = userId => knex('users').where('id', userId);
+
+/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 // search dogs within organization by org id and other parameters
 const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
