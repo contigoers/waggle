@@ -57,7 +57,7 @@ $primary-dark: #972036;
 .nav-bar {
   height: 85px;
   display: grid;
-  grid-template-columns: 10% 10% 10% 10%;
+  grid-template-columns: 10% 10% 10% 10% 10%;
   background: $primary;
   color: white;
   box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2); 
@@ -127,8 +127,4 @@ img {
   justify-content: center;
   align-items: center;
   height: 85px;
-}
-
-button.ant-btn {
-  width: 300px;
 }
