@@ -35,10 +35,11 @@
   "dependencies": {
     "antd": "^3.3.0",
     "axios": "^0.18.0",
-    "bcrypt": "^1.0.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-stage-2": "^6.24.1",
+    "bcrypt": "^1.0.3",
     "dotenv": "^5.0.1",
+    "google-libphonenumber": "^3.1.2",
     "knex": "^0.14.4",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
