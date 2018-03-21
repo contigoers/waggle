@@ -9,14 +9,14 @@ const db = require('../database/index');
 
 const app = new Koa();
 
-require('./passport-auth')(passport);
-
 app.keys = ['supersecret'];
 app.use(session(app));
 
 app
   .use(serve(`${__dirname}/../react-client/dist`))
   .use(bodyParser());
+
+require('./passport-auth')(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -202,6 +202,15 @@ router.get('/adopterInfo', async (ctx) => {
   }
 });
 
+// NEED TO ADD AXIOS REQUEST FOR THIS TO COMPONENT DID MOUNT
+// TODO: persistent user sessions
+router.get('/user', (ctx) => {
+  ctx.status = 200;
+  ctx.body = {
+    user: ctx.state.user,
+  };
+});
+
 // for now this does not use JWT/FBoauth
 router.post('/register', passport.authenticate('local-signup'), (ctx) => {
   ctx.status = 201;
@@ -209,31 +218,6 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
     status: 'success',
     user: ctx.state.user,
   };
-
-  // const hash = ctx.request.body.password; // need to fix later
-  // try {
-  //   const data = await db.createUser(ctx.request.body, ctx.request.body.username, hash);
-  //   if (data === 'already exists!') {
-  //     ctx.status = 409;
-  //     ctx.body = {
-  //       status: 'error',
-  //       message: 'username already exists!',
-  //     };
-  //   } else {
-  //     const users = await db.checkCredentials(ctx.request.body.username);
-  //     ctx.status = 201;
-  //     ctx.body = {
-  //       status: 'success',
-  //       userInfo: users[0],
-  //     };
-  //   }
-  // } catch (err) {
-  //   ctx.status = 400;
-  //   ctx.body = {
-  //     status: 'error',
-  //     message: err.message || 'Sorry, an error has occurred.',
-  //   };
-  // }
 });
 
 // for now this does not use FB oauth/JWT
@@ -243,38 +227,6 @@ router.post('/login', passport.authenticate('local-login'), (ctx) => {
     status: 'success',
     user: ctx.state.user,
   };
-  // try {
-  //   const users = await db.checkCredentials(ctx.request.body.username);
-  //   if (users.length) {
-  //     const userInfo = users[0];
-  //     if (ctx.request.body.password === userInfo.password) { // need to fix later
-  //       ctx.status = 201;
-  //       ctx.body = {
-  //         status: 'success',
-  //         message: 'successful login!',
-  //         userInfo,
-  //       };
-  //     } else {
-  //       ctx.status = 401;
-  //       ctx.body = {
-  //         status: 'error',
-  //         message: 'invalid password!',
-  //       };
-  //     }
-  //   } else {
-  //     ctx.status = 401;
-  //     ctx.body = {
-  //       status: 'error',
-  //       message: 'username does not exist!',
-  //     };
-  //   }
-  // } catch (err) {
-  //   ctx.status = 400;
-  //   ctx.body = {
-  //     status: 'error',
-  //     message: err.message || 'Sorry, an error has occurred.',
-  //   };
-  // }
 });
 
 router.post('/logout', isLoggedIn, async (ctx) => {
