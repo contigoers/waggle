@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "8.9.4"
+  },
   "scripts": {
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon -r dotenv/config server/index.js",
@@ -32,6 +35,8 @@
     "antd": "^3.3.0",
     "axios": "^0.18.0",
     "bcrypt": "^1.0.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-2": "^6.24.1",
     "dotenv": "^5.0.1",
     "knex": "^0.14.4",
     "koa": "^2.5.0",
