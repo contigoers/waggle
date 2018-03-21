@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
+import breeds from '../../../database/breeds';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -87,14 +88,11 @@ class DogForm extends React.Component {
                 placeholder="Search breeds..."
               >
                 <Option value="null"> Unknown </Option>
-                <Option value="pug"> Pug </Option>
-                <Option value="beagle"> Beagle </Option>
-                <Option value="chihuahua"> Chihuahua </Option>
-                <Option value="greatdane"> Great Dane </Option>
-                <Option value="dachshund"> Daschshund </Option>
-                <Option value="shihtzu"> Shih Tzu </Option>
-                <Option value="pitbill"> Pit Bull </Option>
-                <Option value="greyhound"> Greyhound </Option>
+                {
+                breeds.map(breed => (
+                  <Option value={breed} key={breed}> {breed} </Option>
+                ))
+                }
               </Select>)}
 
             </Form.Item>
