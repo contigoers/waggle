@@ -43,7 +43,7 @@ const createUser = async (user, username, password) => {
       org_name: user.name,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
-    const orgId = await knex.select('id').from('orgs').where('org_name', user.name);
+    const orgId = await knex.select('id').from('orgs').where('user_id', userId[0].id);
     await knex('users').where('id', userId[0].id).update('org_id', orgId[0].id);
   }
   return knex('users').select().where('id', userId[0].id);
@@ -119,12 +119,14 @@ const getAllOrganizations = () => knex.column(knex.raw('users.address, users.cit
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id and orgs.user_id = users.id'));
 
+// get all dogs and info
 const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
   .from(knex.raw('dogs, orgs'))
   .where(knex.raw('orgs.id = dogs.org_id'));
 
-/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
+const getUserById = userId => knex('users').where('id', userId);
 
+/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 // search dogs within organization by org id and other parameters
 const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
@@ -145,5 +147,6 @@ module.exports = {
   getDogById,
   searchOrgDogs,
   getAllDogs,
+  getUserById,
 };
 
