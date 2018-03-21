@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from 'antd';
 import { scroller } from 'react-scroll';
+import splashImage from '../assets/splash-image.jpg';
 
 function scrollToNav() {
   scroller.scrollTo('nav-bar', {
@@ -21,7 +22,7 @@ const Splash = () =>
           Adopt a new best friend <Icon className="down-icon" type="down" />
         </button>
       </div>
-      <img src="https://i.imgur.com/dTeR5En.jpg" alt="" />
+      <img src={splashImage} alt="" />
     </div>
   );
 

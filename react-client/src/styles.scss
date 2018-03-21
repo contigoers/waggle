@@ -36,18 +36,15 @@ $primary-dark: #972036;
   padding: 6px 15px;
   border: 3px solid $primary;
   border-radius: 50px;
-  &:hover {
-    border-color: $primary-dark;
-    cursor: pointer;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:active {
-    outline: none;
-  }
+    &:hover {
+      border-color: $primary-dark;
+      cursor: pointer;
+      color: #e0e0e0;
+      transition-duration: .25s;
+    }
+    &:focus, &:active {
+      outline: none;
+    }
 }
 
 .down-icon {
@@ -60,15 +57,12 @@ $primary-dark: #972036;
   grid-template-columns: 10% 10% 10% 10%;
   background: $primary;
   color: white;
-  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2); 
-  // z-index: 1;
-  border-bottom: 3px solid $primary-dark;
+  border-bottom: 4px solid $primary-dark;
 }
 
 .logo-div > img {
   margin-left: 20px;
 }
-
 
 .nav-item {
   display: flex;
@@ -81,25 +75,21 @@ $primary-dark: #972036;
   color: white;
     &:hover {
       color: $primary-dark;
-      cursor: pointer;
+      cursor: pointer;     
     }
-    &:active {
-      text-decoration: none;
-    }
-    &:vistied {
-      text-decoration: none;
-    }
-    &:link {
+    &:active, &:visited, &:link, &:hover {
       text-decoration: none;
     }
 }
 
 .content-divs:nth-child(odd) {
   background: white;
+  color: $primary-dark;  
 }
 
 .content-divs:nth-child(even) {
-  background: rgba($primary, 0.6);
+  background: rgba($primary, 0.2);
+  color: $primary-dark;
 }
 
 .content-divs {
@@ -127,8 +117,4 @@ img {
   justify-content: center;
   align-items: center;
   height: 85px;
-}
-
-button.ant-btn {
-  width: 300px;
 }
