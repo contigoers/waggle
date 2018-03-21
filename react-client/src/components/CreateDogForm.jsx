@@ -37,10 +37,14 @@ class DogForm extends React.Component {
         energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
         photo: values.photo || null,
         description: values.description || null,
-        orgId: null,
+        orgId: 1,
       };
       axios.post('/createOrgDog', dog)
         .then((response) => {
+          const fields = ['name', 'breed', 'isMix', 'isMale', 'isAggressive', 'isAnxious', 'lifestage', 'age', 'size', 'isFixed', 'hasDiet', 'hasMedical', 'energyLevel', 'photo', 'description'];
+          fields.forEach((fieldName) => {
+            this.props.form.setFieldsValue({ [fieldName]: undefined });
+          });
           alert('Successful addition of dog!');
           return response;
         })
@@ -249,7 +253,8 @@ export default CreateDogForm;
 
 // TODO: validate on blur
 // TODO: unfuck falsy validation/checkbox stuff in object
-// TODO: post request
 // TODO: custom validation styling
 // TODO: format fields with columns (ughhh)
 // TODO: photo upload
+// TODO: get id of current organization and set to orgId in dog obj
+// TODO: unfuck clear fields and uncheck boxes after successful submit

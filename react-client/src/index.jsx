@@ -28,8 +28,8 @@ ReactDOM.render(
           <Switch>
             <Route path="/signup" component={Signup} />
             <Route path="/search" component={Search} />
-            <Route path="/" component={Landing} />
             <Route path="/create" component={CreateDogForm} />
+            <Route path="/" component={Landing} />
           </Switch>
           <Footer />
         </div>

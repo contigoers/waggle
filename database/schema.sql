@@ -180,10 +180,10 @@ ADD FOREIGN KEY
 -- ('','','','','','');
 -- INSERT INTO `dogs` (`id`,`name`,`breed`,`gender`,`size`,`temperament`,`age`,`fixed`,`medical`,`energy`,`photo`,`org_id`,`description`) VALUES
 -- ('','','','','','','','','','','','','');
-INSERT INTO `orgs` (`
-id`,`org_name
-`) VALUES
-(1, 'DEFAULT - FOR ADOPTERS');
+ INSERT INTO `orgs` (`
+ id`,`org_name
+ `) VALUES
+ (1, 'DEFAULT - FOR ADOPTERS');
 -- INSERT INTO `breed` (`name`) VALUES
 -- (''),
 -- (''),
