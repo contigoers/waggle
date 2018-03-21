@@ -54,6 +54,33 @@ router.get('/allDogInfo', async (ctx) => {
   };
 });
 
+// get info on single dog by dogId
+router.get('/dogInfo', async (ctx) => {
+  const dog = await db.getDogById(ctx.request.query.dogId);
+  ctx.body = {
+    status: 'success',
+    dog: dog[0],
+  };
+});
+
+// mark dog status as 'adopted' - for organization access only
+router.post('/adopted', async (ctx) => {
+  await db.markAsAdopted(ctx.request.body.dogId);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+  };
+});
+
+// unmark dog status as 'adopted' - for organization access only
+router.post('/adopted/remove', async (ctx) => {
+  await db.unmarkAsAdopted(ctx.request.body.dogId);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+  };
+});
+
 // add new dog to organization - for organization access only
 router.post('/createOrgDog', async (ctx) => {
   try {
@@ -74,7 +101,7 @@ router.post('/createOrgDog', async (ctx) => {
 });
 
 // add new org dog to favorites - for adopters
-router.post('/addFaveDog', async (ctx) => {
+router.post('/favoriteDog', async (ctx) => {
   try {
     const data = await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
     if (data === 'already exists!') {
@@ -90,6 +117,33 @@ router.post('/addFaveDog', async (ctx) => {
         status: 'success',
         faveDogs: data,
         newFaveDog: newFaveDog[0],
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
+// remove org dog from favorites - for adopters
+router.post('/favoriteDog/remove', async (ctx) => {
+  try {
+    const data = await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
+    if (data === 'favorite does not exist!') {
+      ctx.status = 409;
+      ctx.body = {
+        status: 'error',
+        message: 'dog not does exist under favorites!',
+      };
+    } else {
+      ctx.status = 201;
+      ctx.body = {
+        status: 'success',
+        message: 'dog has been removed from favorites!',
+        faveDogs: data,
       };
     }
   } catch (err) {
