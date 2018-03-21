@@ -22,6 +22,9 @@ const NavBar = () =>
         <div className="about-div nav-item">
           <Link className="nav-link" to="/about">About Us</Link>
         </div>
+        <div className="create-dog nav-item">
+          <Link className="nav-link" to="/create">Add a Dog</Link>
+        </div>
       </div>
     </div>
   );
