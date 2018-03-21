@@ -57,8 +57,6 @@ router.get('/allDogInfo', async (ctx) => {
 // add new dog to organization - for organization access only
 router.post('/createOrgDog', async (ctx) => {
   try {
-    console.log('request body: ', ctx.request.body)
-    console.log('trying router post'); //////////
     const dogId = await db.createDog(ctx.request.body);
     const newDog = await db.getDogById(dogId[0]);
     ctx.status = 201;
@@ -67,7 +65,6 @@ router.post('/createOrgDog', async (ctx) => {
       newDog,
     };
   } catch (err) {
-    console.log('router post error', err); //////////
     ctx.status = 400;
     ctx.body = {
       status: 'error',

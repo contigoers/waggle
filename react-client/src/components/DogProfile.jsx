@@ -1,15 +1,15 @@
-import React from 'react';
-import {} from 'antd';
+// import React from 'react';
+// import {} from 'antd';
 
-// on component mount, ~get~ dog by id
-class DogProfile extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
-}
+// // on component mount, ~get~ dog by id
+// class DogProfile extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//         }
+//     }
+// }
 
-const DogProfile = 
+// const DogProfile =
 
-export default 
+// export default
