@@ -24,9 +24,8 @@ module.exports = () => {
           cb(err, null); // error thrown
         } else if (res === false) {
           cb(null, false); // password does not match
-        } else {
-          cb(null, user);
         }
+        cb(null, user);
       });
     } else {
       cb(null, false); // username does not exist

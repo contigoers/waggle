@@ -74,9 +74,9 @@ const createDog = dog => knex('dogs').insert({
 }).orderBy('id', 'asc');
 
 // get dog by id
-const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.id = ${dogId} and dogs.org_id = orgs.id`));
+const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.org_name, users.*')).select()
+  .from(knex.raw('dogs, orgs, users'))
+  .where(knex.raw(`dogs.id = ${dogId} and dogs.org_id = orgs.id and orgs.user_id = users.id`));
 
 // get organization ID from organization name query
 const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
@@ -143,10 +143,9 @@ const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-// search dogs within organization by org id and other parameters
-const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.org_id = ${query.orgId} and orgs.id = ${query.orgId}`));
+// search dogs with various parameters for dogs
+const searchOrgDogs = query => knex('dogs').where(knex.raw(`${query}`));
+
 
 module.exports = {
   getAdopterProfile,
