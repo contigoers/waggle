@@ -1,7 +1,8 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
-// import Select, { Form, Input, Checkbox, InputNumber, TextArea } from 'antd'; // Upload
-import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
+import axios from 'axios';
+import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload } from 'antd';
+import breeds from '../../../database/breeds';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -20,53 +21,39 @@ class DogForm extends React.Component {
       if (errors) {
         return errors;
       }
-      this.setState(values, () => {
-        const dog = {
-          name: values.name,
-          breed: values.breed === 'null' ? null : values.breed,
-          isMix: Boolean(values.isMix),
-          isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
-          isAggressive: Boolean(values.isAggressive),
-          isAnxious: Boolean(values.hasAnxiety),
-          lifestage: values.lifestage === 'null' ? null : values.lifestage,
-          age: values.age || null,
-          size: values.size === 'null' ? null : values.size,
-          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
-          hasDiet: Boolean(values.hasDiet),
-          hasMedical: Boolean(values.hasMedical),
-          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
-          photo: values.photo || null,
-          description: values.description || null,
-        };
-        return dog;
-      });
-      return true;
+      const dog = {
+        name: values.name,
+        breed: values.breed === 'null' ? null : values.breed,
+        isMix: Boolean(values.isMix),
+        isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
+        isAggressive: Boolean(values.isAggressive),
+        isAnxious: Boolean(values.hasAnxiety),
+        lifestage: values.lifestage === 'null' ? null : values.lifestage,
+        age: values.age || null,
+        size: values.size === 'null' ? null : values.size,
+        isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
+        hasDiet: Boolean(values.hasDiet),
+        hasMedical: Boolean(values.hasMedical),
+        energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
+        photo: values.photo || null,
+        description: values.description || null,
+        orgId: 1,
+      };
+      axios.post('/createOrgDog', dog)
+        .then((response) => {
+          this.props.form.resetFields();
+          alert('Successful addition of dog!');
+          return response;
+        })
+        .catch((error) => {
+          console.log('error adding dog', error);
+        });
+      return dog;
     });
   }
 
-  // handleBlur(e) {
-  // }
-
-  // handleFocus(e) {
-  // }
-
-
   render() {
     const { getFieldDecorator } = this.props.form;
-    // const formItemLayout = {
-    //   labelCol: { span: 6 },
-    //   //wrapperCol: { span: 14 },
-    // };
-    // const formItemLayout = {
-    //   labelCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 8 },
-    //   },
-    //   wrapperCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 16 },
-    //   },
-    // };
     return (
       <div style={{ margin: 50 }}>
         <Form layout="horizontal" onSubmit={this.onSubmit}>
@@ -102,14 +89,11 @@ class DogForm extends React.Component {
                 placeholder="Search breeds..."
               >
                 <Option value="null"> Unknown </Option>
-                <Option value="pug"> Pug </Option>
-                <Option value="beagle"> Beagle </Option>
-                <Option value="chihuahua"> Chihuahua </Option>
-                <Option value="greatdane"> Great Dane </Option>
-                <Option value="dachshund"> Daschshund </Option>
-                <Option value="shihtzu"> Shih Tzu </Option>
-                <Option value="pitbill"> Pit Bull </Option>
-                <Option value="greyhound"> Greyhound </Option>
+                {
+                breeds.map(breed => (
+                  <Option value={breed} key={breed}> {breed} </Option>
+                ))
+                }
               </Select>)}
 
             </Form.Item>
@@ -264,9 +248,10 @@ const CreateDogForm = Form.create()(DogForm);
 
 export default CreateDogForm;
 
-// TODO: validate on blur
-// TODO: unfuck falsy validation/checkbox stuff in object
-// TODO: post request
-// TODO: custom validation styling
 // TODO: format fields with columns (ughhh)
+// TODO: unfuck falsy validation/checkbox stuff in object
+// TODO: validate on blur
 // TODO: photo upload
+// TODO: custom validation styling
+// TODO: get id of current organization and set to orgId in dog obj
+// TODO: unfuck clear fields and uncheck boxes after successful submit

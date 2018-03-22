@@ -39,6 +39,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "bcrypt": "^1.0.3",
     "dotenv": "^5.0.1",
+    "google-libphonenumber": "^3.1.2",
     "knex": "^0.14.4",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
