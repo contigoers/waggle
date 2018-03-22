@@ -30,10 +30,7 @@ const isLoggedIn = (ctx, next) => {
 };
 
 router.get('/picture', async (ctx) => {
-  await randomPuppy()
-    .then((url) => {
-      ctx.body = url;
-    });
+  ctx.body = await randomPuppy();
 });
 
 // get all organizations and contact info
