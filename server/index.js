@@ -176,7 +176,6 @@ router.post('/searchOrgDogs', async (ctx) => {
     // console.log(orgId, typeof orgId);
 
     const dogs = await db.searchOrgDogs(query);
-    //console.log(dogs);
     if (dogs.length) {
       ctx.status = 201;
       ctx.body = {
