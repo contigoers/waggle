@@ -158,7 +158,7 @@ router.post('/searchOrgDogs', async (ctx) => {
   try {
     const obj = ctx.request.body;
     let query = '';
-    for (const prop in obj) {
+    Object.keys(obj).forEach((prop) => {
       query = `${query}(`;
       const array = JSON.parse(obj[prop]);
       if (typeof array[0] === 'string') {
@@ -171,11 +171,12 @@ router.post('/searchOrgDogs', async (ctx) => {
         temp.pop();
       }
       query = `${temp.join(' ')}) and `;
-    }
+    });
     query = query.split(',').join(' ');
     let queryNew = query.split(' ');
     queryNew.splice(queryNew.length - 2, 2);
     queryNew = queryNew.join(' ');
+    console.log(queryNew);
     const dogs = await db.searchOrgDogs(queryNew);
     if (dogs.length) {
       ctx.status = 201;

@@ -26,6 +26,7 @@ const createUser = async (user, username, password) => {
     email: user.email,
     address: user.address,
     city: user.city,
+    state: user.state,
     zipcode: user.zipcode,
     phone: user.phone,
     org_id: 1, // default organization ID for adopters
@@ -81,7 +82,7 @@ const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.org_name, users.*
 // get organization ID from organization name query
 const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
-const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.zipcode, users.phone, users.email, orgs.*')).select()
+const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw(`users.org_id = ${orgId} and orgs.id = ${orgId} and orgs.user_id = users.id`));
 
@@ -91,7 +92,7 @@ const getOrgDogs = orgId => knex.raw(`
   FROM dogs, orgs
   WHERE dogs.org_id = ${orgId} and orgs.id = ${orgId}`);
 
-const getAdopterProfile = adopterId => knex.column(knex.raw('users.address, users.city, users.zipcode, users.phone, users.email, adopters.*')).select()
+const getAdopterProfile = adopterId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, adopters.*')).select()
   .from(knex.raw('users, adopters'))
   .where(knex.raw(`users.id = adopters.user_id and adopters.id = ${adopterId}`));
 
@@ -126,7 +127,7 @@ const removeFavoriteDog = async (adopterId, dogId) => {
 };
 
 // get all organizations in orgs
-const getAllOrganizations = () => knex.column(knex.raw('users.address, users.city, users.zipcode, users.phone, users.email, orgs.*')).select()
+const getAllOrganizations = () => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id and orgs.user_id = users.id'));
 
