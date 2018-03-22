@@ -1,180 +1,104 @@
 import React from 'react';
-import { Button, Menu, Dropdown, AutoComplete, Checkbox, Slider, Switch, Icon } from 'antd';
+import { connect } from 'react-redux';
+import { Row, Col, Checkbox, Button } from 'antd';
+import axios from 'axios';
+import { updateSearchQuery } from '../actions/searchActions';
 
-function onChange(e) {
-  console.log(`checked = ${e.target.checked}`);
+class Search extends React.Component {
+  constructor() {
+    super();
+    this.addsToFilterState = this.addsToFilterState.bind(this);
+    this.submitData = this.submitData.bind(this);
+  }
+
+  addsToFilterState({ target: { checked, value, id } }) {
+    this.props.updateSearchQuery(id, value, checked);
+  }
+
+  submitData() {
+    axios.post('/searchOrgDogs', this.props.searchQuery)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+
+  render() {
+    return (
+      <div className="search-div">
+        <div className="search-filters">
+          <div className="breed-filter">
+            Breed
+            <div className="breed-list">
+              <Row>
+                <Col span={4}><Checkbox id="breed" value="AnyBreed" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Pug" onChange={this.addsToFilterState}>Pug</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Poodle" onChange={this.addsToFilterState}>Poodle</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Corgi" onChange={this.addsToFilterState}>Corgi</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Chihuahua" onChange={this.addsToFilterState}>Chihuahua</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Husky" onChange={this.addsToFilterState}>Husky</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Adam" onChange={this.addsToFilterState}>Adam</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="GreatDane" onChange={this.addsToFilterState}>Great Dane</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="GermanShepherd" onChange={this.addsToFilterState}>German Shepherd</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="StBernard" onChange={this.addsToFilterState}>St. Bernard</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Pitbull" onChange={this.addsToFilterState}>Pitbull</Checkbox></Col>
+                <Col span={4}><Checkbox id="breed" value="Pointer" onChange={this.addsToFilterState}>Pointer</Checkbox></Col>
+              </Row>
+            </div>
+          </div>
+          <div className="gender-filter">
+            Gender
+            <div className="gender-list">
+              <Row>
+                <Col span={4}><Checkbox id="gender" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="gender" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
+                <Col span={4}><Checkbox id="gender" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
+              </Row>
+            </div>
+          </div>
+          <div className="size-filter">
+            Size
+            <div className="size-list">
+              <Row>
+                <Col span={4}><Checkbox id="size" value="AnySize" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="size" value="Tiny" onChange={this.addsToFilterState}>Tiny</Checkbox></Col>
+                <Col span={4}><Checkbox id="size" value="Small" onChange={this.addsToFilterState}>Small</Checkbox></Col>
+                <Col span={4}><Checkbox id="size" value="Medium" onChange={this.addsToFilterState}>Medium</Checkbox></Col>
+                <Col span={4}><Checkbox id="size" value="Large" onChange={this.addsToFilterState}>Large</Checkbox></Col>
+                <Col span={4}><Checkbox id="size" value="Giant" onChange={this.addsToFilterState}>Giant</Checkbox></Col>
+              </Row>
+            </div>
+          </div>
+          <div className="age-filter">
+            Age
+            <div className="age-list">
+              <Row>
+                <Col span={4}><Checkbox id="age" value="AnyAge" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="age" value="Puppy" onChange={this.addsToFilterState}>Puppy</Checkbox></Col>
+                <Col span={4}><Checkbox id="age" value="Adolescent" onChange={this.addsToFilterState}>Adolescent</Checkbox></Col>
+                <Col span={4}><Checkbox id="age" value="Adult" onChange={this.addsToFilterState}>Adult</Checkbox></Col>
+                <Col span={4}><Checkbox id="age" value="Senior" onChange={this.addsToFilterState}>Senior</Checkbox></Col>
+              </Row>
+            </div>
+          </div>
+        </div>
+        <Button className="submit-search" onClick={this.submitData}>
+          Submit
+        </Button>
+      </div>
+    );
+  }
 }
 
-const Apply = () =>
-  (
-    <Button className="apply-button">
-      Apply
-    </Button>
-  );
-
-const Clear = () =>
-  (
-    <Button className="clear-button">
-      Clear
-    </Button>
-  );
-
-const ageMarks = {
-  1: 'Puppy',
-  3: 'Adolescent',
-  5: 'Adult',
-  10: 'Senior',
-};
-
-const sizeMarks = {
-  5: 'XXS',
-  10: 'XS',
-  18: 'S',
-  30: 'M',
-  40: 'L',
-  60: 'XL',
-  80: 'XXL',
-  120: 'XXL',
-};
-
-const breedMenu = (
-  <Menu className="breed-menu">
-    <Menu.Item key="0" >
-      <Checkbox onChange={onChange}>Pug</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="1" >
-      <Checkbox onChange={onChange}>Beagle</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="2" >
-      <Checkbox onChange={onChange}>Chihuahua</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="3" >
-      <Checkbox onChange={onChange}>Great Dane</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="4" >
-      <Checkbox onChange={onChange}>Daschshund</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="5" >
-      <Checkbox onChange={onChange}>Shih Tzu</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="6" >
-      <Checkbox onChange={onChange}>Pit Bull</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="7" >
-      <Checkbox onChange={onChange}>Greyhound</Checkbox>
-    </Menu.Item>
-    <div className="menu-footer">
-      <Clear />
-      <Apply />
-    </div>
-  </Menu>
+const mapStateToProps = ({
+  searchQuery: {
+    breed, gender, age, size,
+  },
+}) => (
+  {
+    breed,
+    gender,
+    age,
+    size,
+  }
 );
 
-const genderMenu = (
-  <Menu>
-    <Menu.Item key="0" >
-      Male <Switch className="gender-select" onChange={onChange} />
-    </Menu.Item>
-    <Menu.Item key="1" >
-      Female <Switch className="gender-select" onChange={onChange} />
-    </Menu.Item>
-    <div className="menu-footer">
-      <Clear />
-      <Apply />
-    </div>
-  </Menu>
-);
-
-const sizeMenu = (
-  <Menu>
-    <div className="size-menu">
-      <Slider
-        vertical
-        range
-        step={1}
-        max={120}
-        marks={sizeMarks}
-        defaultValue={[20, 50]}
-      />
-    </div>
-    <div className="menu-footer">
-      <Clear />
-      <Apply />
-    </div>
-  </Menu>
-);
-
-const ageMenu = (
-  <Menu>
-    <div className="age-menu">
-      <Slider
-        vertical
-        range
-        step={1}
-        max={15}
-        marks={ageMarks}
-        defaultValue={[3, 5]}
-      />
-    </div>
-    <div className="menu-footer">
-      <Clear />
-      <Apply />
-    </div>
-  </Menu>
-);
-
-const AutoCompeleteBreed = (
-  <Menu>
-    <Menu.Item>
-      <AutoComplete
-        style={{ width: 400 }}
-        placeholder="Search By Breed"
-      />
-    </Menu.Item>
-  </Menu>
-);
-
-const Search = () =>
-  (
-    <div className="search-div">
-      <div className="search-buttons">
-        <Dropdown
-          overlay={AutoCompeleteBreed}
-          trigger={['click']}
-        >
-          <Button className="breed-button search-button">
-            Breed <Icon type="down" />
-          </Button>
-        </Dropdown>
-      </div>
-    </div>
-  );
-
-export default Search;
-
-// <Dropdown
-//   overlay={AutoCompeleteBreed}
-//   trigger={['click']}
-// >
-//   <Button className="breed-button search-button">
-//     Breed <Icon type="down" />
-//   </Button>
-// </Dropdown>
-
-//   <Dropdown overlay={genderMenu} trigger={['click']}>
-//     <Button className="gender-button search-button">
-//       Gender
-//           </Button>
-//   </Dropdown>
-
-//   <Dropdown overlay={sizeMenu} trigger={['click']}>
-//     <Button className="size-button search-button">
-//       Size
-//           </Button>
-//   </Dropdown>
-
-//   <Dropdown overlay={ageMenu} trigger={['click']}>
-//     <Button className="age-button search-button">
-//       Age
-//           </Button>
-//   </Dropdown>
+export default connect(mapStateToProps, { updateSearchQuery })(Search);
