@@ -89,7 +89,7 @@ router.post('/createOrgDog', async (ctx) => {
     ctx.status = 201;
     ctx.body = {
       status: 'success',
-      newDog,
+      newDog: newDog[0],
     };
   } catch (err) {
     ctx.status = 400;
@@ -155,6 +155,50 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
+
+// filtered search for all dogs or  dogs within an organization
+router.post('/searchOrgDogs', async (ctx) => {
+  try {
+    const obj = ctx.request.body;
+    console.log(obj);
+
+    let query = '';
+    for (const prop in obj) {
+      query = query + ` and ${prop} = ${obj[prop]}`;
+    }
+    console.log(query);
+    // let orgId;
+    // if (obj.orgId) {
+    //   orgId = +obj.orgId;
+    // } else {
+    //   orgId = 'orgs.id';
+    // }
+    // console.log(orgId, typeof orgId);
+
+    const dogs = await db.searchOrgDogs(query);
+    //console.log(dogs);
+    if (dogs.length) {
+      ctx.status = 201;
+      ctx.body = {
+        status: 'success',
+        dogs: dogs[0],
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'No dogs match this search criteria!',
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
@@ -202,8 +246,7 @@ router.get('/adopterInfo', async (ctx) => {
   }
 });
 
-// NEED TO ADD AXIOS REQUEST FOR THIS TO COMPONENT DID MOUNT
-// TODO: persistent user sessions
+// not being used for now except for passport debugging purposes
 router.get('/user', (ctx) => {
   ctx.status = 200;
   ctx.body = {

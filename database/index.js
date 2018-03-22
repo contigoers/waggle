@@ -143,10 +143,13 @@ const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-// search dogs within organization by org id and other parameters
-const searchOrgDogs = query => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.org_id = ${query.orgId} and orgs.id = ${query.orgId}`));
+// search dogs with various parameters for all dogs or dogs within organization
+const searchOrgDogs = async (query) => {
+  return knex.raw(`
+SELECT dogs.*, orgs.org_name
+FROM dogs, orgs
+WHERE dogs.org_id = orgs.id${query}`);
+};
 
 module.exports = {
   getAdopterProfile,
