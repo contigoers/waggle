@@ -32,6 +32,8 @@ CREATE TABLE `users`
 (50) NULL DEFAULT NULL,
   `city` VARCHAR
 (30) NULL DEFAULT NULL,
+  `state` VARCHAR
+(2) NULL DEFAULT NULL,
   `zipcode` INTEGER
 (5) NULL DEFAULT NULL,
   `phone` VARCHAR
@@ -191,5 +193,5 @@ ADD FOREIGN KEY
 
 -- INSERT INTO `favoritedogs` (`id`,`user_id`,`dog_id`) VALUES
 -- ('','','');
--- INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`,`new field`,`zipcode`,`phone`) VALUES
+-- INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`, `state`,`zipcode`,`phone`) VALUES
 -- ('','','','','','','','','','');
