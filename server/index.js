@@ -156,31 +156,35 @@ router.post('/favoriteDog/remove', async (ctx) => {
 });
 
 
-// filtered search for all dogs or  dogs within an organization
+// filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
   try {
     const obj = ctx.request.body;
-    console.log(obj);
-
     let query = '';
     for (const prop in obj) {
-      query = query + ` and ${prop} = ${obj[prop]}`;
+      query = `${query}(`;
+      const array = JSON.parse(obj[prop]);
+      if (typeof array[0] === 'string') {
+        query += array.map(val => `dogs.${prop} = "${val}" or`);
+      } else {
+        query += array.map(val => `dogs.${prop} = ${val} or`);
+      }
+      const temp = query.split(' ');
+      if (temp[temp.length - 1] === 'or') {
+        temp.pop();
+      }
+      query = `${temp.join(' ')}) and `;
     }
-    console.log(query);
-    // let orgId;
-    // if (obj.orgId) {
-    //   orgId = +obj.orgId;
-    // } else {
-    //   orgId = 'orgs.id';
-    // }
-    // console.log(orgId, typeof orgId);
-
-    const dogs = await db.searchOrgDogs(query);
+    query = query.split(',').join(' ');
+    let queryNew = query.split(' ');
+    queryNew.splice(queryNew.length - 2, 2);
+    queryNew = queryNew.join(' ');
+    const dogs = await db.searchOrgDogs(queryNew);
     if (dogs.length) {
       ctx.status = 201;
       ctx.body = {
         status: 'success',
-        dogs: dogs[0],
+        dogs,
       };
     } else {
       ctx.status = 400;

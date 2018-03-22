@@ -74,9 +74,9 @@ const createDog = dog => knex('dogs').insert({
 }).orderBy('id', 'asc');
 
 // get dog by id
-const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw(`dogs.id = ${dogId} and dogs.org_id = orgs.id`));
+const getDogById = dogId => knex.column(knex.raw('dogs.*, orgs.org_name, users.*')).select()
+  .from(knex.raw('dogs, orgs, users'))
+  .where(knex.raw(`dogs.id = ${dogId} and dogs.org_id = orgs.id and orgs.user_id = users.id`));
 
 // get organization ID from organization name query
 const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
@@ -143,26 +143,8 @@ const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-// search dogs with various parameters for all dogs or dogs within organization
-const searchOrgDogs = query => knex.raw(`
-SELECT dogs.*, orgs.org_name
-FROM dogs, orgs
-WHERE dogs.org_id = orgs.id${query}`);
-
-// knex.select().from('dogs')
-//   .where((qb) => {
-// if (searchCriteria.searchTerm) {
-//   qb.where('items.itemName', 'like', `%${searchCriteria.searchTerm}%`);
-// }
-
-// if (query.breed) {
-//   qb.where('dogs.breed', '=', query.breed);
-// }
-
-// if (searchCriteria.category) {
-//   qb.orWhere('items.category', '=', searchCriteria.category);
-// }
-  // });
+// search dogs with various parameters for dogs
+const searchOrgDogs = query => knex('dogs').where(knex.raw(`${query}`));
 
 
 module.exports = {
