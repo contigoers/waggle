@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../assets/logo.png';
-
+import WrappedHorizontalLoginForm from './LoginForm';
 
 const NavBar = () =>
   (
@@ -27,6 +27,9 @@ const NavBar = () =>
         </div>
         <div className="sample-profile nav-item">
           <Link className="nav-link" to="/sample">Sample Profile</Link>
+        </div>
+        <div className="login nav-item">
+          <WrappedHorizontalLoginForm />
         </div>
       </div>
     </div>
