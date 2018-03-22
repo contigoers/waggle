@@ -1,7 +1,7 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
 import axios from 'axios';
-import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
+import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload } from 'antd';
 import breeds from '../../../database/breeds';
 
 const { Option } = Select;
