@@ -3,14 +3,14 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const db = require('../database/index');
 
-module.exports = (passport) => {
+module.exports = () => {
   passport.serializeUser((user, done) => { // creating sessions
     console.log('serialize user', user);
-    done(null, user);
+    done(null, user.id);
   });
-  passport.deserializeUser(async (user, done) => {
-    console.log('deserisalize', user);
-    const users = await db.getUserById(user.id);
+  passport.deserializeUser(async (id, done) => {
+    console.log('deserisalize userid', id);
+    const users = await db.getUserById(id);
     done(null, users[0]);
   });
 

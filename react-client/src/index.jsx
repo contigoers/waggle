@@ -15,6 +15,7 @@ import Landing from './components/Landing';
 import Signup from './components/Signup';
 import Search from './components/Search';
 import Footer from './components/Footer';
+import CreateDogForm from './components/CreateDogForm';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -27,6 +28,7 @@ ReactDOM.render(
         <Switch>
           <Route path="/signup" component={Signup} />
           <Route path="/search" component={Search} />
+          <Route path="/create" component={CreateDogForm} />
           <Route path="/" component={Landing} />
         </Switch>
         <Footer />
