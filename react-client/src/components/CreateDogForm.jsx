@@ -1,7 +1,7 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
 import axios from 'axios';
-import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
+import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload } from 'antd';
 import breeds from '../../../database/breeds';
 
 const { Option } = Select;
@@ -41,10 +41,7 @@ class DogForm extends React.Component {
       };
       axios.post('/createOrgDog', dog)
         .then((response) => {
-          const fields = ['name', 'breed', 'isMix', 'isMale', 'isAggressive', 'isAnxious', 'lifestage', 'age', 'size', 'isFixed', 'hasDiet', 'hasMedical', 'energyLevel', 'photo', 'description'];
-          fields.forEach((fieldName) => {
-            this.props.form.setFieldsValue({ [fieldName]: undefined });
-          });
+          this.props.form.resetFields();
           alert('Successful addition of dog!');
           return response;
         })
@@ -251,10 +248,10 @@ const CreateDogForm = Form.create()(DogForm);
 
 export default CreateDogForm;
 
-// TODO: validate on blur
-// TODO: unfuck falsy validation/checkbox stuff in object
-// TODO: custom validation styling
 // TODO: format fields with columns (ughhh)
+// TODO: unfuck falsy validation/checkbox stuff in object
+// TODO: validate on blur
 // TODO: photo upload
+// TODO: custom validation styling
 // TODO: get id of current organization and set to orgId in dog obj
 // TODO: unfuck clear fields and uncheck boxes after successful submit

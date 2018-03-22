@@ -25,6 +25,9 @@ const NavBar = () =>
         <div className="create-dog nav-item">
           <Link className="nav-link" to="/create">Add a Dog</Link>
         </div>
+        <div className="sample-profile nav-item">
+          <Link className="nav-link" to="/sample">Sample Profile</Link>
+        </div>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ import Signup from './components/Signup';
 import Search from './components/Search';
 import Footer from './components/Footer';
 import CreateDogForm from './components/CreateDogForm';
+import DogProfile from './components/DogProfile';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -29,11 +30,13 @@ ReactDOM.render(
           <Route path="/signup" component={Signup} />
           <Route path="/search" component={Search} />
           <Route path="/create" component={CreateDogForm} />
+          <Route path="/sample" component={DogProfile} />
           <Route path="/" component={Landing} />
         </Switch>
         <Footer />
       </div>
     </BrowserRouter>
+
   </Provider>
   , document.getElementById('app'),
 );
