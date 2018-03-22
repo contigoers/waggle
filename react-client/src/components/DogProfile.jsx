@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Row, Col } from 'antd';
 import { connect } from 'react-redux';
 
 const { Meta } = Card;
@@ -17,7 +17,8 @@ class DogProfile extends React.Component {
   }
 
   render() {
-    let breed = this.props.profile.breed;
+    let { breed } = this.props.profile;
+    breed = breed.charAt(0).toUpperCase() + breed.slice(1);
 
     if (this.props.profile.mix) { breed += ' mix'; }
 
@@ -25,7 +26,7 @@ class DogProfile extends React.Component {
 
     let stage = profile.lifestage.charAt(0).toUpperCase() + profile.lifestage.slice(1);
     if (profile.age) {
-      stage += ' (age ' + profile.age + ')';
+      stage += ` (age ${profile.age})`;
     }
 
     let temperament = '';
@@ -51,28 +52,31 @@ class DogProfile extends React.Component {
     }
 
     return (
-      <div>
-        <Card
-          style={{ width: 250 }}
-          cover={<img alt="pupper" src="https://static01.nyt.com/images/2018/02/11/realestate/11dogs-topbreeds-Chihuahua/11dogs-topbreeds-Chihuahua-master495.jpg" />}
-        >
-          <Meta
-            title={profile.name}
-            description={breed}
-          />
-        </Card>
-
-        <Card>
-          <div> {profile.male ? 'Male' : 'Female'} </div>
-          <div> {stage} </div>
-          <div> Size: {profile.size} </div>
-          <div> Energy level: {profile.energy_level} </div>
-          <div> Fixed: {profile.fixed ? 'yes' : 'no'} </div>
-          <div> Special needs: {specialNeeds} </div>
-          <div> Temperament concerns: {temperament} </div>
-          <div> Description: {profile.description} </div>
-        </Card>
-      </div>
+      <Row>
+        <Col span={8} offset={4}>
+          <Card
+            style={{ width: 250 }}
+            cover={<img alt="pupper" src="https://static01.nyt.com/images/2018/02/11/realestate/11dogs-topbreeds-Chihuahua/11dogs-topbreeds-Chihuahua-master495.jpg" />}
+          >
+            <Meta
+              title={profile.name}
+              description={breed}
+            />
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card>
+            <div> {profile.male ? 'Male' : 'Female'} </div>
+            <div> {stage} </div>
+            <div> Size: {profile.size} </div>
+            <div> Energy level: {profile.energy_level} </div>
+            <div> Fixed: {profile.fixed ? 'yes' : 'no'} </div>
+            <div> Special needs: {specialNeeds} </div>
+            <div> Temperament concerns: {temperament} </div>
+            <div> Description: {profile.description} </div>
+          </Card>
+        </Col>
+      </Row>
 
     );
   }
@@ -84,6 +88,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, null)(DogProfile);
-
-/*
-*/

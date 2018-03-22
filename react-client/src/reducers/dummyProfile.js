@@ -1,4 +1,4 @@
-const defaultState = { 
+const defaultState = {
   name: 'Tractor',
   breed: 'dachshund',
   mix: true,
