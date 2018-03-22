@@ -41,10 +41,7 @@ class DogForm extends React.Component {
       };
       axios.post('/createOrgDog', dog)
         .then((response) => {
-          const fields = ['name', 'breed', 'isMix', 'isMale', 'isAggressive', 'isAnxious', 'lifestage', 'age', 'size', 'isFixed', 'hasDiet', 'hasMedical', 'energyLevel', 'photo', 'description'];
-          fields.forEach((fieldName) => {
-            this.props.form.setFieldsValue({ [fieldName]: undefined });
-          });
+          this.props.form.resetFields();
           alert('Successful addition of dog!');
           return response;
         })
