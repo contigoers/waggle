@@ -9,14 +9,14 @@ const db = require('../database/index');
 
 const app = new Koa();
 
-require('./passport-auth')(passport);
-
 app.keys = ['supersecret'];
 app.use(session(app));
 
 app
   .use(serve(`${__dirname}/../react-client/dist`))
   .use(bodyParser());
+
+require('./passport-auth')(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -86,7 +86,7 @@ router.post('/createOrgDog', async (ctx) => {
     ctx.status = 201;
     ctx.body = {
       status: 'success',
-      newDog,
+      newDog: newDog[0],
     };
   } catch (err) {
     ctx.status = 400;
@@ -152,6 +152,53 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
+
+// filtered search for dogs
+router.post('/searchOrgDogs', async (ctx) => {
+  try {
+    const obj = ctx.request.body;
+    let query = '';
+    for (const prop in obj) {
+      query = `${query}(`;
+      const array = JSON.parse(obj[prop]);
+      if (typeof array[0] === 'string') {
+        query += array.map(val => `dogs.${prop} = "${val}" or`);
+      } else {
+        query += array.map(val => `dogs.${prop} = ${val} or`);
+      }
+      const temp = query.split(' ');
+      if (temp[temp.length - 1] === 'or') {
+        temp.pop();
+      }
+      query = `${temp.join(' ')}) and `;
+    }
+    query = query.split(',').join(' ');
+    let queryNew = query.split(' ');
+    queryNew.splice(queryNew.length - 2, 2);
+    queryNew = queryNew.join(' ');
+    const dogs = await db.searchOrgDogs(queryNew);
+    if (dogs.length) {
+      ctx.status = 201;
+      ctx.body = {
+        status: 'success',
+        dogs,
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'No dogs match this search criteria!',
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
+
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
@@ -199,6 +246,13 @@ router.get('/adopterInfo', async (ctx) => {
   }
 });
 
+// not being used for now except for passport debugging purposes
+router.get('/user', (ctx) => {
+  ctx.status = 200;
+  ctx.body = {
+    user: ctx.state.user,
+  };
+});
 
 // for now this does not use JWT/FBoauth
 router.post('/register', passport.authenticate('local-signup'), (ctx) => {
@@ -207,31 +261,6 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
     status: 'success',
     user: ctx.state.user,
   };
-
-  // const hash = ctx.request.body.password; // need to fix later
-  // try {
-  //   const data = await db.createUser(ctx.request.body, ctx.request.body.username, hash);
-  //   if (data === 'already exists!') {
-  //     ctx.status = 409;
-  //     ctx.body = {
-  //       status: 'error',
-  //       message: 'username already exists!',
-  //     };
-  //   } else {
-  //     const users = await db.checkCredentials(ctx.request.body.username);
-  //     ctx.status = 201;
-  //     ctx.body = {
-  //       status: 'success',
-  //       userInfo: users[0],
-  //     };
-  //   }
-  // } catch (err) {
-  //   ctx.status = 400;
-  //   ctx.body = {
-  //     status: 'error',
-  //     message: err.message || 'Sorry, an error has occurred.',
-  //   };
-  // }
 });
 
 // for now this does not use FB oauth/JWT
@@ -241,38 +270,6 @@ router.post('/login', passport.authenticate('local-login'), (ctx) => {
     status: 'success',
     user: ctx.state.user,
   };
-  // try {
-  //   const users = await db.checkCredentials(ctx.request.body.username);
-  //   if (users.length) {
-  //     const userInfo = users[0];
-  //     if (ctx.request.body.password === userInfo.password) { // need to fix later
-  //       ctx.status = 201;
-  //       ctx.body = {
-  //         status: 'success',
-  //         message: 'successful login!',
-  //         userInfo,
-  //       };
-  //     } else {
-  //       ctx.status = 401;
-  //       ctx.body = {
-  //         status: 'error',
-  //         message: 'invalid password!',
-  //       };
-  //     }
-  //   } else {
-  //     ctx.status = 401;
-  //     ctx.body = {
-  //       status: 'error',
-  //       message: 'username does not exist!',
-  //     };
-  //   }
-  // } catch (err) {
-  //   ctx.status = 400;
-  //   ctx.body = {
-  //     status: 'error',
-  //     message: err.message || 'Sorry, an error has occurred.',
-  //   };
-  // }
 });
 
 router.post('/logout', isLoggedIn, async (ctx) => {
