@@ -3,40 +3,13 @@ $primary-dark: #972036;
 
 .search-div {
   min-height: 100vh;
+  margin: 30px;
 }
 
-.search-buttons {
+.search-filters > div {
+  margin-bottom: 20px;
+}
+
+.submit-search {
   margin-top: 20px;
-  margin-left: 40px;
-}
-
-.search-button {
-  margin-right: 20px;
-}
-
-.gender-select {
-  margin-left: 10px;
-  float: right;
-}
-
-.age-menu, .size-menu {
-  height: 300px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-.ant-slider-vertical {
-  margin-left: 10%;
-}
-
-.menu-footer {
-  margin-top: 10px;
-}
-
-.apply-button {
-  border: none;
-}
-
-.clear-button {
-  border: none;
 }
