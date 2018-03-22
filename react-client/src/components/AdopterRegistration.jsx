@@ -74,6 +74,7 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
+        this.setState({ phone: '', phoneDirty: false });
         console.log('Received values of adopter form: ', values);
         form.resetFields();
         this.toggleModal();
@@ -207,6 +208,9 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
                 rules: [{
                   required: true,
                   message: 'Please enter your city!',
+                }, {
+                  pattern: '[0-9]{5}',
+                  message: 'Please enter a five-digit ZIP!',
                 }],
               })(<Input />)}
           </FormItem>
