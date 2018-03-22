@@ -1,6 +1,6 @@
 const TOGGLE_REGISTRATION_MODAL = 'TOGGLE_REGISTRATION_MODAL';
 
-const toggleRegistrationModal = ({ target: { id } }) => (
+const toggleRegistrationModal = id => (
   {
     type: TOGGLE_REGISTRATION_MODAL,
     id,
