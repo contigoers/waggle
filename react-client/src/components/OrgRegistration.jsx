@@ -1,21 +1,13 @@
-/* eslint-disable react/jsx-closing-tag-location */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Form,
-  Input,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  Modal,
-} from 'antd';
+import { Form, Input, Select, Button, Modal } from 'antd';
+import { PhoneNumberUtil } from 'google-libphonenumber';
 
 import { toggleRegistrationModal } from '../actions/registrationActions';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const phoneUtil = PhoneNumberUtil.getInstance();
 
 const WrappedOrgRegistration = Form.create()(class extends Component {
   constructor(props) {
@@ -23,21 +15,42 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
 
     this.state = {
       confirmDirty: false,
+      phoneDirty: false,
+      numberIsValid: false,
+      phone: '',
     };
 
-    this.handleConfirmBlur = this.handleConfirmBlur.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
   }
 
-  handleConfirmBlur({ target: { value } }) {
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  handleBlur({ target: { id, value } }) {
+    const key = `${id}Dirty`;
+    this.setState({ [key]: this.state[key] || !!value });
+  }
+
+  handleChange({ target: { value, id } }) {
+    if (id === 'phone') {
+      const number = phoneUtil.parseAndKeepRawInput(value, 'US');
+      this.setState({
+        numberIsValid: phoneUtil.isValidNumber(number),
+        phone: value,
+      });
+    } else {
+      this.setState({
+        [id]: value,
+      });
+    }
   }
 
   compareToFirstPassword(rule, value, callback) {
     const { form } = this.props;
     if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!');
+      callback('The two passwords do not match!');
     } else {
       callback();
     }
@@ -49,6 +62,23 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
       form.validateFields(['confirm'], { force: true });
     }
     callback();
+  }
+
+  toggleModal() {
+    this.props.toggleRegistrationModal('org');
+  }
+
+  handleSubmit() {
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      this.setState({ phoneDirty: true });
+      if (!err && this.state.numberIsValid) {
+        this.setState({ phone: '', phoneDirty: false });
+        console.log('Received values of org form: ', values);
+        form.resetFields();
+        this.toggleModal();
+      }
+    });
   }
 
   render() {
@@ -64,34 +94,22 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
         sm: { span: 16 },
       },
     };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 16,
-          offset: 8,
-        },
-      },
-    };
+
     const prefixSelector = getFieldDecorator('prefix', {
-      initialValue: '86',
+      initialValue: '1',
     })(<Select style={{ width: 70 }}>
-      <Option value="86">+86</Option>
-      <Option value="87">+87</Option>
-    </Select>);
+      <Option value="1">+1</Option>
+    </Select>); // eslint-disable-line
 
     return (
       <Modal
         id="org"
         title="Register as an Organization"
         visible={this.props.org}
-        onCancel={this.props.toggleRegistrationModal}
+        onCancel={this.toggleModal}
         footer={[
-          <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-          <Button id="org" key="register" type="primary" onClick={this.props.onSubmit}>
+          <Button key="back" onClick={this.toggleModal}>Cancel</Button>,
+          <Button id="org" key="register" type="primary" onClick={this.handleSubmit}>
             Register
           </Button>,
         ]}
@@ -105,7 +123,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
                 rules: [{
                   type: 'email', message: 'The input is not valid E-mail!',
                 }, {
-                  required: true, message: 'Please input your E-mail!',
+                  required: true, message: 'Please enter your E-mail!',
                 }],
               })(<Input />)}
           </FormItem>
@@ -115,7 +133,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
           >
             {getFieldDecorator('password', {
                 rules: [{
-                  required: true, message: 'Please input your password!',
+                  required: true, message: 'Please enter your password!',
                 }, {
                   validator: this.validateToNextPassword,
                 }],
@@ -131,36 +149,69 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
                 }, {
                   validator: this.compareToFirstPassword,
                 }],
-              })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+              })(<Input type="password" onBlur={this.handleBlur} />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="Phone Number"
+            validateStatus={!this.state.numberIsValid && this.state.phoneDirty ? 'error' : null}
+            help={!this.state.numberIsValid && this.state.phoneDirty ? 'Please enter a valid phone number' : null}
           >
-            {getFieldDecorator('phone', {
-                rules: [{ required: true, message: 'Please input your phone number!' }],
-              })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
+            <Input
+              value={this.state.phone}
+              onChange={this.handleChange}
+              id="phone"
+              onBlur={this.handleBlur}
+              addonBefore={prefixSelector}
+              style={{ width: '100%' }}
+            />
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="Captcha"
-            extra="We must make sure that your are a human."
+            label="Organization Name"
           >
-            <Row gutter={8}>
-              <Col span={12}>
-                {getFieldDecorator('captcha', {
-                  rules: [{ required: true, message: 'Please input the captcha you got!' }],
-                })(<Input />)}
-              </Col>
-              <Col span={12}>
-                <Button>Get captcha</Button>
-              </Col>
-            </Row>
+            {getFieldDecorator('name', {
+                rules: [{
+                  required: true,
+                  message: 'Please enter your name!',
+                }],
+              })(<Input />)}
           </FormItem>
-          <FormItem {...tailFormItemLayout}>
-            {getFieldDecorator('agreement', {
-                valuePropName: 'checked',
-              })(<Checkbox>I have read the <a href="">agreement</a></Checkbox>)}
+          <FormItem
+            {...formItemLayout}
+            label="Street Address"
+          >
+            {getFieldDecorator('address', {
+                rules: [{
+                  required: true,
+                  message: 'Please enter your street address!',
+                }],
+              })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="City"
+          >
+            {getFieldDecorator('city', {
+                rules: [{
+                  required: true,
+                  message: 'Please enter your city!',
+                }],
+                })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="ZIP Code"
+          >
+            {getFieldDecorator('zip', {
+                rules: [{
+                  required: true,
+                  message: 'Please enter your city!',
+                }, {
+                  pattern: '[0-9]{5}',
+                  message: 'Please enter a five-digit ZIP!',
+                }],
+              })(<Input />)}
           </FormItem>
         </Form>
       </Modal>
@@ -168,33 +219,10 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = ({ registrationModal: { adopter, org } }) => (
+const mapStateToProps = ({ registrationModal: { org } }) => (
   {
     org,
-    adopter,
   }
 );
 
 export default connect(mapStateToProps, { toggleRegistrationModal })(WrappedOrgRegistration);
-
-
-// sign up w/ facebook option
-
-// all users
-//   username : string
-//   password : string
-//   password confirm : string
-//   email address : string (verify?)
-//   street address : string
-//   city : string
-//   zipcode : number
-//   phone # : numeric?
-//   organization/adopter: drop down
-
-// render on adopter signup
-//   name : string
-//   has pets : checkbox boolean
-//   home type : drop down (house, apartment, other)
-
-// render on organization signup
-//   org name
