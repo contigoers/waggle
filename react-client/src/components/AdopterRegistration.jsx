@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Select, Button, Modal, Radio } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
+import axios from 'axios';
 
 import { toggleRegistrationModal } from '../actions/registrationActions';
 
@@ -18,13 +19,12 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
       confirmDirty: false,
       phoneDirty: false,
       numberIsValid: false,
-      phone: '',
     };
 
     this.handleBlur = this.handleBlur.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.validateNumber = this.validateNumber.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
   }
@@ -34,18 +34,17 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
     this.setState({ [key]: this.state[key] || !!value });
   }
 
-  handleChange({ target: { value, id } }) {
-    if (id === 'phone') {
-      const number = phoneUtil.parseAndKeepRawInput(value, 'US');
-      this.setState({
-        numberIsValid: phoneUtil.isValidNumber(number),
-        phone: value,
-      });
-    } else {
-      this.setState({
-        [id]: value,
-      });
+  validateNumber(rule, value, callback) {
+    if (!value) {
+      callback('phone is required');
+      return;
     }
+    const number = phoneUtil.parseAndKeepRawInput(value, 'US');
+    const numberIsValid = phoneUtil.isValidNumber(number);
+    this.setState({
+      numberIsValid,
+    });
+    callback();
   }
 
   compareToFirstPassword(rule, value, callback) {
@@ -74,10 +73,12 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
-        this.setState({ phone: '', phoneDirty: false });
-        console.log('Received values of adopter form: ', values);
-        form.resetFields();
-        this.toggleModal();
+        console.log(values);
+        axios.post('/register', values)
+          .then(res => console.log(res));
+        // this.setState({ phone: '', phoneDirty: false });
+        // form.resetFields();
+        // this.toggleModal();
       }
     });
   }
@@ -130,11 +131,21 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="Username"
+          >
+            {getFieldDecorator('username', {
+                rules: [{
+                  required: true, message: 'Please enter a username!',
+                }],
+              })(<Input />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="Password"
           >
             {getFieldDecorator('password', {
                 rules: [{
-                  required: true, message: 'Please enter your password!',
+                  required: true, message: 'Please enter a password!',
                 }, {
                   validator: this.validateToNextPassword,
                 }],
@@ -158,14 +169,16 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
             validateStatus={!this.state.numberIsValid && this.state.phoneDirty ? 'error' : null}
             help={!this.state.numberIsValid && this.state.phoneDirty ? 'Please enter a valid phone number' : null}
           >
-            <Input
-              value={this.state.phone}
+            {getFieldDecorator('phone', {
+              rules: [{
+                validator: this.validateNumber,
+              }],
+            })(<Input
               onChange={this.handleChange}
-              id="phone"
-              onBlur={this.handleBlur}
               addonBefore={prefixSelector}
               style={{ width: '100%' }}
-            />
+              onBlur={this.handleBlur}
+            />)}
           </FormItem>
           <FormItem
             {...formItemLayout}
@@ -204,7 +217,7 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
             {...formItemLayout}
             label="ZIP Code"
           >
-            {getFieldDecorator('zip', {
+            {getFieldDecorator('zipcode', {
                 rules: [{
                   required: true,
                   message: 'Please enter your city!',
