@@ -29,7 +29,7 @@ class SearchResult extends React.Component {
 
     return (
       <Card
-        style={{ width: 300, margin: 30 }}
+        style={{ width: 300, margin: 30, marginLeft: 200 }}
         cover={<img alt="pupper" src={dog.photo} />}
         actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
       >

@@ -2,13 +2,9 @@ import React from 'react';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
 import SearchResults from './SearchResults';
+import OrgCard from './OrgCard';
 
 import dogs from '../../../database/sampleData';
-
-const { Meta } = Card;
-
-// props should pass dog object as this.props.dog and org object as this.props.org
-// <DogProfile dog=? org=? />
 
 class DogProfile extends React.Component {
   constructor(props) {
@@ -60,8 +56,6 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const phone = `(${org.phone.slice(1, 4)}) ${org.phone.slice(4, 7)}-${org.phone.slice(7)}`;
-
     return (
       <div>
         <Row style={{ marginTop: 30, marginBottom: 30 }} >
@@ -111,16 +105,7 @@ class DogProfile extends React.Component {
           </Col>
         </Row>
         <Row style={{ marginBottom: 50 }} >
-          <Col span={10} offset={3}>
-            <Card >
-              <Meta title="Shelter Info" />
-              <Divider />
-              <h4> {org.name} </h4>
-              <div style={{ marginTop: 10 }}> {org.address} </div>
-              <div> {org.city}, {dog.state} {org.zipcode} </div>
-              <div style={{ marginTop: 10 }}> {phone} </div>
-            </Card>
-          </Col>
+          <OrgCard org={org} />
         </Row>
         <SearchResults dogs={dogs.dogs} />
       </div>
@@ -136,10 +121,3 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, null)(DogProfile);
 
 // TODO: editable?????
-
-// on clicking an item that will take us to a dog page,
-// it will take the dog id from that item
-// and initiate a get request that will call the get dog by id db query
-// and get the org id from the result of that
-// and call the get org by id db query
-// and send the org info and dog info to the profile page component
