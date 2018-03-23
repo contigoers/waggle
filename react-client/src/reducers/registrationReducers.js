@@ -5,7 +5,7 @@ const defaultState = {
   adopter: false,
 };
 
-const toggleRegistrationModal = (state = defaultState, action) => {
+const registrationModal = (state = defaultState, action) => {
   switch (action.type) {
     case TOGGLE_REGISTRATION_MODAL:
       return {
@@ -17,4 +17,4 @@ const toggleRegistrationModal = (state = defaultState, action) => {
   }
 };
 
-export default toggleRegistrationModal;
+export default registrationModal;
