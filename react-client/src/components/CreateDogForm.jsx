@@ -13,17 +13,15 @@ class DogForm extends React.Component {
 
     this.defaultState = {
       // mix, aggression, anxiety, diet, medical
-      isMixChecked: false,
-      isAggressiveChecked: false,
-      hasAnxietyChecked: false,
+      isMix: false,
+      isAggressive: false,
+      hasAnxiety: false,
       hasDiet: false,
       hasMedical: false,
     };
-
     this.state = this.defaultState;
     this.onSubmit = this.onSubmit.bind(this);
     this.onCheckChange = this.onCheckChange.bind(this);
-    this.onBlur = this.onBlur.bind(this);
   }
 
   onCheckChange({ target: { id } }) {
@@ -31,12 +29,7 @@ class DogForm extends React.Component {
     console.log('change');
     this.setState({
       [id]: !this.state[id],
-    });
-  }
-
-  onBlur({ target: { id } }) {
-    console.log('validating');
-    this.props.form.validateFields([id]);
+    }, () => {'STATE:', console.log(this.defaultState)});
   }
 
   onSubmit(e) {
@@ -66,7 +59,8 @@ class DogForm extends React.Component {
       axios.post('/createOrgDog', dog)
         .then((response) => {
           this.props.form.resetFields();
-          this.setState(this.defaultState);
+          console.log('before:', this.state),
+          this.setState(this.defaultState, () => {console.log('after:', this.state)});
           alert('Successful addition of dog!');
           return response;
         })
@@ -220,7 +214,7 @@ class DogForm extends React.Component {
             </Form.Item>
           </Row>
           <div> Temperament: </div>
-          <Row style={{ marginLeft: 20 }}>
+          <Row style={{ marginLeft: 15 }}>
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
@@ -230,21 +224,21 @@ class DogForm extends React.Component {
             <Form.Item label="Anxiety">
               {getFieldDecorator('hasAnxiety', {
                 valuePropName: 'medicalChecked',
-              })(<Checkbox value={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
+              })(<Checkbox checked={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
           <div> Special needs: </div>
-          <Row style={{ marginLeft: 20 }}>
+          <Row style={{ marginLeft: 15 }}>
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
-                })(<Checkbox value={this.state.hasDiet} onChange={this.onCheckChange} />)}
+                })(<Checkbox checked={this.state.hasDiet} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Medical">
               {getFieldDecorator('hasMedical', {
                 valuePropName: 'medicalChecked',
-              })(<Checkbox value={this.state.hasMedical} onChange={this.onCheckChange} />)}
+              })(<Checkbox checked={this.state.hasMedical} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
 
