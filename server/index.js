@@ -156,12 +156,14 @@ router.post('/favoriteDog/remove', async (ctx) => {
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
+  console.log(ctx.request.body);
   try {
     const obj = ctx.request.body;
     let query = '';
     for (const prop in obj) {
       query = `${query}(`;
-      const array = JSON.parse(obj[prop]);
+      const array = obj[prop];
+      console.log('gfd')
       if (typeof array[0] === 'string') {
         query += array.map(val => `dogs.${prop} = "${val}" or`);
       } else {
