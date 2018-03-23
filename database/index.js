@@ -1,4 +1,3 @@
-
 const config = {
   client: process.env.CLIENT || 'pg',
   connection: process.env.DATABASE_URL,
@@ -144,9 +143,6 @@ const markAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted',
 const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted', false);
 
 const searchOrgDogs = query => knex('dogs').where(knex.raw(`${query}`));
-/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
-
-// search dogs with various parameters for dogs
 
 const getOrgsAfterDogs = (orgs) => {
   let whereQuery = '';
@@ -163,6 +159,10 @@ const getOrgsAfterDogs = (orgs) => {
     .from(knex.raw('users, orgs'))
     .where(knex.raw(whereQuery));
 };
+
+/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
+
+// search dogs with various parameters for dogs
 
 module.exports = {
   getAdopterProfile,
