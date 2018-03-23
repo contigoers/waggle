@@ -89,6 +89,7 @@ router.post('/createOrgDog', async (ctx) => {
       newDog: newDog[0],
     };
   } catch (err) {
+    console.log(err)
     ctx.status = 400;
     ctx.body = {
       status: 'error',
