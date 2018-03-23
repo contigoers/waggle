@@ -89,7 +89,6 @@ router.post('/createOrgDog', async (ctx) => {
       newDog: newDog[0],
     };
   } catch (err) {
-    console.log(err)
     ctx.status = 400;
     ctx.body = {
       status: 'error',
@@ -162,8 +161,7 @@ router.post('/searchOrgDogs', async (ctx) => {
     let query = '';
     Object.keys(obj).forEach((prop) => {
       query = `${query}(`;
-      const array = obj[prop];
-      console.log('gfd')
+      const array = obj[prop]; // need to JSON.parse this for postman testing
       if (typeof array[0] === 'string') {
         query += array.map(val => `dogs.${prop} = "${val}" or`);
       } else {
