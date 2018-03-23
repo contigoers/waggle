@@ -81,7 +81,7 @@ class DogForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div style={{ margin: 50 }}>
-        <Form layout="horizontal" onSubmit={this.onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
 
           <Row>
 
@@ -219,8 +219,8 @@ class DogForm extends React.Component {
               </Select>)}
             </Form.Item>
           </Row>
-
-          <Row>
+          <div> Temperament: </div>
+          <Row style={{ marginLeft: 20 }}>
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
@@ -233,8 +233,8 @@ class DogForm extends React.Component {
               })(<Checkbox value={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
-
-          <Row>
+          <div> Special needs: </div>
+          <Row style={{ marginLeft: 20 }}>
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
