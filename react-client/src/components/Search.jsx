@@ -16,18 +16,29 @@ class Search extends React.Component {
     if (id === 'size' || id === 'lifestage') {
       valueChanged = value.toLowerCase();
     }
-    if (id === 'gender' && value === 'Male' && !this.props.breed.length) {
+    if (id === 'male' && value === 'Male') {
       valueChanged = true;
-    } else if (id === 'gender' && value === 'Female' && !this.props.breed.length) {
+    } else if (id === 'male' && value === 'Female') {
       valueChanged = false;
-    } else if (id === 'gender' && this.props.breed.length) {
-      valueChanged = [true, false];
     }
     this.props.updateSearchQuery(id, valueChanged, checked);
   }
 
   submitData() {
-    axios.post('/searchOrgDogs', this.props.searchQuery)
+    const searchObject = {};
+    if (this.props.breed.length) {
+      searchObject.breed = this.props.breed;
+    }
+    if (this.props.male.length) {
+      searchObject.male = this.props.male;
+    }
+    if (this.props.size.length) {
+      searchObject.size = this.props.size;
+    }
+    if (this.props.lifestage.length) {
+      searchObject.lifestage = this.props.lifestage;
+    }
+    axios.post('/searchOrgDogs', searchObject)
       .then(res => console.log(res))
       .catch(err => console.log(err));
   }
@@ -59,9 +70,9 @@ class Search extends React.Component {
             Gender
             <div className="gender-list">
               <Row>
-                <Col span={4}><Checkbox id="gender" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-                <Col span={4}><Checkbox id="gender" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
-                <Col span={4}><Checkbox id="gender" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
+                <Col span={4}><Checkbox id="male" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="male" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
+                <Col span={4}><Checkbox id="male" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
               </Row>
             </div>
           </div>
@@ -101,13 +112,13 @@ class Search extends React.Component {
 
 const mapStateToProps = ({
   searchQuery: {
-    breed, gender, age, size,
+    breed, male, lifestage, size,
   },
 }) => (
   {
     breed,
-    gender,
-    age,
+    male,
+    lifestage,
     size,
   }
 );
