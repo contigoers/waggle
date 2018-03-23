@@ -6,6 +6,7 @@ const initialState = {
   male: [],
   lifestage: [],
   size: [],
+  results: {},
 };
 
 export default handleActions({
@@ -21,4 +22,5 @@ export default handleActions({
       [action.id]: [...state[action.id]].filter(element => element !== action.value),
     };
   },
+  SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
 }, initialState);
