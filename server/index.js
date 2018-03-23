@@ -160,13 +160,12 @@ router.post('/searchOrgDogsTest', async (ctx) => {
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
-  console.log(ctx.request.body);
   try {
     const obj = ctx.request.body;
     let query = '';
     Object.keys(obj).forEach((prop) => {
       query = `${query}(`;
-      const array = obj[prop]; // need to JSON.parse this for postman testing
+      const array = JSON.parse(obj[prop]); // need to JSON.parse this for postman testing
 
       if (typeof array[0] === 'string') {
         query += array.map(val => `dogs.${prop} = "${val}" or`);
