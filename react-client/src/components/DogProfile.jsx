@@ -1,10 +1,13 @@
 import React from 'react';
 import { Card, Divider, Row, Col } from 'antd';
 import { connect } from 'react-redux';
+import SearchResult from './SearchResult';
 
 const { Meta } = Card;
 
-// on component mount, ~get~ dog by id
+// props should pass dog object as this.props.dog and org object as this.props.org
+// <DogProfile dog=? org=? />
+
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -19,11 +22,9 @@ class DogProfile extends React.Component {
   render() {
     const { dog } = this.props.profile;
     const { org } = this.props.profile;
-
-    let { breed } = dog;
-    breed = breed.charAt(0).toUpperCase() + breed.slice(1);
-
-    if (dog.mix) { breed += ' mix'; }
+    // uncomment to use with props n get rid of the ones above
+    // const { dog } = this.props;
+    // const { org } = this.props;
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
@@ -32,24 +33,24 @@ class DogProfile extends React.Component {
 
     let temperament = '';
     if (dog.anxious && dog.aggressive) {
-      temperament = 'Anxiety, Aggression';
+      temperament = 'anxiety, aggression';
     } else if (dog.anxious) {
-      temperament = 'Anxiety';
+      temperament = 'anxiety';
     } else if (dog.aggressive) {
-      temperament = 'Aggression';
+      temperament = 'aggression';
     } else {
-      temperament = 'None';
+      temperament = 'none';
     }
 
     let specialNeeds = '';
     if (dog.diet && dog.medical) {
-      specialNeeds = 'Diet, Medical';
+      specialNeeds = 'diet, medical';
     } else if (dog.diet) {
-      specialNeeds = 'Diet';
+      specialNeeds = 'diet';
     } else if (dog.medical) {
-      specialNeeds = 'Medical';
+      specialNeeds = 'medical';
     } else {
-      specialNeeds = 'None';
+      specialNeeds = 'none';
     }
 
     const phone = `(${org.phone.slice(1, 4)}) ${org.phone.slice(4, 7)}-${org.phone.slice(7)}`;
@@ -60,7 +61,7 @@ class DogProfile extends React.Component {
           <Col span={10} offset={3} >
             <Card>
               <h1> {dog.name} </h1>
-              <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {breed} </span>
+              <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
               <Divider type="vertical" />
               <span style={{ fontWeight: 600, fontSize: 16 }} > {dog.male ? 'Male' : 'Female'} </span>
               <Divider type="vertical" />
@@ -94,7 +95,7 @@ class DogProfile extends React.Component {
           <Col span={8} offset={1}>
             <Card
               style={{ width: 350 }}
-              cover={<img alt="pupper" src="https://static01.nyt.com/images/2018/02/11/realestate/11dogs-topbreeds-Chihuahua/11dogs-topbreeds-Chihuahua-master495.jpg" />}
+              cover={<img alt="pupper" src={dog.photo} />}
             />
           </Col>
         </Row>
@@ -110,6 +111,7 @@ class DogProfile extends React.Component {
             </Card>
           </Col>
         </Row>
+        <SearchResult dog={dog} />
       </div>
     );
   }
@@ -123,3 +125,10 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, null)(DogProfile);
 
 // TODO: editable?????
+
+// on clicking an item that will take us to a dog page,
+// it will take the dog id from that item
+// and initiate a get request that will call the get dog by id db query
+// and get the org id from the result of that
+// and call the get org by id db query
+// and send the org info and dog info to the profile page component

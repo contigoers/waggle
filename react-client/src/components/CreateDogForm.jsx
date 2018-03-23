@@ -213,7 +213,7 @@ class DogForm extends React.Component {
               </Select>)}
             </Form.Item>
           </Row>
-          <div> Temperament: </div>
+          <div style={{ marginLeft: 10, fontWeight: 600 }}> Temperament: </div>
           <Row style={{ marginLeft: 15 }}>
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
@@ -227,7 +227,7 @@ class DogForm extends React.Component {
               })(<Checkbox checked={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
-          <div> Special needs: </div>
+          <div style={{ marginLeft: 10, fontWeight: 500 }} > Special needs: </div>
           <Row style={{ marginLeft: 15 }}>
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
