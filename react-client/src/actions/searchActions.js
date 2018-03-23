@@ -17,7 +17,7 @@ const dogsSearch = async (searchObject) => {
   const { data } = await axios.post('/searchOrgDogs', searchObject);
   return {
     type: SEARCH_DOGS,
-    data,
+    data: data.dogsAndOrgs,
   };
 };
 
