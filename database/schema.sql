@@ -62,7 +62,7 @@ CREATE TABLE `orgs` (
   PRIMARY KEY (`id`)
 );
 
--- ---
+-- ---  
 -- Table 'dogs'
 --  
 -- ---
