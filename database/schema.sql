@@ -62,7 +62,7 @@ CREATE TABLE `orgs` (
   PRIMARY KEY (`id`)
 );
 
--- ---
+-- ---  
 -- Table 'dogs'
 --  
 -- ---
@@ -243,3 +243,4 @@ INSERT INTO `dogs` (`name`,`breed`,`mix`,`male`,`size`,`aggressive`,`anxious`,`l
 ('Marley', 'Dutch Shepherd', true, true, 'huge', true, false, 'adolescent', 3, false, true, true, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Cooper', 'Yellow Labrador Retriever', true, true, 'tiny', false, true, 'adolescent', 12, false, false, false, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Lexi', 'Feist', true, false, 'large', false, false, 'senior', 6, true, false, true, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', true, 2);
+

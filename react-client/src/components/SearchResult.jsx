@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Divider } from 'antd';
+import { connect } from 'react-redux';
+import { Card, Divider, Icon } from 'antd';
 
 // onclick should render a new profile page with org signed in (from state?)
 // and dog from that result
@@ -8,14 +9,16 @@ class SearchResult extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      favorite: false,
     };
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
-  // onclick renders profile from dog
-  //   renderProfile() {
-  // get org from dog org_id?
-  //     // renders  profile page
-  //   }
+  toggleFavorite() {
+    this.setState({ favorite: !this.state.favorite });
+  }
+
+  // onclick sends to profile page
 
   render() {
     const { dog } = this.props;
@@ -26,8 +29,9 @@ class SearchResult extends React.Component {
 
     return (
       <Card
-        style={{ width: 300 }}
+        style={{ width: 300, margin: 30 }}
         cover={<img alt="pupper" src={dog.photo} />}
+        actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
       >
         <Card.Meta title={dog.name} />
         <div style={{ marginTop: 10 }}>
@@ -43,4 +47,11 @@ class SearchResult extends React.Component {
   }
 }
 
-export default SearchResult;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return state;
+};
+
+export default connect(mapStateToProps, null)(SearchResult);
+
+// TODO: make photo in card view square
