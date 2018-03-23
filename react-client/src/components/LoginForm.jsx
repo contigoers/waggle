@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Modal } from 'antd';
+import axios from 'axios';
+
 import { toggleLoginModal } from '../actions/loginActions';
 
 const FormItem = Form.Item;
@@ -9,15 +11,17 @@ const WrappedLoginForm = Form.create()(class extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleModal = this.props.toggleLoginModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleModal = this.props.toggleLoginModal.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        axios.post('/login', values);
+        this.props.form.resetFields();
+        this.toggleModal();
       }
     });
   }
@@ -39,18 +43,20 @@ const WrappedLoginForm = Form.create()(class extends Component {
       >
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
-            {getFieldDecorator('userName', {
+            {getFieldDecorator('username', {
               rules: [{ required: true, message: 'Please input your username!' }],
-            })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />)}
+            })(<Input
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Username"
+              onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+            />)}
           </FormItem>
           <FormItem>
             {getFieldDecorator('password', {
               rules: [{ required: true, message: 'Please input your Password!' }],
             })(<Input
-              prefix={<Icon
-                type="lock"
-                style={{ color: 'rgba(0,0,0,.25)' }}
-              />}
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
               type="password"
               placeholder="Password"
             />)}

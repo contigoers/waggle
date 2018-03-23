@@ -73,12 +73,10 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
-        console.log(values);
-        axios.post('/register', values)
-          .then(res => console.log(res));
-        // this.setState({ phone: '', phoneDirty: false });
-        // form.resetFields();
-        // this.toggleModal();
+        axios.post('/register', values);
+        this.setState({ phoneDirty: false });
+        form.resetFields();
+        this.toggleModal();
       }
     });
   }
