@@ -1,7 +1,7 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
 import axios from 'axios';
-import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload } from 'antd';
+import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
 import breeds from '../../../database/breeds';
 
 const { Option } = Select;
@@ -10,9 +10,26 @@ const { TextArea } = Input;
 class DogForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+
+    this.defaultState = {
+      // mix, aggression, anxiety, diet, medical
+      isMix: false,
+      isAggressive: false,
+      hasAnxiety: false,
+      hasDiet: false,
+      hasMedical: false,
     };
+    this.state = this.defaultState;
     this.onSubmit = this.onSubmit.bind(this);
+    this.onCheckChange = this.onCheckChange.bind(this);
+  }
+
+  onCheckChange({ target: { id } }) {
+    console.log(id);
+    console.log('change');
+    this.setState({
+      [id]: !this.state[id],
+    }, () => {'STATE:', console.log(this.defaultState)});
   }
 
   onSubmit(e) {
@@ -42,6 +59,8 @@ class DogForm extends React.Component {
       axios.post('/createOrgDog', dog)
         .then((response) => {
           this.props.form.resetFields();
+          console.log('before:', this.state),
+          this.setState(this.defaultState, () => {console.log('after:', this.state)});
           alert('Successful addition of dog!');
           return response;
         })
@@ -56,7 +75,7 @@ class DogForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div style={{ margin: 50 }}>
-        <Form layout="horizontal" onSubmit={this.onSubmit}>
+        <Form layout="inline" onSubmit={this.onSubmit}>
 
           <Row>
 
@@ -101,7 +120,7 @@ class DogForm extends React.Component {
             <Form.Item label="Mixed breed?">
               {getFieldDecorator('isMix', {
                 valuePropName: 'mixChecked',
-              })(<Checkbox />)}
+              })(<Checkbox checked={this.state.isMix} onChange={this.onCheckChange} />)}
 
             </Form.Item>
           </Row>
@@ -114,7 +133,7 @@ class DogForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 200 }} onChange={this.onChange} placeholder="Select">
+              })(<Select style={{ width: 200 }} onChange={this.onChange} onBlur={this.onBlur} placeholder="Select">
                 <Option value="true"> Good boy </Option>
                 <Option value="false"> Good girl </Option>
                 <Option value="null"> Unknown </Option>
@@ -194,32 +213,32 @@ class DogForm extends React.Component {
               </Select>)}
             </Form.Item>
           </Row>
-
-          <Row>
+          <div> Temperament: </div>
+          <Row style={{ marginLeft: 15 }}>
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
-              })(<Checkbox />)}
+              })(<Checkbox checked={this.state.isAggressive} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Anxiety">
               {getFieldDecorator('hasAnxiety', {
                 valuePropName: 'medicalChecked',
-              })(<Checkbox />)}
+              })(<Checkbox checked={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
-
-          <Row>
+          <div> Special needs: </div>
+          <Row style={{ marginLeft: 15 }}>
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
-                })(<Checkbox />)}
+                })(<Checkbox checked={this.state.hasDiet} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Medical">
               {getFieldDecorator('hasMedical', {
                 valuePropName: 'medicalChecked',
-              })(<Checkbox />)}
+              })(<Checkbox checked={this.state.hasMedical} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
 

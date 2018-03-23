@@ -1,3 +1,4 @@
+
 DROP DATABASE IF EXISTS waggl;
 
 CREATE DATABASE waggl;
@@ -74,7 +75,7 @@ CREATE TABLE `dogs` (
   `breed` VARCHAR(50) NULL DEFAULT NULL, -- (primary breed) string (should be enum but we're not putting in ten million enum cases) ideally filtered search from file
   `mix` BOOLEAN DEFAULT FALSE, -- is mix 
   `male` BOOLEAN DEFAULT FALSE, -- enum m/f
-  `size` ENUM('tiny', 'small', 'medium', 'large', 'giant') NULL DEFAULT NULL, -- enum tiny/small/medium/large/giant
+  `size` ENUM('tiny', 'small', 'medium', 'large', 'huge') NULL DEFAULT NULL, -- enum tiny/small/medium/large/giant
   `aggressive` BOOLEAN DEFAULT FALSE, 
   `anxious` BOOLEAN DEFAULT FALSE,
   `lifestage` ENUM('puppy', 'adolescent', 'adult', 'senior') NULL DEFAULT NULL,
