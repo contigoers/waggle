@@ -88,6 +88,11 @@ $primary-dark: #972036;
   align-items: center;
 }
 
+.login-button {
+  background-color: $primary-dark;
+  border-color: $primary-dark;
+}
+
 .content-divs:nth-child(odd) {
   background: white;
   color: $primary-dark;  
