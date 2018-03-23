@@ -1,7 +1,7 @@
 const defaultState = {
   dog: {
     name: 'Tractor',
-    breed: 'dachshund',
+    breed: 'Chihuahua',
     mix: true,
     male: true,
     size: 'small',
@@ -13,7 +13,7 @@ const defaultState = {
     diet: true,
     medical: false,
     energy_level: 'medium',
-    photo: null,
+    photo: 'https://static01.nyt.com/images/2018/02/11/realestate/11dogs-topbreeds-Chihuahua/11dogs-topbreeds-Chihuahua-master495.jpg',
     description: 'a Good Boy',
   },
   org: {
