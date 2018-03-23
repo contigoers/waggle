@@ -29,7 +29,7 @@ class DogForm extends React.Component {
     console.log('change');
     this.setState({
       [id]: !this.state[id],
-    }, () => {'STATE:', console.log(this.defaultState)});
+    });
   }
 
   onSubmit(e) {
@@ -56,11 +56,11 @@ class DogForm extends React.Component {
         description: values.description || null,
         orgId: 1,
       };
+      console.log(dog);
       axios.post('/createOrgDog', dog)
         .then((response) => {
           this.props.form.resetFields();
-          console.log('before:', this.state),
-          this.setState(this.defaultState, () => {console.log('after:', this.state)});
+          this.setState(this.defaultState);
           alert('Successful addition of dog!');
           return response;
         })
@@ -149,8 +149,8 @@ class DogForm extends React.Component {
                   },
                 ],
               })(<Select style={{ width: 150 }} placeholder="Select" >
-                <Option value="true"> Yes </Option>
-                <Option value="false"> No </Option>
+                <Option value={1}> Yes </Option>
+                <Option value={0}> No </Option>
                 <Option value="null"> Unknown </Option>
               </Select>)}
             </Form.Item>
