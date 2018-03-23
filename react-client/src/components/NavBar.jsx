@@ -1,9 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Logo from '../assets/logo.png';
-import WrappedHorizontalLoginForm from './LoginForm';
+import { Button } from 'antd';
 
-const NavBar = () =>
+import Logo from '../assets/logo.png';
+import WrappedLoginForm from './LoginForm';
+import { toggleLoginModal } from '../actions/loginActions';
+
+const NavBar = props =>
   (
     <div>
       <div name="nav-bar" className="nav-bar">
@@ -28,11 +32,19 @@ const NavBar = () =>
         <div className="sample-profile nav-item">
           <Link className="nav-link" to="/sample">Sample Profile</Link>
         </div>
+
         <div className="login nav-item">
-          <WrappedHorizontalLoginForm />
+          <Button className="login-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
         </div>
       </div>
+      <WrappedLoginForm />
     </div>
   );
 
-export default NavBar;
+const mapStateToProps = ({ loginModal: { visible } }) => (
+  {
+    visible,
+  }
+);
+
+export default connect(mapStateToProps, { toggleLoginModal })(NavBar);
