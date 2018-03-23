@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Checkbox, Button } from 'antd';
-import axios from 'axios';
-import { updateSearchQuery } from '../actions/searchActions';
+import { forOwn } from 'lodash';
+import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
 
 class Search extends React.Component {
   constructor() {
@@ -26,21 +26,13 @@ class Search extends React.Component {
 
   submitData() {
     const searchObject = {};
-    if (this.props.breed.length) {
-      searchObject.breed = this.props.breed;
-    }
-    if (this.props.male.length) {
-      searchObject.male = this.props.male;
-    }
-    if (this.props.size.length) {
-      searchObject.size = this.props.size;
-    }
-    if (this.props.lifestage.length) {
-      searchObject.lifestage = this.props.lifestage;
-    }
-    axios.post('/searchOrgDogs', searchObject)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+    const { params } = this.props;
+    forOwn(params, (value, key) => {
+      if (value.length) {
+        searchObject[key] = value;
+      }
+    });
+    this.props.dogsSearch(searchObject);
   }
 
   render() {
@@ -110,17 +102,16 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({
-  searchQuery: {
-    breed, male, lifestage, size,
-  },
-}) => (
+const mapStateToProps = ({ search }) => (
   {
-    breed,
-    male,
-    lifestage,
-    size,
+    params: {
+      breed: search.breed,
+      male: search.male,
+      lifestage: search.lifestage,
+      size: search.size,
+    },
+    results: search.results,
   }
 );
 
-export default connect(mapStateToProps, { updateSearchQuery })(Search);
+export default connect(mapStateToProps, { updateSearchQuery, dogsSearch })(Search);

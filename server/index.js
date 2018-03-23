@@ -89,7 +89,6 @@ router.post('/createOrgDog', async (ctx) => {
       newDog: newDog[0],
     };
   } catch (err) {
-    console.log(err)
     ctx.status = 400;
     ctx.body = {
       status: 'error',
@@ -153,6 +152,11 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
+router.post('/searchOrgDogsTest', async (ctx) => {
+  ctx.body = {
+    dog: 'hello',
+  };
+});
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
@@ -160,10 +164,10 @@ router.post('/searchOrgDogs', async (ctx) => {
   try {
     const obj = ctx.request.body;
     let query = '';
-    for (const prop in obj) {
+    Object.keys(obj).forEach((prop) => {
       query = `${query}(`;
-      const array = obj[prop];
-      console.log('gfd')
+      const array = obj[prop]; // need to JSON.parse this for postman testing
+
       if (typeof array[0] === 'string') {
         query += array.map(val => `dogs.${prop} = "${val}" or`);
       } else {
@@ -174,11 +178,12 @@ router.post('/searchOrgDogs', async (ctx) => {
         temp.pop();
       }
       query = `${temp.join(' ')}) and `;
-    }
+    });
     query = query.split(',').join(' ');
     let queryNew = query.split(' ');
     queryNew.splice(queryNew.length - 2, 2);
     queryNew = queryNew.join(' ');
+    console.log(queryNew);
     const dogs = await db.searchOrgDogs(queryNew);
     if (dogs.length) {
       ctx.status = 201;
