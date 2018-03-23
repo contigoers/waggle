@@ -6,6 +6,7 @@ const session = require('koa-session');
 const serve = require('koa-static');
 const randomPuppy = require('random-puppy');
 const db = require('../database/index');
+const { mapKeys } = require('lodash');
 
 const app = new Koa();
 
@@ -183,12 +184,30 @@ router.post('/searchOrgDogs', async (ctx) => {
     queryNew.splice(queryNew.length - 2, 2);
     queryNew = queryNew.join(' ');
     console.log(queryNew);
-    const dogs = await db.searchOrgDogs(queryNew);
+
+    let dogs = await db.searchOrgDogs(queryNew);
+
     if (dogs.length) {
+      let orgs = {};
+
+      dogs = mapKeys(dogs, ({ id, org_id }) => {
+        orgs[org_id] = 1;
+        return id;
+      });
+
+      orgs = await db.getOrgsAfterDogs(Object.keys(orgs));
+
+      orgs = mapKeys(orgs, 'id');
+
+      const dogsAndOrgs = {
+        dogs,
+        orgs,
+      };
+
       ctx.status = 201;
       ctx.body = {
         status: 'success',
-        dogs,
+        dogsAndOrgs,
       };
     } else {
       ctx.status = 400;

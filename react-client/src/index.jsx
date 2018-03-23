@@ -18,6 +18,7 @@ import Footer from './components/Footer';
 import CreateDogForm from './components/CreateDogForm';
 import DogProfile from './components/DogProfile';
 
+
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers(applyMiddleware(promise)));
