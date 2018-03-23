@@ -1,7 +1,9 @@
 import React from 'react';
-import { Card, Divider, Row, Col } from 'antd';
+import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
-import SearchResult from './SearchResult';
+import SearchResults from './SearchResults';
+
+import dogs from '../../../database/sampleData';
 
 const { Meta } = Card;
 
@@ -12,19 +14,24 @@ class DogProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      favorite: false,
     };
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
   componentDidMount() {
     console.log(this.props.state);
   }
 
+  toggleFavorite() {
+    this.setState({ favorite: !this.state.favorite }, () => {
+      message.info(this.state.favorite ? 'Added to favorites!' : 'Removed from favorites.');
+    });
+  }
+
   render() {
     const { dog } = this.props.profile;
     const { org } = this.props.profile;
-    // uncomment to use with props n get rid of the ones above
-    // const { dog } = this.props;
-    // const { org } = this.props;
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
@@ -75,7 +82,7 @@ class DogProfile extends React.Component {
               <div style={{ marginLeft: 40 }}>
                 <span style={{ fontWeight: 700 }}> Size: </span> {dog.size}
               </div>
-              <div style={{ marginLeft: 40 }}> {dog.fixed ? 'N' : 'Not n'}eutered/spayed </div>
+              <div style={{ marginLeft: 40 }}> <span style={{ fontWeight: 700 }}> Neutered/spayed: </span> {dog.fixed ? 'yes' : 'no'} </div>
               <div style={{ marginLeft: 40 }}>
                 <span style={{ fontWeight: 700 }}> Special needs: </span> {specialNeeds}
               </div>
@@ -95,13 +102,17 @@ class DogProfile extends React.Component {
           <Col span={8} offset={1}>
             <Card
               style={{ width: 350 }}
-              cover={<img alt="pupper" src={dog.photo} />}
+              cover={<img
+                alt="pupper"
+                src={dog.photo}
+              />}
+              actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
             />
           </Col>
         </Row>
         <Row style={{ marginBottom: 50 }} >
           <Col span={10} offset={3}>
-            <Card>
+            <Card >
               <Meta title="Shelter Info" />
               <Divider />
               <h4> {org.name} </h4>
@@ -111,7 +122,7 @@ class DogProfile extends React.Component {
             </Card>
           </Col>
         </Row>
-        <SearchResult dog={dog} />
+        <SearchResults dogs={dogs.dogs} />
       </div>
     );
   }
