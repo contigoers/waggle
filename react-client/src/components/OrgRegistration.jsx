@@ -72,9 +72,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
-        axios.post('/register', values)
-          .then(res => console.log(res));
-        console.log('Received values of org form: ', values);
+        axios.post('/register', values);
         this.setState({ phoneDirty: false });
         form.resetFields();
         this.toggleModal();

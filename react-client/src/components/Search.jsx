@@ -12,11 +12,33 @@ class Search extends React.Component {
   }
 
   addsToFilterState({ target: { checked, value, id } }) {
-    this.props.updateSearchQuery(id, value, checked);
+    let valueChanged = value;
+    if (id === 'size' || id === 'lifestage') {
+      valueChanged = value.toLowerCase();
+    }
+    if (id === 'male' && value === 'Male') {
+      valueChanged = true;
+    } else if (id === 'male' && value === 'Female') {
+      valueChanged = false;
+    }
+    this.props.updateSearchQuery(id, valueChanged, checked);
   }
 
   submitData() {
-    axios.post('/searchOrgDogs', this.props.searchQuery)
+    const searchObject = {};
+    if (this.props.breed.length) {
+      searchObject.breed = this.props.breed;
+    }
+    if (this.props.male.length) {
+      searchObject.male = this.props.male;
+    }
+    if (this.props.size.length) {
+      searchObject.size = this.props.size;
+    }
+    if (this.props.lifestage.length) {
+      searchObject.lifestage = this.props.lifestage;
+    }
+    axios.post('/searchOrgDogs', searchObject)
       .then(res => console.log(res))
       .catch(err => console.log(err));
   }
@@ -48,9 +70,9 @@ class Search extends React.Component {
             Gender
             <div className="gender-list">
               <Row>
-                <Col span={4}><Checkbox id="gender" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-                <Col span={4}><Checkbox id="gender" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
-                <Col span={4}><Checkbox id="gender" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
+                <Col span={4}><Checkbox id="male" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="male" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
+                <Col span={4}><Checkbox id="male" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
               </Row>
             </div>
           </div>
@@ -71,11 +93,11 @@ class Search extends React.Component {
             Age
             <div className="age-list">
               <Row>
-                <Col span={4}><Checkbox id="age" value="AnyAge" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Puppy" onChange={this.addsToFilterState}>Puppy</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Adolescent" onChange={this.addsToFilterState}>Adolescent</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Adult" onChange={this.addsToFilterState}>Adult</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Senior" onChange={this.addsToFilterState}>Senior</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Anylifestage" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Puppy" onChange={this.addsToFilterState}>Puppy</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Adolescent" onChange={this.addsToFilterState}>Adolescent</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Adult" onChange={this.addsToFilterState}>Adult</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Senior" onChange={this.addsToFilterState}>Senior</Checkbox></Col>
               </Row>
             </div>
           </div>
@@ -90,13 +112,13 @@ class Search extends React.Component {
 
 const mapStateToProps = ({
   searchQuery: {
-    breed, gender, age, size,
+    breed, male, lifestage, size,
   },
 }) => (
   {
     breed,
-    gender,
-    age,
+    male,
+    lifestage,
     size,
   }
 );
