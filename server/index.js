@@ -152,6 +152,11 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
+router.post('/searchOrgDogsTest', async (ctx) => {
+  ctx.body = {
+    dog: 'hello',
+  };
+});
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
@@ -162,6 +167,7 @@ router.post('/searchOrgDogs', async (ctx) => {
     Object.keys(obj).forEach((prop) => {
       query = `${query}(`;
       const array = obj[prop]; // need to JSON.parse this for postman testing
+
       if (typeof array[0] === 'string') {
         query += array.map(val => `dogs.${prop} = "${val}" or`);
       } else {
