@@ -147,7 +147,6 @@ const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted
 // search dogs with various parameters for dogs
 const searchOrgDogs = query => knex('dogs').where(knex.raw(`${query}`));
 
-
 module.exports = {
   getAdopterProfile,
   getOrgProfile,

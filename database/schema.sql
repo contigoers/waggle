@@ -178,20 +178,22 @@ ADD FOREIGN KEY
 -- Test Data
 -- ---
 
--- INSERT INTO `adopters` (`id`,`user_id`,`name`,`pets`,`zipcode`,`house`) VALUES
--- ('','','','','','');
--- INSERT INTO `dogs` (`id`,`name`,`breed`,`gender`,`size`,`temperament`,`age`,`fixed`,`medical`,`energy`,`photo`,`org_id`,`description`) VALUES
--- ('','','','','','','','','','','','','');
- INSERT INTO `orgs` (`
- id`,`org_name
- `) VALUES
- (1, 'DEFAULT - FOR ADOPTERS');
--- INSERT INTO `breed` (`name`) VALUES
--- (''),
--- (''),
--- ('');
+INSERT INTO `adopters` (`id`,`user_id`,`name`,`pets`,`house_type`) VALUES
+(1,2,'Krisha Mehta',true,'house');
+
+INSERT INTO `dogs` (`id`,`name`,`breed`,`mix`,`male`,`size`,`aggressive`,`anxious`,`lifestage`,`age`,`fixed`,`diet`,`medical`,`energy_level`,`photo`,`description`,`adopted`,`org_id`) VALUES
+(1,'Sammy','Black Labrador Retriever',true,true,'medium',true,false,'adult',3,true,false,false,'medium',NULL,'Best dog ever! Has some aggression issues with other dogs but loves people', true,2);
+(2,'Charles Jr','Corgi',false,false,'small',false,false,'puppy',1,false,true,false,'high','http://imgur.com/JBFlsJK.jpg','Adorable corgi puppy! Has to have a special diet for now but very healthy and friendly!',false,3);
+(3,'Sparky','Golden Retriever',false,true,'large',false,true,'senior',9,true,false,true,'low','http://imgur.com/BuhZN1l.jpg','Very sweet dog but has some medical issues and needs due to senior age',false,3);
+
+INSERT INTO `orgs` (`id`,`org_name`,`user_id`) VALUES
+(1, 'DEFAULT - FOR ADOPTERS', NULL);
+(2,'Small Chance Rescue',1);
+(3,'Austin Pets Alive',3)
 
 -- INSERT INTO `favoritedogs` (`id`,`user_id`,`dog_id`) VALUES
 -- ('','','');
--- INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`, `state`,`zipcode`,`phone`) VALUES
--- ('','','','','','','','','','');
+INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`, `state`,`zipcode`,`phone`) VALUES
+(1,'orgUser','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@smallchancerescue.com',2,'P.O. Box 10033','Austin','TX',78766,'512-699-7244');
+(2,'kmehta903','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krisha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'123-456-7890');
+(3,'orgUser3','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adopt@austinpetsalive.org',3,'1156 West Cesar Chavez','Austin','TX',78704,'512-961-6519');
