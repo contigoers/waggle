@@ -4,7 +4,7 @@ import { uniq } from 'lodash';
 const initialState = {
   breed: [],
   gender: [],
-  age: [],
+  lifestage: [],
   size: [],
 };
 

@@ -12,7 +12,18 @@ class Search extends React.Component {
   }
 
   addsToFilterState({ target: { checked, value, id } }) {
-    this.props.updateSearchQuery(id, value, checked);
+    let valueChanged = value;
+    if (id === 'size' || id === 'lifestage') {
+      valueChanged = value.toLowerCase();
+    }
+    if (id === 'gender' && value === 'Male' && !this.props.breed.length) {
+      valueChanged = true;
+    } else if (id === 'gender' && value === 'Female' && !this.props.breed.length) {
+      valueChanged = false;
+    } else if (id === 'gender' && this.props.breed.length) {
+      valueChanged = [true, false];
+    }
+    this.props.updateSearchQuery(id, valueChanged, checked);
   }
 
   submitData() {
@@ -71,11 +82,11 @@ class Search extends React.Component {
             Age
             <div className="age-list">
               <Row>
-                <Col span={4}><Checkbox id="age" value="AnyAge" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Puppy" onChange={this.addsToFilterState}>Puppy</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Adolescent" onChange={this.addsToFilterState}>Adolescent</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Adult" onChange={this.addsToFilterState}>Adult</Checkbox></Col>
-                <Col span={4}><Checkbox id="age" value="Senior" onChange={this.addsToFilterState}>Senior</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Anylifestage" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Puppy" onChange={this.addsToFilterState}>Puppy</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Adolescent" onChange={this.addsToFilterState}>Adolescent</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Adult" onChange={this.addsToFilterState}>Adult</Checkbox></Col>
+                <Col span={4}><Checkbox id="lifestage" value="Senior" onChange={this.addsToFilterState}>Senior</Checkbox></Col>
               </Row>
             </div>
           </div>

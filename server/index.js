@@ -155,6 +155,7 @@ router.post('/favoriteDog/remove', async (ctx) => {
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
+  console.log('running');
   try {
     const obj = ctx.request.body;
     let query = '';
