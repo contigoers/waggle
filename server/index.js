@@ -311,7 +311,10 @@ router.post('/logout', isLoggedIn, async (ctx) => {
 
 app
   .use(router.routes())
-  .use(router.allowedMethods());
+  .use(router.allowedMethods())
+  .use(function* () { // eslint-disable-line
+    this.redirect('/');
+  });
 
 
 app.listen(process.env.PORT, () => {
