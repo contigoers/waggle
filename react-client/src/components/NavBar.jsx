@@ -6,6 +6,8 @@ import { Button } from 'antd';
 import Logo from '../assets/logo.png';
 import WrappedLoginForm from './LoginForm';
 import { toggleLoginModal } from '../actions/loginActions';
+import { toggleRegistrationModal } from '../actions/registrationActions';
+import RegistrationLandingModal from './RegistrationLandingModal';
 
 const NavBar = props =>
   (
@@ -20,9 +22,6 @@ const NavBar = props =>
         <div className="find-dog-div nav-item">
           <Link className="nav-link" to="/search">Find A Dog</Link>
         </div>
-        <div className="signup-div nav-item">
-          <Link className="nav-link" to="/signup">Sign Up</Link>
-        </div>
         <div className="about-div nav-item">
           <Link className="nav-link" to="/about">About Us</Link>
         </div>
@@ -32,19 +31,23 @@ const NavBar = props =>
         <div className="sample-profile nav-item">
           <Link className="nav-link" to="/sample">Sample Profile</Link>
         </div>
-
         <div className="login nav-item">
           <Button className="login-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
         </div>
+        <div className="signup nav-item">
+          <Button className="signup-button" onClick={props.toggleRegistrationModal} size="large" type="primary">Sign Up</Button>
+        </div>
       </div>
       <WrappedLoginForm />
+      <RegistrationLandingModal />
     </div>
   );
 
-const mapStateToProps = ({ loginModal: { visible } }) => (
+const mapStateToProps = state => (
   {
-    visible,
+    visible: state.loginModal.visible,
+    landing: state.registrationModal.landing,
   }
 );
 
-export default connect(mapStateToProps, { toggleLoginModal })(NavBar);
+export default connect(mapStateToProps, { toggleLoginModal, toggleRegistrationModal })(NavBar);
