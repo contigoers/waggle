@@ -153,7 +153,6 @@ const getOrgsAfterDogs = (orgs) => {
       whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]}`);
     }
   }
-
   return knex.column(knex.raw('orgs.*, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
     .select()
     .from(knex.raw('users, orgs'))
