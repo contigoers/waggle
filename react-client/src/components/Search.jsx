@@ -15,13 +15,20 @@ class Search extends React.Component {
   }
 
   addsToFilterState({ target: { id, value, checked } }) {
+    let valueChanged = value;
     if (id === 'male') {
       this.toggleGenderCheck(value, checked);
+      if (value === 'male') {
+        valueChanged = true;
+      } else if (value === 'female') {
+        valueChanged = false;
+      }
     } else if (id === 'size') {
       this.toggleSizeCheck(value, checked);
     } else if (id === 'lifestage') {
       this.toggleLifeStageCheck(value, checked);
     }
+    this.props.updateSearchQuery(id, valueChanged, checked);
   }
 
   addBreedToFilterState(value) {
