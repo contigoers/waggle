@@ -15,6 +15,8 @@
   "author": "Jean-Paul Angelle, Andrew Dibble, Krisha Mehta, Shannon Pearson",
   "license": "ISC",
   "devDependencies": {
+  },
+  "dependencies": {
     "css-loader": "^0.28.11",
     "eslint": "^4.18.2",
     "eslint-config-airbnb": "^16.1.0",
@@ -24,9 +26,7 @@
     "file-loader": "^1.1.11",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
-    "webpack": "^2.2.1"
-  },
-  "dependencies": {
+    "webpack": "^2.2.1",
     "@ava/babel-preset-stage-4": "^1.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.23.1",
