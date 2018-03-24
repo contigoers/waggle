@@ -10,7 +10,7 @@
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon -r dotenv/config server/index.js",
     "start": "node server/index.js",
-    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress"
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js"
   },
   "author": "Jean-Paul Angelle, Andrew Dibble, Krisha Mehta, Shannon Pearson",
   "license": "ISC",
