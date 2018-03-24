@@ -11,19 +11,6 @@ class DogProfile extends React.Component {
       favorite: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
-  }
-
-  componentDidMount() {
-    // get id from url
-    // var id = this.props.match.url; // '/dog/id/'
-    // id = id.slice(5, id.length - 1);
-    // gets dog at key id from store
-    // const dog = null;
-    // gets org at key dog.orgId from store
-    // const org = null;
-    // const dog = this.props.results.dogs['39'];
-    // const org = this.props.results.orgs[dog[org_id]];
   }
 
   toggleFavorite() {
@@ -33,13 +20,8 @@ class DogProfile extends React.Component {
   }
 
   render() {
-    console.log('props', this.props);
-    const url = this.props.location.pathname;
-    const id = url.slice(5);
-    console.log(id);
-
+    const id = this.props.location.pathname.slice(5);
     const dog = this.props.results.dogs[id];
-    console.log(dog);
     const org = this.props.results.orgs[dog.org_id];
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
@@ -128,5 +110,3 @@ class DogProfile extends React.Component {
 const mapStateToProps = state => ({ results: state.search.results });
 
 export default connect(mapStateToProps, null)(DogProfile);
-
-// TODO: editable?????

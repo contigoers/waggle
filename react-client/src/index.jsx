@@ -31,7 +31,6 @@ ReactDOM.render(
         <Switch>
           <Route path="/search" component={Search} />
           <Route path="/create" component={CreateDogForm} />
-          <Route path="/sample" component={DogProfile} />
           <Route path="/dog/:id" component={DogProfile} />
           <Route path="/" component={Landing} />
         </Switch>
