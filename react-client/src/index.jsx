@@ -16,7 +16,7 @@ import Search from './components/Search';
 import Footer from './components/Footer';
 import CreateDogForm from './components/CreateDogForm';
 import DogProfile from './components/DogProfile';
-import SearchResults from './components/SearchResults';
+// import SearchResults from './components/SearchResults';
 
 
 /* eslint-disable no-underscore-dangle */
@@ -34,7 +34,7 @@ ReactDOM.render(
           <Route path="/search" component={Search} />
           <Route path="/create" component={CreateDogForm} />
           <Route path="/sample" component={DogProfile} />
-          // <Route path="/searchResults" component={SearchResults} />
+          {/* <Route path="/searchResults" component={SearchResults} /> */}
           <Route path="/" component={Landing} />
         </Switch>
         <Footer />
