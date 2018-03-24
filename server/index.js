@@ -153,15 +153,8 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
-router.post('/searchOrgDogsTest', async (ctx) => {
-  ctx.body = {
-    dog: 'hello',
-  };
-});
-
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
-  console.log(ctx.request.body);
   try {
     const obj = ctx.request.body;
     let query = '';
@@ -184,7 +177,6 @@ router.post('/searchOrgDogs', async (ctx) => {
     let queryNew = query.split(' ');
     queryNew.splice(queryNew.length - 2, 2);
     queryNew = queryNew.join(' ');
-    console.log(queryNew);
 
     let dogs = await db.searchOrgDogs(queryNew);
 
