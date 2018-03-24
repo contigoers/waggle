@@ -5,6 +5,7 @@ import registrationModal from './registrationReducers';
 import search from './searchReducers';
 import dummyProfile from './dummyProfile';
 import loginModal from './loginReducers';
+import searchSelections from './searchViewReducers';
 
 const rootReducer = combineReducers({
   contents: showMessage,
@@ -13,7 +14,7 @@ const rootReducer = combineReducers({
   search,
   profile: dummyProfile,
   loginModal,
-
+  searchSelections,
 });
 
 export default rootReducer;
