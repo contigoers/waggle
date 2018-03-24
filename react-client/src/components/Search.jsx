@@ -85,13 +85,10 @@ class Search extends React.Component {
   // }
 
   render() {
-<<<<<<< HEAD
     const breedDataSource = breedList;
-=======
     if (this.state.getResults) {
       return <Redirect from="/search" to="/searchResults" />;
     }
->>>>>>> b7bae107ef487c2d28a2b62e48cd02888a0e4248
     return (
       <div className="search-div">
         <div className="search-filters">
@@ -167,19 +164,3 @@ const mapStateToProps = ({ search }) => (
 );
 
 export default connect(mapStateToProps, { updateSearchQuery, dogsSearch })(Search);
-
-
-// <Row>
-//               //   <Col span={4}><Checkbox id="breed" value="AnyBreed" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Pug" onChange={this.addsToFilterState}>Pug</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Poodle" onChange={this.addsToFilterState}>Poodle</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Corgi" onChange={this.addsToFilterState}>Corgi</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Chihuahua" onChange={this.addsToFilterState}>Chihuahua</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Husky" onChange={this.addsToFilterState}>Husky</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Adam" onChange={this.addsToFilterState}>Adam</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="GreatDane" onChange={this.addsToFilterState}>Great Dane</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="GermanShepherd" onChange={this.addsToFilterState}>German Shepherd</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="StBernard" onChange={this.addsToFilterState}>St. Bernard</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Pitbull" onChange={this.addsToFilterState}>Pitbull</Checkbox></Col>
-//               //   <Col span={4}><Checkbox id="breed" value="Pointer" onChange={this.addsToFilterState}>Pointer</Checkbox></Col>
-//               // </Row>
