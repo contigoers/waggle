@@ -83,19 +83,3 @@ const mapStateToProps = ({ registrationModal: { landing, org, adopter } }) => (
 );
 
 export default connect(mapStateToProps, { toggleRegistrationModal, updateModalView })(LandingModal);
-
-
-/*
-<Modal
-  id="adopter"
-  title="Register as an Adopter"
-  visible={this.props.adopter}
-  onCancel={this.toggleModal}
-  footer={[
-    <Button key="back" onClick={this.toggleModal}>Cancel</Button>,
-    <Button id="adopter" key="register" type="primary" onClick={this.handleSubmit}>
-      Register
-    </Button>,
-  ]}
->
-*/
