@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Row, Col, Checkbox, Button } from 'antd';
 import { forOwn } from 'lodash';
 import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
@@ -7,6 +8,9 @@ import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
 class Search extends React.Component {
   constructor() {
     super();
+    this.state = {
+      getResults: false,
+    };
     this.addsToFilterState = this.addsToFilterState.bind(this);
     this.submitData = this.submitData.bind(this);
   }
@@ -33,9 +37,15 @@ class Search extends React.Component {
       }
     });
     this.props.dogsSearch(searchObject);
+    console.log('SEARCH STATE:', this.props);
+    // reroute to search results page
+    // this.setState({ getResults: true });
   }
 
   render() {
+    if (this.state.getResults) {
+      return <Redirect from="/search" to="/searchResults" />;
+    }
     return (
       <div className="search-div">
         <div className="search-filters">
