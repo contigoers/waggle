@@ -136,9 +136,9 @@ INSERT INTO `orgs` (`id`,`org_name`) VALUES
 (3,'Austin Pets Alive');
 
 INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`, `state`,`zipcode`,`phone`) VALUES
-(1,'orgUser','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@smallchancerescue.com',2,'P.O. Box 10033','Austin','TX',78766,'512-699-7244'),
-(2,'kmehta903','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krisha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'123-456-7890'),
-(3,'orgUser3','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adopt@austinpetsalive.org',3,'1156 West Cesar Chavez','Austin','TX',78704,'512-961-6519');
+(1,'orgUser','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@smallchancerescue.com',2,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(2,'kmehta903','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krisha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(3,'orgUser3','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adopt@austinpetsalive.org',3,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519');
 
 INSERT INTO `adopters` (`id`,`user_id`,`name`,`pets`,`house_type`) VALUES
 (1,2,'Krisha Mehta',true,'house');

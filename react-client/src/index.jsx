@@ -36,6 +36,7 @@ ReactDOM.render(
           <Route path="/sample" component={DogProfile} />
           <Route path="/org" component={OrgProfile} />
           <Route path="/searchResults" component={SearchResults} />
+          <Route path="/dog/:id" component={DogProfile} />
           <Route path="/" component={Landing} />
         </Switch>
         <Footer />

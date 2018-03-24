@@ -5,6 +5,7 @@ import { PhoneNumberUtil } from 'google-libphonenumber';
 import axios from 'axios';
 
 import { toggleRegistrationModal } from '../actions/registrationActions';
+import states from '../assets/states';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -207,7 +208,9 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
                 required: true,
                 message: 'Please enter your state!',
               }],
-              })(<Input />)}
+              })(<Select style={{ width: 120 }}>
+                {states.map(state => <Option key={state} value={state}>{state}</Option>)}
+              </Select>) /* eslint-disable-line */}
         </FormItem>
         <FormItem
           {...formItemLayout}
