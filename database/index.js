@@ -146,7 +146,7 @@ const searchOrgDogs = (dogFilters) => {
   let query = '';
   Object.keys(dogFilters).forEach((prop) => {
     query = `${query}(`;
-    const array = JSON.parse(dogFilters[prop]); // need to JSON.parse this for postman testing
+    const array = dogFilters[prop]; // need to JSON.parse this for postman testing
     if (typeof array[0] === 'string') {
       query += array.map(val => `dogs.${prop} = "${val}" or`);
     } else {

@@ -23,6 +23,9 @@ const defaultState = {
     city: 'Austin',
     state: 'TX',
     zipcode: 78703,
+    email: 'adopt@austinpetsalive.org',
+    username: 'orguser123',
+    id: 2,
   },
 };
 
