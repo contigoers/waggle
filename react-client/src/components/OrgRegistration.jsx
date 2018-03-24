@@ -200,6 +200,17 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
         </FormItem>
         <FormItem
           {...formItemLayout}
+          label="State"
+        >
+          {getFieldDecorator('state', {
+              rules: [{
+                required: true,
+                message: 'Please enter your state!',
+              }],
+              })(<Input />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
           label="ZIP Code"
         >
           {getFieldDecorator('zipcode', {
