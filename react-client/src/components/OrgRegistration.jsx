@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select, Button, Modal } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import axios from 'axios';
 
@@ -101,131 +101,118 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     </Select>); // eslint-disable-line
 
     return (
-      <Modal
-        id="org"
-        title="Register as an Organization"
-        visible={this.props.org}
-        onCancel={this.toggleModal}
-        footer={[
-          <Button key="back" onClick={this.toggleModal}>Cancel</Button>,
-          <Button id="org" key="register" type="primary" onClick={this.handleSubmit}>
-            Register
-          </Button>,
-        ]}
-      >
-        <Form onSubmit={this.handleSubmit}>
-          <FormItem
-            {...formItemLayout}
-            label="E-mail"
-          >
-            {getFieldDecorator('email', {
-                rules: [{
-                  type: 'email', message: 'The input is not valid E-mail!',
-                }, {
-                  required: true, message: 'Please enter your E-mail!',
-                }],
-              })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Username"
-          >
-            {getFieldDecorator('username', {
-                rules: [{
-                  required: true, message: 'Please enter a username!',
-                }],
-              })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Password"
-          >
-            {getFieldDecorator('password', {
-                rules: [{
-                  required: true, message: 'Please enter your password!',
-                }, {
-                  validator: this.validateToNextPassword,
-                }],
-              })(<Input type="password" />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Confirm Password"
-          >
-            {getFieldDecorator('confirm', {
-                rules: [{
-                  required: true, message: 'Please confirm your password!',
-                }, {
-                  validator: this.compareToFirstPassword,
-                }],
-              })(<Input type="password" onBlur={this.handleBlur} />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Phone Number"
-            validateStatus={!this.state.numberIsValid && this.state.phoneDirty ? 'error' : null}
-            help={!this.state.numberIsValid && this.state.phoneDirty ? 'Please enter a valid phone number' : null}
-          >
-            {getFieldDecorator('phone', {
+      <Form onSubmit={this.handleSubmit}>
+        <FormItem
+          {...formItemLayout}
+          label="E-mail"
+        >
+          {getFieldDecorator('email', {
               rules: [{
-                validator: this.validateNumber,
+                type: 'email', message: 'The input is not valid E-mail!',
+              }, {
+                required: true, message: 'Please enter your E-mail!',
               }],
-            })(<Input
-              onChange={this.handleChange}
-              addonBefore={prefixSelector}
-              style={{ width: '100%' }}
-              onBlur={this.handleBlur}
-            />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Organization Name"
-          >
-            {getFieldDecorator('name', {
-                rules: [{
-                  required: true,
-                  message: 'Please enter your name!',
-                }],
+            })(<Input />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Username"
+        >
+          {getFieldDecorator('username', {
+              rules: [{
+                required: true, message: 'Please enter a username!',
+              }],
+            })(<Input />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Password"
+        >
+          {getFieldDecorator('password', {
+              rules: [{
+                required: true, message: 'Please enter your password!',
+              }, {
+                validator: this.validateToNextPassword,
+              }],
+            })(<Input type="password" />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Confirm Password"
+        >
+          {getFieldDecorator('confirm', {
+              rules: [{
+                required: true, message: 'Please confirm your password!',
+              }, {
+                validator: this.compareToFirstPassword,
+              }],
+            })(<Input type="password" onBlur={this.handleBlur} />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Phone Number"
+          validateStatus={!this.state.numberIsValid && this.state.phoneDirty ? 'error' : null}
+          help={!this.state.numberIsValid && this.state.phoneDirty ? 'Please enter a valid phone number' : null}
+        >
+          {getFieldDecorator('phone', {
+            rules: [{
+              validator: this.validateNumber,
+            }],
+          })(<Input
+            onChange={this.handleChange}
+            addonBefore={prefixSelector}
+            style={{ width: '100%' }}
+            onBlur={this.handleBlur}
+          />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Organization Name"
+        >
+          {getFieldDecorator('name', {
+              rules: [{
+                required: true,
+                message: 'Please enter your name!',
+              }],
+            })(<Input />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="Street Address"
+        >
+          {getFieldDecorator('address', {
+              rules: [{
+                required: true,
+                message: 'Please enter your street address!',
+              }],
+            })(<Input />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="City"
+        >
+          {getFieldDecorator('city', {
+              rules: [{
+                required: true,
+                message: 'Please enter your city!',
+              }],
               })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="Street Address"
-          >
-            {getFieldDecorator('address', {
-                rules: [{
-                  required: true,
-                  message: 'Please enter your street address!',
-                }],
-              })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="City"
-          >
-            {getFieldDecorator('city', {
-                rules: [{
-                  required: true,
-                  message: 'Please enter your city!',
-                }],
-                })(<Input />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="ZIP Code"
-          >
-            {getFieldDecorator('zipcode', {
-                rules: [{
-                  required: true,
-                  message: 'Please enter your city!',
-                }, {
-                  pattern: '[0-9]{5}',
-                  message: 'Please enter your five-digit ZIP!',
-                }],
-              })(<Input />)}
-          </FormItem>
-        </Form>
-      </Modal>
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label="ZIP Code"
+        >
+          {getFieldDecorator('zipcode', {
+              rules: [{
+                required: true,
+                message: 'Please enter your city!',
+              }, {
+                pattern: '[0-9]{5}',
+                message: 'Please enter your five-digit ZIP!',
+              }],
+            })(<Input />)}
+        </FormItem>
+      </Form>
     );
   }
 });
