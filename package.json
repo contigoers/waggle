@@ -33,9 +33,6 @@
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^2.2.1"
   },
-  "plugins": [
-    "new UglifyJsPlugin()",
-  ],
   "dependencies": {
     "antd": "^3.3.0",
     "axios": "^0.18.0",
