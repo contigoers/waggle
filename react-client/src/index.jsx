@@ -19,7 +19,6 @@ import CreateDogForm from './components/CreateDogForm';
 import DogProfile from './components/DogProfile';
 import SearchResults from './components/SearchResults';
 
-
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers(applyMiddleware(promise)));
@@ -36,7 +35,7 @@ ReactDOM.render(
           <Route path="/search" component={Search} />
           <Route path="/create" component={CreateDogForm} />
           <Route path="/sample" component={DogProfile} />
-          // <Route path="/searchResults" component={SearchResults} />
+          <Route path="/searchresults" component={SearchResults} />
           <Route path="/" component={Landing} />
         </Switch>
         <Footer />
