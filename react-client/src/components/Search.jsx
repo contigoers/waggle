@@ -1,21 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { Row, Col, Checkbox, Button } from 'antd';
+import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
 import { forOwn } from 'lodash';
+import { Redirect } from 'react-router-dom';
 import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
+import breedList from '../../../database/breeds';
 
 class Search extends React.Component {
   constructor() {
     super();
     this.state = {
+      AnyGender: false,
+      Male: false,
+      Female: false,
       getResults: false,
     };
     this.addsToFilterState = this.addsToFilterState.bind(this);
     this.submitData = this.submitData.bind(this);
   }
 
-  addsToFilterState({ target: { checked, value, id } }) {
+  addsToFilterState({ target: { id, value, checked } }) {
+    this.toggleGenderCheck(value, checked);
     let valueChanged = value;
     if (id === 'size' || id === 'lifestage') {
       valueChanged = value.toLowerCase();
@@ -26,6 +31,39 @@ class Search extends React.Component {
       valueChanged = false;
     }
     this.props.updateSearchQuery(id, valueChanged, checked);
+  }
+
+  toggleGenderCheck(value, checked) {
+    if ((value === 'Male' || value === 'Female') && checked) {
+      this.setState({
+        AnyGender: false,
+        [value]: true,
+      });
+    } else if (!checked) {
+      this.setState({
+        [value]: false,
+      });
+    }
+    if ((value === 'AnyGender' && checked)) {
+      this.setState({
+        Female: false,
+        Male: false,
+        AnyGender: true,
+      });
+    }
+    if ((value === 'Male' && this.state.Female && checked) || (value === 'Female' && this.state.Male && checked)) {
+      setTimeout(() => {
+        this.setState({
+          Female: false,
+          Male: false,
+          AnyGender: true,
+        });
+      }, 300);
+    }
+  }
+
+  addBreedToFilterState(value) {
+    this.props.updateSearchQuery('breed', value, true);
   }
 
   submitData() {
@@ -42,39 +80,43 @@ class Search extends React.Component {
     // this.setState({ getResults: true });
   }
 
+  // onSelect(value) {
+  //   console.log('onSelect', value);
+  // }
+
   render() {
+<<<<<<< HEAD
+    const breedDataSource = breedList;
+=======
     if (this.state.getResults) {
       return <Redirect from="/search" to="/searchResults" />;
     }
+>>>>>>> b7bae107ef487c2d28a2b62e48cd02888a0e4248
     return (
       <div className="search-div">
         <div className="search-filters">
           <div className="breed-filter">
             Breed
             <div className="breed-list">
-              <Row>
-                <Col span={4}><Checkbox id="breed" value="AnyBreed" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Pug" onChange={this.addsToFilterState}>Pug</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Poodle" onChange={this.addsToFilterState}>Poodle</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Corgi" onChange={this.addsToFilterState}>Corgi</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Chihuahua" onChange={this.addsToFilterState}>Chihuahua</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Husky" onChange={this.addsToFilterState}>Husky</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Adam" onChange={this.addsToFilterState}>Adam</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="GreatDane" onChange={this.addsToFilterState}>Great Dane</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="GermanShepherd" onChange={this.addsToFilterState}>German Shepherd</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="StBernard" onChange={this.addsToFilterState}>St. Bernard</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Pitbull" onChange={this.addsToFilterState}>Pitbull</Checkbox></Col>
-                <Col span={4}><Checkbox id="breed" value="Pointer" onChange={this.addsToFilterState}>Pointer</Checkbox></Col>
-              </Row>
+              <AutoComplete
+                dataSource={breedDataSource}
+                style={{ width: 500 }}
+                id="breed"
+                placeholder="enter breed"
+                filterOption={(inputValue, option) => option.props.children
+                  .toUpperCase()
+                  .indexOf(inputValue.toUpperCase()) !== -1}
+                onSelect={inputValue => this.addBreedToFilterState(inputValue)}
+              />
             </div>
           </div>
           <div className="gender-filter">
             Gender
             <div className="gender-list">
               <Row>
-                <Col span={4}><Checkbox id="male" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
-                <Col span={4}><Checkbox id="male" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
-                <Col span={4}><Checkbox id="male" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
+                <Col span={4}><Checkbox checked={this.state.AnyGender} id="male" value="AnyGender" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+                <Col span={4}><Checkbox checked={this.state.Male} id="male" value="Male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
+                <Col span={4}><Checkbox checked={this.state.Female} id="male" value="Female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
               </Row>
             </div>
           </div>
@@ -125,3 +167,19 @@ const mapStateToProps = ({ search }) => (
 );
 
 export default connect(mapStateToProps, { updateSearchQuery, dogsSearch })(Search);
+
+
+// <Row>
+//               //   <Col span={4}><Checkbox id="breed" value="AnyBreed" onChange={this.addsToFilterState}>Any</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Pug" onChange={this.addsToFilterState}>Pug</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Poodle" onChange={this.addsToFilterState}>Poodle</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Corgi" onChange={this.addsToFilterState}>Corgi</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Chihuahua" onChange={this.addsToFilterState}>Chihuahua</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Husky" onChange={this.addsToFilterState}>Husky</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Adam" onChange={this.addsToFilterState}>Adam</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="GreatDane" onChange={this.addsToFilterState}>Great Dane</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="GermanShepherd" onChange={this.addsToFilterState}>German Shepherd</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="StBernard" onChange={this.addsToFilterState}>St. Bernard</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Pitbull" onChange={this.addsToFilterState}>Pitbull</Checkbox></Col>
+//               //   <Col span={4}><Checkbox id="breed" value="Pointer" onChange={this.addsToFilterState}>Pointer</Checkbox></Col>
+//               // </Row>
