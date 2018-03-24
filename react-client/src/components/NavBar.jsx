@@ -32,6 +32,9 @@ const NavBar = props =>
         <div className="sample-profile nav-item">
           <Link className="nav-link" to="/sample">Sample Profile</Link>
         </div>
+        <div className="org-profile nav-item">
+          <Link className="nav-link" to="/org">Org Profile</Link>
+        </div>
 
         <div className="login nav-item">
           <Button className="login-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
