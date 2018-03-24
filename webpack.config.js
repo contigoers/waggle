@@ -38,9 +38,9 @@ module.exports = {
         ],
       }],
   },
-  plugins: [
-    new UglifyJsPlugin(),
-  ],
+  // plugins: [
+  //   new UglifyJsPlugin(),
+  // ],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
