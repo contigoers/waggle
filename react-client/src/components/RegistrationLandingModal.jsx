@@ -11,33 +11,18 @@ class LandingModal extends Component {
   constructor(props) {
     super(props);
 
-    this.handleOrgSubmit = this.handleOrgSubmit.bind(this);
-    this.handleAdopterSubmit = this.handleAdopterSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleOrgSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault();
-    const { form } = this.orgRef.props;
-    form.validateFieldsAndScroll((err, values) => {
-      this.orgRef.setState({ phoneDirty: true });
+    const ref = e.target.id === 'org' ? this.orgRef : this.adopterRef;
+    ref.props.form.validateFieldsAndScroll((err, values) => {
+      ref.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
         axios.post('/register', values);
-        this.orgRef.setState({ phoneDirty: false });
-        form.resetFields();
-        this.toggleModal();
-      }
-    });
-  }
-
-  handleAdopterSubmit(e) {
-    e.preventDefault();
-    const { form } = this.adopterRef.props;
-    form.validateFieldsAndScroll((err, values) => {
-      this.adopterRef.setState({ phoneDirty: true });
-      if (!err && this.state.numberIsValid) {
-        axios.post('/register', values);
-        this.adopterRef.setState({ phoneDirty: false });
-        form.resetFields();
+        ref.setState({ phoneDirty: false });
+        ref.props.form.resetFields();
         this.toggleModal();
       }
     });
@@ -56,10 +41,10 @@ class LandingModal extends Component {
           <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
           ]) || (!adopter && org && [
             <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-            <Button id="org" key="register" type="primary" onClick={this.handleOrgSubmit}>Register</Button>,
+            <Button id="org" key="register" type="primary" onClick={this.handleSubmit}>Register</Button>,
           ]) || (adopter && !org && [
             <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-            <Button id="adopter" key="register" type="primary" onClick={this.handleAdopterSubmit}>Register</Button>,
+            <Button id="adopter" key="register" type="primary" onClick={this.handleSubmit}>Register</Button>,
           ])}
       >
 
