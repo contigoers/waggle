@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Card, Divider, Icon, message } from 'antd';
 
 // onclick should render a new profile page with org signed in (from state?)
@@ -10,9 +11,16 @@ class SearchResult extends React.Component {
     super(props);
     this.state = {
       favorite: false,
+      seeProfile: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
+  }
+
+  // onclick sends to profile page
+  onClick() {
+    // reroute to url /dog/[dog.id]
+    this.setState({ seeProfile: true });
   }
 
   toggleFavorite() {
@@ -21,13 +29,14 @@ class SearchResult extends React.Component {
     });
   }
 
-  // onclick sends to profile page
-  //   onClick() {
-  //     // reroute to url /dog/[dog.id]
-  //   }
-
   render() {
     const { dog } = this.props;
+
+    const url = `/dog/${dog.id}`;
+
+    if (this.state.seeProfile) {
+      return <Redirect to={url} />;
+    }
 
     const stage = dog.lifestage
       .charAt(0)
@@ -54,10 +63,7 @@ class SearchResult extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log(state);
-  return state;
-};
+const mapStateToProps = state => ({ results: state.search.results });
 
 export default connect(mapStateToProps, null)(SearchResult);
 
