@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Row, Col, Checkbox, Button } from 'antd';
 import { forOwn } from 'lodash';
 import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
@@ -33,6 +34,9 @@ class Search extends React.Component {
       }
     });
     this.props.dogsSearch(searchObject);
+    console.log('SEARCH STATE:', this.props);
+    // reroute to search results page
+    return <Redirect to="/searchResults" />;
   }
 
   render() {

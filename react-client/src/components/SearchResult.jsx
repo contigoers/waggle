@@ -12,6 +12,7 @@ class SearchResult extends React.Component {
       favorite: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   toggleFavorite() {
@@ -19,6 +20,9 @@ class SearchResult extends React.Component {
   }
 
   // onclick sends to profile page
+  //   onClick() {
+  //     // reroute to url /dog/[dog.id]
+  //   }
 
   render() {
     const { dog } = this.props;
@@ -32,6 +36,7 @@ class SearchResult extends React.Component {
         style={{ width: 300, margin: 30, marginLeft: 200 }}
         cover={<img alt="pupper" src={dog.photo} />}
         actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+        onClick={this.onClick}
       >
         <Card.Meta title={dog.name} />
         <div style={{ marginTop: 10 }}>

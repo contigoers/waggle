@@ -19,13 +19,4 @@ const updateRandomPic = async () => {
   };
 };
 
-// const addDog = async () => {
-//   const { data } = await axios.post('/createOrgDog');
-
-//   return {
-//     type: ADD_DOG, // ?
-//     payload: data,
-//   };
-// };
-
 export { TOGGLE_BUTTON, sendMessage, UPDATE_RANDOM_PIC, updateRandomPic };
