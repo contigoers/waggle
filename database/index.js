@@ -144,21 +144,21 @@ const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted
 
 const searchOrgDogs = query => knex('dogs').where(knex.raw(`${query}`));
 
-const getOrgsAfterDogs = (orgs) => {
-  let whereQuery = '';
-  for (let i = 0; i < orgs.length; i += 1) {
-    if (i < orgs.length - 1) {
-      whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]} or `);
-    } else {
-      whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]}`);
-    }
-  }
+// const getOrgsAfterDogs = (orgs) => {
+//   let whereQuery = '';
+//   for (let i = 0; i < orgs.length; i += 1) {
+//     if (i < orgs.length - 1) {
+//       whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]} or `);
+//     } else {
+//       whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]}`);
+//     }
+//   }
 
-  return knex.column(knex.raw('orgs.*, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
-    .select()
-    .from(knex.raw('users, orgs'))
-    .where(knex.raw(whereQuery));
-};
+//   return knex.column(knex.raw('orgs.*, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
+//     .select()
+//     .from(knex.raw('users, orgs'))
+//     .where(knex.raw(whereQuery));
+// };
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 

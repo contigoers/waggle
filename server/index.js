@@ -160,71 +160,71 @@ router.post('/searchOrgDogsTest', async (ctx) => {
 });
 
 // filtered search for dogs
-// router.post('/searchOrgDogs', async (ctx) => {
-//   console.log(ctx.request.body);
-//   try {
-//     const obj = ctx.request.body;
-//     let query = '';
-//     Object.keys(obj).forEach((prop) => {
-//       query = `${query}(`;
-//       const array = obj[prop]; // need to JSON.parse this for postman testing
+router.post('/searchOrgDogs', async (ctx) => {
+  console.log(ctx.request.body);
+  try {
+    const obj = ctx.request.body;
+    let query = '';
+    Object.keys(obj).forEach((prop) => {
+      query = `${query}(`;
+      const array = obj[prop]; // need to JSON.parse this for postman testing
 
-//       if (typeof array[0] === 'string') {
-//         query += array.map(val => `dogs.${prop} = "${val}" or`);
-//       } else {
-//         query += array.map(val => `dogs.${prop} = ${val} or`);
-//       }
-//       const temp = query.split(' ');
-//       if (temp[temp.length - 1] === 'or') {
-//         temp.pop();
-//       }
-//       query = `${temp.join(' ')}) and `;
-//     });
-//     query = query.split(',').join(' ');
-//     let queryNew = query.split(' ');
-//     queryNew.splice(queryNew.length - 2, 2);
-//     queryNew = queryNew.join(' ');
-//     console.log(queryNew);
+      if (typeof array[0] === 'string') {
+        query += array.map(val => `dogs.${prop} = "${val}" or`);
+      } else {
+        query += array.map(val => `dogs.${prop} = ${val} or`);
+      }
+      const temp = query.split(' ');
+      if (temp[temp.length - 1] === 'or') {
+        temp.pop();
+      }
+      query = `${temp.join(' ')}) and `;
+    });
+    query = query.split(',').join(' ');
+    let queryNew = query.split(' ');
+    queryNew.splice(queryNew.length - 2, 2);
+    queryNew = queryNew.join(' ');
+    console.log(queryNew);
 
-//     let dogs = await db.searchOrgDogs(queryNew);
+    let dogs = await db.searchOrgDogs(queryNew);
 
-//     if (dogs.length) {
-//       let orgs = {};
+    if (dogs.length) {
+      let orgs = {};
 
-//       dogs = mapKeys(dogs, ({ id, org_id }) => {
-//         orgs[org_id] = 1;
-//         return id;
-//       });
+      dogs = mapKeys(dogs, ({ id, org_id }) => {
+        orgs[org_id] = 1;
+        return id;
+      });
 
-//       orgs = await db.getOrgsAfterDogs(Object.keys(orgs));
+      orgs = await db.getOrgsAfterDogs(Object.keys(orgs));
 
-//       orgs = mapKeys(orgs, 'id');
+      orgs = mapKeys(orgs, 'id');
 
-//       const dogsAndOrgs = {
-//         dogs,
-//         orgs,
-//       };
+      const dogsAndOrgs = {
+        dogs,
+        orgs,
+      };
 
-//       ctx.status = 201;
-//       ctx.body = {
-//         status: 'success',
-//         dogsAndOrgs,
-//       };
-//     } else {
-//       ctx.status = 400;
-//       ctx.body = {
-//         status: 'error',
-//         message: 'No dogs match this search criteria!',
-//       };
-//     }
-//   } catch (err) {
-//     ctx.status = 400;
-//     ctx.body = {
-//       status: 'error',
-//       message: err.message || 'Sorry, an error has occurred.',
-//     };
-//   }
-// });
+      ctx.status = 201;
+      ctx.body = {
+        status: 'success',
+        dogsAndOrgs,
+      };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'No dogs match this search criteria!',
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+});
 
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
