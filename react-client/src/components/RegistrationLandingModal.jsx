@@ -12,6 +12,7 @@ class LandingModal extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleModal = this.props.toggleRegistrationModal.bind(this);
   }
 
   handleSubmit(e) {
@@ -19,7 +20,7 @@ class LandingModal extends Component {
     const ref = e.target.id === 'org' ? this.orgRef : this.adopterRef;
     ref.props.form.validateFieldsAndScroll((err, values) => {
       ref.setState({ phoneDirty: true });
-      if (!err && this.state.numberIsValid) {
+      if (!err && ref.state.numberIsValid) {
         axios.post('/register', values);
         ref.setState({ phoneDirty: false });
         ref.props.form.resetFields();
