@@ -36,7 +36,7 @@ ReactDOM.render(
           <Route path="/search" component={Search} />
           <Route path="/create" component={CreateDogForm} />
           <Route path="/sample" component={DogProfile} />
-          <Route path="/searchResults" component={SearchResults} />
+          // <Route path="/searchResults" component={SearchResults} />
           <Route path="/" component={Landing} />
         </Switch>
         <Footer />

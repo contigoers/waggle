@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, Divider, Icon } from 'antd';
+import { Card, Divider, Icon, message } from 'antd';
 
 // onclick should render a new profile page with org signed in (from state?)
 // and dog from that result
@@ -16,7 +16,9 @@ class SearchResult extends React.Component {
   }
 
   toggleFavorite() {
-    this.setState({ favorite: !this.state.favorite });
+    this.setState({ favorite: !this.state.favorite }, () => {
+      message.info(this.state.favorite ? 'Added to favorites!' : 'Remove from favorites');
+    });
   }
 
   // onclick sends to profile page
