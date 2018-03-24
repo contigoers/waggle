@@ -10,12 +10,13 @@
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon -r dotenv/config server/index.js",
     "start": "node server/index.js",
-    "heroku-postbuild": "webpack -p --config ./webpack.config.js"
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress"
   },
   "author": "Jean-Paul Angelle, Andrew Dibble, Krisha Mehta, Shannon Pearson",
   "license": "ISC",
   "devDependencies": {
     "@ava/babel-preset-stage-4": "^1.1.0",
+    "@babel/preset-env": "^7.0.0-beta.42",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
