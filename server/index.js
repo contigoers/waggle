@@ -153,12 +153,6 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
-router.post('/searchOrgDogsTest', async (ctx) => {
-  ctx.body = {
-    dog: 'hello',
-  };
-});
-
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
   try {
