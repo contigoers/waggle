@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
-import { forOwn } from 'lodash';
-import { Redirect } from 'react-router-dom';
+import { forOwn, keys } from 'lodash';
 import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
 import breedList from '../../../database/breeds';
+import SearchResults from './SearchResults';
 
 class Search extends React.Component {
   constructor() {
     super();
+
     this.state = {
       AnyGender: false,
       Male: false,
       Female: false,
-      getResults: false,
     };
     this.addsToFilterState = this.addsToFilterState.bind(this);
     this.submitData = this.submitData.bind(this);
@@ -75,9 +75,6 @@ class Search extends React.Component {
       }
     });
     this.props.dogsSearch(searchObject);
-    console.log('SEARCH STATE:', this.props);
-    // reroute to search results page
-    // this.setState({ getResults: true });
   }
 
   // onSelect(value) {
@@ -86,9 +83,6 @@ class Search extends React.Component {
 
   render() {
     const breedDataSource = breedList;
-    if (this.state.getResults) {
-      return <Redirect from="/search" to="/searchResults" />;
-    }
     return (
       <div className="search-div">
         <div className="search-filters">
@@ -146,6 +140,9 @@ class Search extends React.Component {
         <Button className="submit-search" onClick={this.submitData}>
           Submit
         </Button>
+        {keys(this.props.results).length > 0 && (
+          <SearchResults />
+        )}
       </div>
     );
   }
