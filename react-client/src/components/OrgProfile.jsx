@@ -126,6 +126,6 @@ const mapStateToProps = (state) => {
   return state;
 };
 
-export default connect(mapStateToProps, { markAdopted, unmarkAdopted })(OrgProfile);
+export default connect(mapStateToProps, null)(OrgProfile);
 
 // TODO: editable?????

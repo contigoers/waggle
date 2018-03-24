@@ -12,7 +12,7 @@ class SearchResult extends React.Component {
       favorite: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
-    this.onClick = this.onClick.bind(this);
+    // this.onClick = this.onClick.bind(this);
   }
 
   toggleFavorite() {
