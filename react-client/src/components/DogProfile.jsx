@@ -1,24 +1,20 @@
 import React from 'react';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
-import SearchResults from './SearchResults';
 import OrgCard from './OrgCard';
 
-import dogs from '../../../database/sampleData';
 
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       favorite: false,
-      dog: null,
-      org: null,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    console.log('PROPS:', this.props);
     // get id from url
     // var id = this.props.match.url; // '/dog/id/'
     // id = id.slice(5, id.length - 1);
@@ -26,6 +22,8 @@ class DogProfile extends React.Component {
     // const dog = null;
     // gets org at key dog.orgId from store
     // const org = null;
+    // const dog = this.props.results.dogs['39'];
+    // const org = this.props.results.orgs[dog[org_id]];
   }
 
   toggleFavorite() {
@@ -35,9 +33,15 @@ class DogProfile extends React.Component {
   }
 
   render() {
-    const { dog } = this.state.dog;
-    const { org } = this.state.org;
-    // if (dog && org) {
+    console.log('props', this.props);
+    const url = this.props.location.pathname;
+    const id = url.slice(5);
+    console.log(id);
+
+    const dog = this.props.results.dogs[id];
+    console.log(dog);
+    const org = this.props.results.orgs[dog.org_id];
+
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
       stage += ` (age ${dog.age})`;
@@ -116,17 +120,12 @@ class DogProfile extends React.Component {
         <Row style={{ marginBottom: 50 }} >
           <OrgCard org={org} />
         </Row>
-        <SearchResults dogs={dogs.dogs} />
       </div>
     );
-    // }
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log('STATE', state);
-  return state;
-};
+const mapStateToProps = state => ({ results: state.search.results });
 
 export default connect(mapStateToProps, null)(DogProfile);
 
