@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
-import { forOwn, debounce } from 'lodash';
+import { forOwn } from 'lodash';
+import { Redirect } from 'react-router-dom';
 import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
 import breedList from '../../../database/breeds';
 
@@ -12,6 +13,7 @@ class Search extends React.Component {
       AnyGender: false,
       Male: false,
       Female: false,
+      getResults: false,
     };
     this.addsToFilterState = this.addsToFilterState.bind(this);
     this.submitData = this.submitData.bind(this);
@@ -73,6 +75,9 @@ class Search extends React.Component {
       }
     });
     this.props.dogsSearch(searchObject);
+    console.log('SEARCH STATE:', this.props);
+    // reroute to search results page
+    // this.setState({ getResults: true });
   }
 
   // onSelect(value) {
@@ -80,7 +85,13 @@ class Search extends React.Component {
   // }
 
   render() {
+<<<<<<< HEAD
     const breedDataSource = breedList;
+=======
+    if (this.state.getResults) {
+      return <Redirect from="/search" to="/searchResults" />;
+    }
+>>>>>>> b7bae107ef487c2d28a2b62e48cd02888a0e4248
     return (
       <div className="search-div">
         <div className="search-filters">
