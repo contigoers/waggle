@@ -27,7 +27,7 @@ const isLoggedIn = (ctx, next) => {
     return next();
   }
   return ctx.throw(401, 'You must be logged in!');
-  // ctx.redirect('/');  <---redirect to home page
+  // ctx.redirect('/');  <---redirect to home page??
 };
 
 router.get('/picture', async (ctx) => {
@@ -153,40 +153,10 @@ router.post('/favoriteDog/remove', async (ctx) => {
   }
 });
 
-router.post('/searchOrgDogsTest', async (ctx) => {
-  ctx.body = {
-    dog: 'hello',
-  };
-});
-
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
   try {
-    const obj = ctx.request.body;
-    let query = '';
-    Object.keys(obj).forEach((prop) => {
-      query = `${query}(`;
-      const array = JSON.parse(obj[prop]); // need to JSON.parse this for postman testing
-
-      if (typeof array[0] === 'string') {
-        query += array.map(val => `dogs.${prop} = "${val}" or`);
-      } else {
-        query += array.map(val => `dogs.${prop} = ${val} or`);
-      }
-      const temp = query.split(' ');
-      if (temp[temp.length - 1] === 'or') {
-        temp.pop();
-      }
-      query = `${temp.join(' ')}) and `;
-    });
-    query = query.split(',').join(' ');
-    let queryNew = query.split(' ');
-    queryNew.splice(queryNew.length - 2, 2);
-    queryNew = queryNew.join(' ');
-    console.log(queryNew);
-
-    let dogs = await db.searchOrgDogs(queryNew);
-
+    let dogs = await db.searchOrgDogs(ctx.request.body);
     if (dogs.length) {
       let orgs = {};
 
@@ -196,7 +166,6 @@ router.post('/searchOrgDogs', async (ctx) => {
       });
 
       orgs = await db.getOrgsAfterDogs(Object.keys(orgs));
-
       orgs = mapKeys(orgs, 'id');
 
       const dogsAndOrgs = {
@@ -305,7 +274,7 @@ router.post('/logout', isLoggedIn, async (ctx) => {
     status: 'success',
     message: 'You have been logged out successfully!',
   };
-  // ctx.redirect('/');  <---redirect to home page
+  // ctx.redirect('/');  <---redirect to home page??
 });
 
 app
