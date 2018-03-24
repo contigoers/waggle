@@ -166,13 +166,15 @@ const searchOrgDogs = (dogFilters) => {
 
 const getOrgsAfterDogs = (orgs) => {
   let whereQuery = '';
-  for (let i = 0; i < orgs.length; i += 1) {
+
+  orgs.forEach((id, i) => {
     if (i < orgs.length - 1) {
-      whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]} or `);
+      whereQuery = whereQuery.concat(`users.org_id = ${id} and orgs.id = ${id} or `);
     } else {
-      whereQuery = whereQuery.concat(`users.org_id = ${orgs[i]} and orgs.id = ${orgs[i]}`);
+      whereQuery = whereQuery.concat(`users.org_id = ${id} and orgs.id = ${id}`);
     }
-  }
+  });
+
   return knex.column(knex.raw('orgs.*, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
     .select()
     .from(knex.raw('users, orgs'))

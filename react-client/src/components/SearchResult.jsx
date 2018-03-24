@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, Divider, Icon } from 'antd';
+import { Card, Divider, Icon, message } from 'antd';
 
 // onclick should render a new profile page with org signed in (from state?)
 // and dog from that result
@@ -12,13 +12,19 @@ class SearchResult extends React.Component {
       favorite: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   toggleFavorite() {
-    this.setState({ favorite: !this.state.favorite });
+    this.setState({ favorite: !this.state.favorite }, () => {
+      message.info(this.state.favorite ? 'Added to favorites!' : 'Remove from favorites');
+    });
   }
 
   // onclick sends to profile page
+  //   onClick() {
+  //     // reroute to url /dog/[dog.id]
+  //   }
 
   render() {
     const { dog } = this.props;
@@ -29,9 +35,10 @@ class SearchResult extends React.Component {
 
     return (
       <Card
-        style={{ width: 300, margin: 30 }}
+        style={{ width: 300, margin: 30, marginLeft: 200 }}
         cover={<img alt="pupper" src={dog.photo} />}
         actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+        onClick={this.onClick}
       >
         <Card.Meta title={dog.name} />
         <div style={{ marginTop: 10 }}>
