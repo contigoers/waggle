@@ -38,9 +38,9 @@ class DogProfile extends React.Component {
     const id = url.slice(5);
     console.log(id);
 
-    const dog = this.props.results.dogs[id];
+    const dog = this.props.location.props.orgDog.dog; // this.props.results.dogs[id];
     console.log(dog);
-    const org = this.props.results.orgs[dog.org_id];
+    // const org = this.props.results.orgs[dog.org_id];
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
@@ -117,9 +117,9 @@ class DogProfile extends React.Component {
             />
           </Col>
         </Row>
-        <Row style={{ marginBottom: 50 }} >
+        {/* <Row style={{ marginBottom: 50 }} >
           <OrgCard org={org} />
-        </Row>
+        </Row> */}
       </div>
     );
   }

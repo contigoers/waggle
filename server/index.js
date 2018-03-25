@@ -156,34 +156,7 @@ router.post('/favoriteDog/remove', async (ctx) => {
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
   try {
-<<<<<<< HEAD
     let dogs = await db.searchOrgDogs(ctx.request.body);
-=======
-    const obj = ctx.request.body;
-    let query = '';
-    Object.keys(obj).forEach((prop) => {
-      query = `${query}(`;
-      const array = obj[prop]; // need to JSON.parse this for postman testing
-
-      if (typeof array[0] === 'string') {
-        query += array.map(val => `dogs.${prop} = "${val}" or`);
-      } else {
-        query += array.map(val => `dogs.${prop} = ${val} or`);
-      }
-      const temp = query.split(' ');
-      if (temp[temp.length - 1] === 'or') {
-        temp.pop();
-      }
-      query = `${temp.join(' ')}) and `;
-    });
-    query = query.split(',').join(' ');
-    let queryNew = query.split(' ');
-    queryNew.splice(queryNew.length - 2, 2);
-    queryNew = queryNew.join(' ');
-
-    let dogs = await db.searchOrgDogs(queryNew);
-
->>>>>>> f6bec023e33a2e81920151f8b8d9e635eea0a9cc
     if (dogs.length) {
       let orgs = {};
 

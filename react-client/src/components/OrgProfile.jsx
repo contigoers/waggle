@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
+import OrgDog from './OrgDog';
 
 class OrgProfile extends React.Component {
   constructor(props) {
@@ -44,8 +45,9 @@ class OrgProfile extends React.Component {
     }
     return (
       <div>
-
-              <Card>
+        <Row style={{ marginTop: 30, marginBottom: 30 }} >
+          <Col span={15} offset={3} >
+            <Card>
               <h1> {this.state.org.name} </h1>
               <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} > Organization Profile </span>
               <Divider type="vertical" />
@@ -65,57 +67,69 @@ class OrgProfile extends React.Component {
               <div style={{ marginLeft: 20 }} > {phone} </div>
               <div style={{ marginLeft: 20 }} > {this.state.org.email} </div>
             </Card>
-
-              {/* <Card
-                style={{ width: 200 }}
-                cover={<img
-                  alt="pupper"
-                  src={this.state.dogs.photo}
-                />}
-              >
-                <Card.Meta title={this.state.dogs.name} />
-                <div style={{ marginTop: 10 }}>
-                  <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
-                  <Divider type="vertical" />
-                  <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
-                  <Divider type="vertical" />
-                  <span> {stage} </span>
-                </div>
-              </Card>
-              <Card
-                style={{ width: 200 }}
-                cover={<img
-                  alt="pupper"
-                  src={this.state.dogs.photo}
-                />}
-              >
-                <Card.Meta title={this.state.dogs.name} />
-                <div style={{ marginTop: 10 }}>
-                  <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
-                  <Divider type="vertical" />
-                  <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
-                  <Divider type="vertical" />
-                  <span> {stage} </span>
-                </div>
-              </Card>
-
-              <Card
-                style={{ width: 300 }}
-                cover={<img
+          </Col>
+        </Row>
+        <Row style={{ marginBottom: 50 }} gutter={8}>
+          <Col span={5} offset={3} >
+            <Card
+              style={{ width: 250 }}
+              cover={<img
                 alt="pupper"
                 src={this.state.dogs.photo}
               />}
-              >
-                <Card.Meta title={this.state.dogs.name} />
-                <div style={{ marginTop: 10 }}>
+            >
+              <Card.Meta title={this.state.dogs.name} />
+              <div style={{ marginTop: 10 }}>
                 <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
                 <Divider type="vertical" />
                 <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
                 <Divider type="vertical" />
                 <span> {stage} </span>
               </div>
-              </Card> */}
- 
+            </Card>
+          </Col>
+          <Col span={5} >
+            <Card
+              style={{ width: 250 }}
+              cover={<img
+                alt="pupper"
+                src={this.state.dogs.photo}
+              />}
+            >
+              <Card.Meta title={this.state.dogs.name} />
+              <div style={{ marginTop: 10 }}>
+                <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
+                <Divider type="vertical" />
+                <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
+                <Divider type="vertical" />
+                <span> {stage} </span>
+              </div>
+            </Card>
+          </Col>
+          <Col span={5} >
+            <Card
+              style={{ width: 250 }}
+              cover={<img
+                alt="pupper"
+                src={this.state.dogs.photo}
+              />}
+            >
+              <Card.Meta title={this.state.dogs.name} />
+              <div style={{ marginTop: 10 }}>
+                <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
+                <Divider type="vertical" />
+                <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
+                <Divider type="vertical" />
+                <span> {stage} </span>
+              </div>
+            </Card>
+
+          </Col>
+        </Row>
+
+        {this.state.request.length > 0 && (
+          this.state.request.map(dog => (<OrgDog key={dog.id} dog={dog} />))
+        )}
 
       </div>
     );
