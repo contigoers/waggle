@@ -100,7 +100,6 @@ router.post('/createOrgDog', async (ctx) => {
 
 // add new org dog to favorites - for adopters
 router.post('/favoriteDog', async (ctx) => {
-  console.log('add fave', ctx.request.body);
   try {
     const data = await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
     if (data === 'already exists!') {
@@ -129,7 +128,6 @@ router.post('/favoriteDog', async (ctx) => {
 
 // remove org dog from favorites - for adopters
 router.post('/favoriteDog/remove', async (ctx) => {
-  console.log('remove f ave', ctx.request.body);
   try {
     const data = await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
     if (data === 'favorite does not exist!') {

@@ -24,6 +24,11 @@ class DogProfile extends React.Component {
     this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
+  componentDidMount() {
+    const { favorites } = this.props;
+    favorites.forEach(favorite => this.setState({ favorite: favorite.id === this.state.id }));
+  }
+
   toggleFavorite() {
     const { favoriteParams } = this.props;
     favoriteParams.dogId = this.state.id;
