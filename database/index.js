@@ -52,6 +52,8 @@ const createUser = async (user, username, password) => {
   return knex('users').select().where('id', userId[0].id);
 };
 
+const getAdopterId = userId => knex('adopters').select('id').where('user_id', userId);
+
 // get user by username (login)
 const checkCredentials = username => knex.select().from('users')
   .where(knex.raw(`LOWER(username) = LOWER('${username}')`));
@@ -204,5 +206,6 @@ module.exports = {
   unmarkAsAdopted,
   removeFavoriteDog,
   getOrgsAfterDogs,
+  getAdopterId,
 };
 
