@@ -155,7 +155,6 @@ router.post('/favoriteDog/remove', async (ctx) => {
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
-  console.log(ctx.request.body);
   try {
     let dogs = await db.searchOrgDogs(ctx.request.body);
     if (dogs.length) {
@@ -180,10 +179,12 @@ router.post('/searchOrgDogs', async (ctx) => {
         dogsAndOrgs,
       };
     } else {
-      ctx.status = 400;
+      ctx.status = 200;
       ctx.body = {
-        status: 'error',
-        message: 'No dogs match this search criteria!',
+        dogsAndOrgs: {
+          dogs: {},
+          orgs: {},
+        },
       };
     }
   } catch (err) {
