@@ -41,6 +41,8 @@ class SearchResult extends React.Component {
     const stage = dog.lifestage
       .charAt(0)
       .toUpperCase() + dog.lifestage.slice(1);
+    const adoptedStyle = { color: '#00db19', fontWeight: 700 };
+    const notAdoptedStyle = { color: '#db0000', fontWeight: 700 };
 
     return (
       <Card
@@ -57,6 +59,7 @@ class SearchResult extends React.Component {
           <Divider type="vertical" />
           <span> {stage} </span>
         </div>
+        <div style={dog.adopted ? adoptedStyle : notAdoptedStyle}> {dog.adopted ? 'Adopted' : 'Not adopted' } </div>
 
       </Card>
     );

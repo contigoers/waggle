@@ -23,7 +23,7 @@ class OrgDog extends React.Component {
 
   render() {
     const { dog } = this.props;
-    const url = `/orgDog/${dog.id}`;
+    const url = `/dog/${dog.id}`;
 
     if (this.state.seeProfile) {
       return (<Redirect to={{

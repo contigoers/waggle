@@ -9,13 +9,22 @@ class DogProfile extends React.Component {
     super(props);
     this.state = {
       favorite: false,
+      adopted: false, // update this to find value once i can see it in props
+      isMyDog: true, // also update this
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
   toggleFavorite() {
     this.setState({ favorite: !this.state.favorite }, () => {
       message.info(this.state.favorite ? 'Added to favorites!' : 'Removed from favorites.');
+    });
+  }
+
+  toggleAdopted() {
+    this.setState({ adopted: !this.state.adopted }, () => {
+      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted');
     });
   }
 
@@ -50,6 +59,11 @@ class DogProfile extends React.Component {
     } else {
       specialNeeds = 'none';
     }
+
+    let adoptIcon = this.state.adopted ? 'smile' : 'smile-o';
+    let favoriteIcon = this.state.favorite ? 'heart' : 'heart-o';
+    let cardType = this.state.isMyDog ? adoptIcon : favoriteIcon;
+    
 
     return (
       <div>
@@ -95,12 +109,17 @@ class DogProfile extends React.Component {
                 alt="pupper"
                 src={dog.photo}
               />}
-              actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+              actions={
+                [<Icon
+                  onClick={this.state.isMyDog ? this.toggleAdopted : this.toggleFavorite}
+                  type={cardType}
+                />]
+              }
             />
           </Col>
         </Row>
         <Row style={{ marginBottom: 50 }} >
-          <OrgCard org={org} />
+          {!this.state.isMyDog && <OrgCard org={org} />}
         </Row>
       </div>
     );

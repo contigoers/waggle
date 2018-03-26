@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Checkbox, Button, AutoComplete, message } from 'antd';
+import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { updateSearchQuery, dogsSearch, getFavorites } from '../actions/searchActions';
 import { updateSearchView } from '../actions/searchViewActions';
