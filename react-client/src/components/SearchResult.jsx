@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Card, Divider, Icon, message } from 'antd';
+import { addFavorite, removeFavorite } from '../actions/searchActions';
 
 // onclick should render a new profile page with org signed in (from state?)
 // and dog from that result
@@ -15,6 +16,16 @@ class SearchResult extends React.Component {
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+
+  componentDidMount() {
+    const { favorites } = this.props;
+    favorites.forEach((favorite) => {
+      if (favorite.id === this.props.dog.id) {
+        this.setState({ favorite: true });
+      }
+    });
   }
 
   // onclick sends to profile page
@@ -24,6 +35,13 @@ class SearchResult extends React.Component {
   }
 
   toggleFavorite() {
+    const { favoriteParams } = this.props;
+    favoriteParams.dogId = this.props.dog.id;
+    if (this.state.favorite) {
+      this.props.removeFavorite(favoriteParams);
+    } else {
+      this.props.addFavorite(favoriteParams);
+    }
     this.setState({ favorite: !this.state.favorite }, () => {
       message.info(this.state.favorite ? 'Added to favorites!' : 'Remove from favorites');
     });
@@ -63,8 +81,22 @@ class SearchResult extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ results: state.search.results });
+const mapStateToProps = ({ search, profile }) => (
+  {
+    results: search.results,
+    favorites: search.favorites,
+    favoriteParams: {
+      adopterId: profile.adopter.id,
+      dogId: null,
+    },
+  }
+);
 
-export default connect(mapStateToProps, null)(SearchResult);
+const mapDispatchToProps = {
+  addFavorite,
+  removeFavorite,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);
 
 // TODO: make photo in card view square
