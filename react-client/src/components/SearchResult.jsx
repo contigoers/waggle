@@ -11,15 +11,15 @@ class SearchResult extends React.Component {
     super(props);
     this.state = {
       favorite: false,
+      // fix ^ (how without get request? might need to do a get request on componentdidmount)
       seeProfile: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
   }
 
-  // onclick sends to profile page
+  // onclick sets state to send to profile page at /dog/:id
   onClick() {
-    // reroute to url /dog/[dog.id]
     this.setState({ seeProfile: true });
   }
 
@@ -41,6 +41,7 @@ class SearchResult extends React.Component {
     const stage = dog.lifestage
       .charAt(0)
       .toUpperCase() + dog.lifestage.slice(1);
+
     const adoptedStyle = { color: '#00db19', fontWeight: 700 };
     const notAdoptedStyle = { color: '#db0000', fontWeight: 700 };
 

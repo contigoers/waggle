@@ -9,9 +9,12 @@ class DogProfile extends React.Component {
     super(props);
     this.state = {
       favorite: false,
-      dog: this.props.results.dogs[this.props.location.pathname.slice(5)], // this should set the dog equal to the dog object
-      adopted: this.state.dog.adopted, // making this its own property so we can change it with set state, for now
-      isMyDog: this.state.dog.org_id === this.props.user.org_id, // boolean for if user in props has the same org id as the dog
+      dog: this.props.results.dogs[this.props.location.pathname.slice(5)], 
+      // this ^ should set the dog equal to the dog object
+      adopted: this.state.dog.adopted,
+      // making this ^ its own property so we can change it with set state, for now
+      isMyDog: this.state.dog.org_id === this.props.user.org_id,
+      // ^ boolean for if user in props has the same org id as the dog
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
