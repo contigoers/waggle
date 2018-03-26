@@ -14,13 +14,11 @@ const loginModal = (state = { visible: null }, action) => {
 const storeUser = (state = { user: null }, action) => {
   switch (action.type) {
     case STORE_USER_ID:
-    console.log('heyyyyyy ;)')
       return {
         ...state,
         user: action.user,
       };
     default:
-    console.log(':( action: ', action);
       return state;
   }
 };

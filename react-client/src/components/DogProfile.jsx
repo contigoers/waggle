@@ -9,11 +9,11 @@ class DogProfile extends React.Component {
     super(props);
     this.state = {
       favorite: false,
-      dog: this.props.results.dogs[this.props.location.pathname.slice(5)], 
+      dog: this.props.results.dogs[this.props.location.pathname.slice(5)],
       // this ^ should set the dog equal to the dog object
-      adopted: this.state.dog.adopted,
+      adopted: this.props.results.dogs[this.props.location.pathname.slice(5)].favorite,
       // making this ^ its own property so we can change it with set state, for now
-      isMyDog: this.state.dog.org_id === this.props.user.org_id,
+      isMyDog: this.props.user ? this.props.user.org_id === this.props.results.dogs[this.props.location.pathname.slice(5)].org_id : false, // this.state.dog.org_id === this.props.storeUser.user.org_id,
       // ^ boolean for if user in props has the same org id as the dog
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
@@ -34,8 +34,10 @@ class DogProfile extends React.Component {
   }
 
   render() {
-    const { dog } = this.props;
+    console.log(this.props);
+    const { dog } = this.state;
     const org = this.props.results.orgs[dog.org_id];
+    // const { user } = this.props.storeUser;
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
@@ -64,11 +66,9 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    // do these count as getting reassigned when state changes?
-    let adoptIcon = this.state.adopted ? 'smile' : 'smile-o';
-    let favoriteIcon = this.state.favorite ? 'heart' : 'heart-o';
-    let cardType = this.state.isMyDog ? adoptIcon : favoriteIcon;
-    
+    const favoriteIcon = this.state.favorite ? 'heart' : 'heart-o';
+    const adoptIcon = this.state.adopted ? 'smile' : 'smile-o';
+    const cardType = this.state.isMyDog ? adoptIcon : favoriteIcon;
 
     return (
       <div>
@@ -131,6 +131,9 @@ class DogProfile extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ results: state.search.results });
+const mapStateToProps = state => ({ 
+  results: state.search.results,
+  user: state.storeUser.user,
+});
 
 export default connect(mapStateToProps, null)(DogProfile);
