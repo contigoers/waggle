@@ -12,7 +12,17 @@ const initialState = {
 
 export default handleActions({
   UPDATE_SEARCH_QUERY: (state, action) => {
-    if (action.checked) {
+    if (action.id === 'breed') {
+      return {
+        ...state,
+        [action.id]: [action.value],
+      };
+    } else if (action.value === 'default') {
+      return {
+        ...state,
+        [action.id]: [],
+      };
+    } else if (action.checked) {
       return {
         ...state,
         [action.id]: uniq([...state[action.id], action.value]),
