@@ -54,7 +54,7 @@ $primary-dark: #972036;
 .nav-bar {
   height: 85px;
   display: grid;
-  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 30%;
+  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10%;
   background: $primary;
   color: white;
   border-bottom: 4px solid $primary-dark;
@@ -82,15 +82,13 @@ $primary-dark: #972036;
     }
 }
 
-.login {
-  display: flex;
-  justify-content: right;
-  align-items: center;
-}
-
-.login-button {
+.user-button {
   background-color: $primary-dark;
   border-color: $primary-dark;
+  &:hover, &:active, &:focus {
+    background-color: $primary-dark;
+    border: 1px solid white;
+  }
 }
 
 .content-divs:nth-child(odd) {
