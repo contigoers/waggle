@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Row, Col, Checkbox, Button, AutoComplete, message } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
 import breedList from '../../../database/breeds';
@@ -140,9 +140,9 @@ class Search extends React.Component {
         <Button className="submit-search" onClick={this.submitData}>
           Submit
         </Button>
-        {keys(this.props.results).length > 0 && (
+        {(keys(this.props.results).length > 0 && (
           <SearchResults />
-        )}
+        ))}
       </div>
     );
   }
