@@ -4,7 +4,7 @@ import randomDogPic from './random-dog-pic';
 import registrationModal from './registrationReducers';
 import search from './searchReducers';
 import dummyProfile from './dummyProfile';
-import loginModal from './loginReducers';
+import { loginModal, storeUser } from './loginReducers';
 import searchSelections from './searchViewReducers';
 
 const rootReducer = combineReducers({
@@ -14,6 +14,7 @@ const rootReducer = combineReducers({
   search,
   profile: dummyProfile,
   loginModal,
+  thisUser: storeUser,
   searchSelections,
 });
 

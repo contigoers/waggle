@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Modal } from 'antd';
 import axios from 'axios';
 
-import { toggleLoginModal } from '../actions/loginActions';
+import { toggleLoginModal, storeUserId } from '../actions/loginActions';
 
 const FormItem = Form.Item;
 
@@ -13,6 +13,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleLoginModal.bind(this);
+    this.storeUser = storeUserId.bind(this);
   }
 
   handleSubmit(e) {
@@ -21,7 +22,8 @@ const WrappedLoginForm = Form.create()(class extends Component {
       if (!err) {
         axios.post('/login', values).then((response) => {
           console.log(response.data.user);
-          this.toggleModal(response.data.user);
+          this.toggleModal();
+          this.storeUser({ user: response.data.user });
         });
         this.props.form.resetFields();
         // this.toggleModal();
