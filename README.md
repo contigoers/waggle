@@ -1,4 +1,4 @@
-# whiskr
+# waggl
 # new-mvp-react# Project Title
 
 Waggle: something something dogs
