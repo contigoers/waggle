@@ -12,8 +12,9 @@ const OrgCard = (props) => {
         <h4> {org.name} </h4>
         <div style={{ marginTop: 10 }}> {props.org.address} </div>
         <div>
-          {org.city}, {org.zipcode}
+          {org.city}, {org.state}
         </div>
+        <div> {org.zipcode} </div>
         <div style={{ marginTop: 10 }}> {phone} </div>
       </Card>
     </Col>

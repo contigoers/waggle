@@ -28,10 +28,7 @@ const NavBar = props =>
         <div className="create-dog nav-item">
           <Link className="nav-link" to="/create">Add a Dog</Link>
         </div>
-        <div className="sample-profile nav-item">
-          <Link className="nav-link" to="/sample">Sample Profile</Link>
-        </div>
-        <div className="login nav-item">
+        <div className="login nav-item" style={{ marginLeft: 10 }}>
           <Button className="login-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
         </div>
         <div className="signup nav-item">
