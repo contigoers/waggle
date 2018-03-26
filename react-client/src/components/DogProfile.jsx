@@ -13,7 +13,10 @@ class DogProfile extends React.Component {
       // this ^ should set the dog equal to the dog object
       adopted: this.props.results.dogs[this.props.location.pathname.slice(5)].favorite,
       // making this ^ its own property so we can change it with set state, for now
-      isMyDog: this.props.user ? this.props.user.org_id === this.props.results.dogs[this.props.location.pathname.slice(5)].org_id : false, // this.state.dog.org_id === this.props.storeUser.user.org_id,
+      isMyDog: this.props.user ?
+        this.props.user.org_id ===
+        this.props.results.dogs[this.props.location.pathname.slice(5)].org_id : false,
+      // this.state.dog.org_id === this.props.storeUser.user.org_id,
       // ^ boolean for if user in props has the same org id as the dog
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
@@ -124,14 +127,14 @@ class DogProfile extends React.Component {
           </Col>
         </Row>
         <Row style={{ marginBottom: 50 }} >
-        {!this.state.isMyDog && <OrgCard org={org} />}
+          {!this.state.isMyDog && <OrgCard org={org} />}
         </Row>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({ 
+const mapStateToProps = state => ({
   results: state.search.results,
   user: state.storeUser.user,
 });

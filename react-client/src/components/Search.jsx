@@ -27,21 +27,33 @@ class Search extends React.Component {
     let valueChanged = value;
     if (id === 'male') {
       this.toggleGenderCheck(value, checked);
-      if (value === 'male') {
+      if (value === 'male' && !this.props.searchSelections.female) {
         valueChanged = true;
-      } else if (value === 'female') {
+      } else if (value === 'female' && !this.props.searchSelections.male) {
         valueChanged = false;
+      } else {
+        valueChanged = 'default';
       }
     } else if (id === 'size') {
       this.toggleSizeCheck(value, checked);
+      if (this.props.params.size.length === 4 || value === 'anySize') {
+        valueChanged = 'default';
+      }
     } else if (id === 'lifestage') {
       this.toggleLifeStageCheck(value, checked);
+      if (this.props.params.lifestage.length === 3 || value === 'anyLifestage') {
+        valueChanged = 'default';
+      }
     }
     this.props.updateSearchQuery(id, valueChanged, checked);
   }
 
   addBreedToFilterState(value) {
-    this.props.updateSearchQuery('breed', value, true);
+    let valueChanged = value;
+    if (value === 'Any Breed') {
+      valueChanged = 'default';
+    }
+    this.props.updateSearchQuery('breed', valueChanged, true);
   }
 
   toggleGenderCheck(value, checked, { female, male } = this.props.searchSelections) {
