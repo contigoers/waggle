@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Card, Divider, Row, Col, Icon, message } from 'antd';
+import { Card, Divider, Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import OrgDog from './OrgDog';
 
@@ -39,7 +39,8 @@ class OrgProfile extends React.Component {
 
   render() {
     const phone = `(${this.state.org.phone.slice(0, 3)}) ${this.state.org.phone.slice(3, 6)}-${this.state.org.phone.slice(6)}`;
-    let stage = this.state.dogs.lifestage.charAt(0).toUpperCase() + this.state.dogs.lifestage.slice(1);
+    let stage = this.state.dogs.lifestage.charAt(0).toUpperCase()
+    + this.state.dogs.lifestage.slice(1);
     if (this.state.dogs.age) {
       stage += ` (age ${this.state.dogs.age})`;
     }
@@ -49,9 +50,13 @@ class OrgProfile extends React.Component {
           <Col span={15} offset={3} >
             <Card>
               <h1> {this.state.org.name} </h1>
-              <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} > Organization Profile </span>
+              <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
+              Organization Profile
+              </span>
               <Divider type="vertical" />
-              <span style={{ fontWeight: 600, fontSize: 16 }} > Username: {this.state.org.username} </span>
+              <span style={{ fontWeight: 600, fontSize: 16 }} >
+              Username: {this.state.org.username}
+              </span>
 
               <Divider />
 
@@ -59,7 +64,9 @@ class OrgProfile extends React.Component {
 
               <h3 style={{ marginLeft: 20 }}> Address </h3>
               <div style={{ marginLeft: 20 }}> {this.state.org.address} </div>
-              <div style={{ marginLeft: 20 }}> {this.state.org.city}, {this.state.org.state} {this.state.org.zipcode} </div>
+              <div style={{ marginLeft: 20 }}>
+                {this.state.org.city}, {this.state.org.state} {this.state.org.zipcode}
+              </div>
 
               <h2 style={{ marginTop: 20 }} > Contact Info </h2>
 

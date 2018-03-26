@@ -1,16 +1,15 @@
 import React from 'react';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
-import OrgCard from './OrgCard';
 
 
-class DogProfile extends React.Component {
+class OrgDogProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      favorite: false,
+      adopted: this.props.location.state.orgDog.adopted,
     };
-    this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.toggleAdopted = this.toggleAdopted.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -26,21 +25,20 @@ class DogProfile extends React.Component {
     // const org = this.props.results.orgs[dog[org_id]];
   }
 
-  toggleFavorite() {
-    this.setState({ favorite: !this.state.favorite }, () => {
-      message.info(this.state.favorite ? 'Added to favorites!' : 'Removed from favorites.');
+  toggleAdopted() {
+    this.setState({ adopted: !this.state.adopted }, () => {
+      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted');
     });
   }
 
   render() {
     console.log('props', this.props);
     const url = this.props.location.pathname;
-    const id = url.slice(5);
+    const id = url.slice(8);
     console.log(id);
 
-    const dog = this.props.results.dogs[id];
+    const dog = this.props.location.state.orgDog;
     console.log(dog);
-    const org = this.props.results.orgs[dog.org_id];
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
@@ -113,20 +111,21 @@ class DogProfile extends React.Component {
                 alt="pupper"
                 src={dog.photo}
               />}
-              actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+              actions={[<Icon onClick={this.toggleAdopted} type={this.state.adopted ? 'smile' : 'smile-o'} />]}
             />
+            <span style={{ marginLeft: 80 }}> {this.state.adopted ? 'Mark as not adopted!' : 'Mark as adopted!'} </span>
+
           </Col>
-        </Row>
-        <Row style={{ marginBottom: 50 }} >
-          <OrgCard org={org} />
         </Row>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({ results: state.search.results });
 
-export default connect(mapStateToProps, null)(DogProfile);
+const mapStateToProps = (state) => {
+  console.log('STATE', state);
+  return state;
+};
 
-// TODO: editable?????
+export default connect(mapStateToProps, null)(OrgDogProfile);

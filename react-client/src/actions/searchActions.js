@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const UPDATE_SEARCH_QUERY = 'UPDATE_SEARCH_QUERY';
 const SEARCH_DOGS = 'SEARCH_DOGS';
+const GET_FAVORITES = 'GET_FAVORITES';
 
 const updateSearchQuery = (id, value, checked) =>
   (
@@ -21,4 +22,15 @@ const dogsSearch = async (searchObject) => {
   };
 };
 
-export { UPDATE_SEARCH_QUERY, updateSearchQuery, SEARCH_DOGS, dogsSearch };
+const getFavorites = async (adopterObject) => {
+  const { data } = await axios.get('adopterInfo', adopterObject);
+  return {
+    type: GET_FAVORITES,
+    data: data.adopterFavoriteDogs,
+  };
+};
+
+export {
+  UPDATE_SEARCH_QUERY, updateSearchQuery, SEARCH_DOGS, dogsSearch,
+  GET_FAVORITES, getFavorites,
+};

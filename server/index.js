@@ -225,6 +225,7 @@ router.get('/orgInfo', async (ctx) => {
 
 router.get('/adopterInfo', async (ctx) => {
   try {
+    console.log(ctx.request.query);
     const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
     const adopterFavoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
     ctx.body = {

@@ -27,6 +27,9 @@ const defaultState = {
     username: 'orguser123',
     id: 2,
   },
+  adopter: {
+    id: 1,
+  },
 };
 
 const dummyProfile = (state = defaultState) => state;
