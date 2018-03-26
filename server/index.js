@@ -155,6 +155,7 @@ router.post('/favoriteDog/remove', async (ctx) => {
 
 // filtered search for dogs
 router.post('/searchOrgDogs', async (ctx) => {
+  console.log(ctx.request.body);
   try {
     let dogs = await db.searchOrgDogs(ctx.request.body);
     if (dogs.length) {
