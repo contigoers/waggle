@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
 import { forOwn, keys } from 'lodash';
-import { updateSearchQuery, dogsSearch } from '../actions/searchActions';
+import { updateSearchQuery, dogsSearch, getFavorites } from '../actions/searchActions';
 import { updateSearchView } from '../actions/searchViewActions';
 import breedList from '../../../database/breeds';
 import SearchResults from './SearchResults';
@@ -12,6 +12,15 @@ class Search extends React.Component {
     super();
     this.addsToFilterState = this.addsToFilterState.bind(this);
     this.submitData = this.submitData.bind(this);
+  }
+
+  componentDidMount() {
+    this.getFavorites();
+  }
+
+  getFavorites() {
+    const { adopterParams } = this.props;
+    this.props.getFavorites({ params: adopterParams });
   }
 
   addsToFilterState({ target: { id, value, checked } }) {
@@ -237,7 +246,7 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, searchSelections }) => (
+const mapStateToProps = ({ search, searchSelections, profile }) => (
   {
     params: {
       breed: search.breed,
@@ -247,6 +256,10 @@ const mapStateToProps = ({ search, searchSelections }) => (
     },
     results: search.results,
     searchSelections,
+    favorites: search.favorites,
+    adopterParams: {
+      adopterId: profile.adopter.id,
+    },
   }
 );
 
@@ -254,6 +267,7 @@ const mapDispatchToProps = {
   updateSearchQuery,
   dogsSearch,
   updateSearchView,
+  getFavorites,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

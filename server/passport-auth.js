@@ -5,11 +5,9 @@ const db = require('../database/index');
 
 module.exports = () => {
   passport.serializeUser((user, done) => { // creating sessions
-    console.log('serialize user', user);
     done(null, user.id);
   });
   passport.deserializeUser(async (id, done) => {
-    console.log('deserisalize userid', id);
     const users = await db.getUserById(id);
     done(null, users[0]);
   });
