@@ -19,9 +19,12 @@ const WrappedLoginForm = Form.create()(class extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        axios.post('/login', values);
+        axios.post('/login', values).then((response) => {
+          console.log(response.data.user);
+          this.toggleModal(response.data.user);
+        });
         this.props.form.resetFields();
-        this.toggleModal();
+        // this.toggleModal();
       }
     });
   }

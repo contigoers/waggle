@@ -246,7 +246,7 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, searchSelections, profile }) => (
+const mapStateToProps = ({ search, searchSelections, profile, user }) => (
   {
     params: {
       breed: search.breed,

@@ -9,8 +9,9 @@ class DogProfile extends React.Component {
     super(props);
     this.state = {
       favorite: false,
-      adopted: false, // update this to find value once i can see it in props
-      isMyDog: true, // also update this
+      dog: this.props.results.dogs[this.props.location.pathname.slice(5)], // this should set the dog equal to the dog object
+      adopted: this.state.dog.adopted, // making this its own property so we can change it with set state, for now
+      isMyDog: this.state.dog.org_id === this.props.user.org_id, // boolean for if user in props has the same org id as the dog
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
@@ -25,12 +26,12 @@ class DogProfile extends React.Component {
   toggleAdopted() {
     this.setState({ adopted: !this.state.adopted }, () => {
       message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted');
+      // should actually update dog's adopted status in the database eventually
     });
   }
 
   render() {
-    const id = this.props.location.pathname.slice(5);
-    const dog = this.props.results.dogs[id];
+    const { dog } = this.props;
     const org = this.props.results.orgs[dog.org_id];
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
@@ -60,6 +61,7 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
+    // do these count as getting reassigned when state changes?
     let adoptIcon = this.state.adopted ? 'smile' : 'smile-o';
     let favoriteIcon = this.state.favorite ? 'heart' : 'heart-o';
     let cardType = this.state.isMyDog ? adoptIcon : favoriteIcon;
