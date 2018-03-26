@@ -100,6 +100,7 @@ router.post('/createOrgDog', async (ctx) => {
 
 // add new org dog to favorites - for adopters
 router.post('/favoriteDog', async (ctx) => {
+  console.log('add fave', ctx.request.body);
   try {
     const data = await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
     if (data === 'already exists!') {
@@ -128,6 +129,7 @@ router.post('/favoriteDog', async (ctx) => {
 
 // remove org dog from favorites - for adopters
 router.post('/favoriteDog/remove', async (ctx) => {
+  console.log('remove f ave', ctx.request.body);
   try {
     const data = await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
     if (data === 'favorite does not exist!') {
@@ -227,7 +229,6 @@ router.get('/orgInfo', async (ctx) => {
 
 router.get('/adopterInfo', async (ctx) => {
   try {
-    console.log(ctx.request.query);
     const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
     const adopterFavoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
     ctx.body = {
@@ -262,11 +263,17 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
 });
 
 // for now this does not use FB oauth/JWT
-router.post('/login', passport.authenticate('local-login'), (ctx) => {
+router.post('/login', passport.authenticate('local-login'), async (ctx) => {
+  let adopterId = null;
+  if (ctx.state.user.org_id === 1) {
+    const adopter = await db.getAdopterId(ctx.state.user.id);
+    adopterId = adopter[0].id;
+  }
   ctx.status = 201;
   ctx.body = {
     status: 'success',
     user: ctx.state.user,
+    adopterId,
   };
 });
 

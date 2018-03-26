@@ -1,7 +1,7 @@
-# whiskr
+# waggl
 # new-mvp-react# Project Title
 
-Waggle: something something dogs
+Waggl: something something dogs
 
 ## Getting Started
 

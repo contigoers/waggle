@@ -23,14 +23,30 @@ const dogsSearch = async (searchObject) => {
 };
 
 const getFavorites = async (adopterObject) => {
-  const { data } = await axios.get('adopterInfo', adopterObject);
+  const { data } = await axios.get('/adopterInfo', adopterObject);
   return {
     type: GET_FAVORITES,
     data: data.adopterFavoriteDogs,
   };
 };
 
+const addFavorite = async (favoritesObject) => {
+  const { data } = await axios.post('/favoriteDog', favoritesObject);
+  return {
+    type: GET_FAVORITES,
+    data: data.faveDogs,
+  };
+};
+
+const removeFavorite = async (favoritesObject) => {
+  const { data } = await axios.post('/favoriteDog/remove', favoritesObject);
+  return {
+    type: GET_FAVORITES,
+    data: data.faveDogs,
+  };
+};
+
 export {
   UPDATE_SEARCH_QUERY, updateSearchQuery, SEARCH_DOGS, dogsSearch,
-  GET_FAVORITES, getFavorites,
+  GET_FAVORITES, getFavorites, addFavorite, removeFavorite,
 };
