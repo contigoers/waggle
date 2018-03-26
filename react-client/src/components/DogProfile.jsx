@@ -2,19 +2,22 @@ import React from 'react';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
 import OrgCard from './OrgCard';
-
+import { addFavorite, removeFavorite } from '../actions/searchActions';
 
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       favorite: false,
+      id: +this.props.location.pathname.slice(5),
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
+    const { favorites } = this.props;
+    favorites.forEach(favorite => this.setState({ favorite: favorite.id === this.state.id }));
     // get id from url
     // var id = this.props.match.url; // '/dog/id/'
     // id = id.slice(5, id.length - 1);
@@ -27,6 +30,13 @@ class DogProfile extends React.Component {
   }
 
   toggleFavorite() {
+    const { favoriteParams } = this.props;
+    favoriteParams.dogId = this.state.id;
+    if (this.state.favorite) {
+      this.props.removeFavorite(favoriteParams);
+    } else {
+      this.props.addFavorite(favoriteParams);
+    }
     this.setState({ favorite: !this.state.favorite }, () => {
       message.info(this.state.favorite ? 'Added to favorites!' : 'Removed from favorites.');
     });
@@ -34,11 +44,7 @@ class DogProfile extends React.Component {
 
   render() {
     console.log('props', this.props);
-    const url = this.props.location.pathname;
-    const id = url.slice(5);
-    console.log(id);
-
-    const dog = this.props.results.dogs[id];
+    const dog = this.props.results.dogs[this.state.id];
     console.log(dog);
     const org = this.props.results.orgs[dog.org_id];
 
@@ -125,8 +131,22 @@ class DogProfile extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ results: state.search.results });
+const mapStateToProps = ({ search, profile }) => (
+  {
+    results: search.results,
+    favorites: search.favorites,
+    favoriteParams: {
+      adopterId: profile.adopter.id,
+      dogId: null,
+    },
+  }
+);
 
-export default connect(mapStateToProps, null)(DogProfile);
+const mapDispatchToProps = {
+  addFavorite,
+  removeFavorite,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DogProfile);
 
 // TODO: editable?????
