@@ -250,9 +250,9 @@ class Search extends React.Component {
         <Button className="submit-search" onClick={this.submitData}>
           Submit
         </Button>
-        {keys(this.props.results).length > 0 && (
+        {(keys(this.props.results).length > 0 && (
           <SearchResults />
-        )}
+        ))}
       </div>
     );
   }

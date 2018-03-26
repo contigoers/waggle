@@ -55,6 +55,7 @@ const createUser = async (user, username, password) => {
 const getAdopterId = userId => knex('adopters').select('id').where('user_id', userId);
 
 // get user by username (login)
+// add select all from users and adopter id if adopter (version?)
 const checkCredentials = username => knex.select().from('users')
   .where(knex.raw(`LOWER(username) = LOWER('${username}')`));
 

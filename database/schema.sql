@@ -84,7 +84,7 @@ CREATE TABLE `dogs` (
   `diet` BOOLEAN DEFAULT FALSE, -- boolean for dietary needs
   `medical` BOOLEAN DEFAULT FALSE, -- boolean for medical needs
   `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
-  `photo` VARCHAR(150) NULL DEFAULT NULL, -- string input
+  `photo` VARCHAR(150) NULL DEFAULT 'http://i65.tinypic.com/5v26ns.jpg', -- string input
   `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
   `adopted` BOOLEAN DEFAULT FALSE,
   `org_id` INTEGER NOT NULL, -- foreign key integer
@@ -243,4 +243,3 @@ INSERT INTO `dogs` (`name`,`breed`,`mix`,`male`,`size`,`aggressive`,`anxious`,`l
 ('Marley', 'Dutch Shepherd', true, true, 'huge', true, false, 'adolescent', 3, false, true, true, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Cooper', 'Yellow Labrador Retriever', true, true, 'tiny', false, true, 'adolescent', 12, false, false, false, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Lexi', 'Feist', true, false, 'large', false, false, 'senior', 6, true, false, true, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', true, 2);
-

@@ -9,24 +9,20 @@ class DogProfile extends React.Component {
     super(props);
     this.state = {
       favorite: false,
+      dog: this.props.results.dogs[this.props.location.pathname.slice(5)],
+      // this ^ should set the dog equal to the dog object
+      adopted: this.props.results.dogs[this.props.location.pathname.slice(5)].favorite,
+      // making this ^ its own property so we can change it with set state, for now
+      isMyDog: this.props.user ?
+        this.props.user.org_id ===
+        this.props.results.dogs[this.props.location.pathname.slice(5)].org_id : false,
+      // this.state.dog.org_id === this.props.storeUser.user.org_id,
+      // ^ boolean for if user in props has the same org id as the dog
       id: +this.props.location.pathname.slice(5),
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
-  }
-
-  componentDidMount() {
-    const { favorites } = this.props;
-    favorites.forEach(favorite => this.setState({ favorite: favorite.id === this.state.id }));
-    // get id from url
-    // var id = this.props.match.url; // '/dog/id/'
-    // id = id.slice(5, id.length - 1);
-    // gets dog at key id from store
-    // const dog = null;
-    // gets org at key dog.orgId from store
-    // const org = null;
-    // const dog = this.props.results.dogs['39'];
-    // const org = this.props.results.orgs[dog[org_id]];
+    this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
   toggleFavorite() {
@@ -42,11 +38,18 @@ class DogProfile extends React.Component {
     });
   }
 
+  toggleAdopted() {
+    this.setState({ adopted: !this.state.adopted }, () => {
+      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted');
+      // should actually update dog's adopted status in the database eventually
+    });
+  }
+
   render() {
-    console.log('props', this.props);
-    const dog = this.props.results.dogs[this.state.id];
-    console.log(dog);
+    const { dog } = this.state;
+
     const org = this.props.results.orgs[dog.org_id];
+    // const { user } = this.props.storeUser;
 
     let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
     if (dog.age) {
@@ -74,6 +77,10 @@ class DogProfile extends React.Component {
     } else {
       specialNeeds = 'none';
     }
+
+    const favoriteIcon = this.state.favorite ? 'heart' : 'heart-o';
+    const adoptIcon = this.state.adopted ? 'smile' : 'smile-o';
+    const cardType = this.state.isMyDog ? adoptIcon : favoriteIcon;
 
     return (
       <div>
@@ -119,22 +126,28 @@ class DogProfile extends React.Component {
                 alt="pupper"
                 src={dog.photo}
               />}
-              actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+              actions={
+                [<Icon
+                  onClick={this.state.isMyDog ? this.toggleAdopted : this.toggleFavorite}
+                  type={cardType}
+                />]
+              }
             />
           </Col>
         </Row>
         <Row style={{ marginBottom: 50 }} >
-          <OrgCard org={org} />
+          {!this.state.isMyDog && <OrgCard org={org} />}
         </Row>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ search, profile }) => (
+const mapStateToProps = ({ search, profile, storeUser }) => (
   {
     results: search.results,
     favorites: search.favorites,
+    user: storeUser.user,
     favoriteParams: {
       adopterId: profile.adopter.id,
       dogId: null,
