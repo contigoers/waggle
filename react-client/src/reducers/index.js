@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   search,
   profile: dummyProfile,
   loginModal,
-  thisUser: storeUser,
+  storeUser,
   searchSelections,
 });
 

@@ -7,10 +7,11 @@ const toggleLoginModal = () => (
   }
 );
 
-const storeUserId = () => (
+const storeUserId = ({ user }) => (
   {
     type: STORE_USER_ID,
+    user,
   }
-)
+);
 
 export { TOGGLE_LOGIN_MODAL, toggleLoginModal, STORE_USER_ID, storeUserId };
