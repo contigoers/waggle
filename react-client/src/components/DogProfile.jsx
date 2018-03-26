@@ -124,7 +124,7 @@ class DogProfile extends React.Component {
           </Col>
         </Row>
         <Row style={{ marginBottom: 50 }} >
-          {!this.state.isMyDog && <OrgCard org={org} />}
+        {!this.state.isMyDog && <OrgCard org={org} />}
         </Row>
       </div>
     );
