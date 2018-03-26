@@ -142,7 +142,27 @@ const markAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted',
 
 const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted', false);
 
-const searchOrgDogs = query => knex('dogs').where(knex.raw(`${query}`));
+const searchOrgDogs = (dogFilters) => {
+  let query = '';
+  Object.keys(dogFilters).forEach((prop) => {
+    query = `${query}(`;
+    const array = dogFilters[prop]; // need to JSON.parse this for postman testing
+    if (typeof array[0] === 'string') {
+      query += array.map(val => `dogs.${prop} = "${val}" or`);
+    } else {
+      query += array.map(val => `dogs.${prop} = ${val} or`);
+    }
+    const temp = query.split(' ');
+    if (temp[temp.length - 1] === 'or') {
+      temp.pop();
+    }
+    query = `${temp.join(' ')}) and `;
+  });
+  query = query.split(',').join(' ').split(' ');
+  query.splice(query.length - 2, 2);
+  query = query.join(' ');
+  return knex('dogs').where(knex.raw(query));
+};
 
 const getOrgsAfterDogs = (orgs) => {
   let whereQuery = '';

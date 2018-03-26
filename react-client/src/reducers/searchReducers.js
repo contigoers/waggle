@@ -7,6 +7,7 @@ const initialState = {
   lifestage: [],
   size: [],
   results: {},
+  favorites: {},
 };
 
 export default handleActions({
@@ -23,4 +24,5 @@ export default handleActions({
     };
   },
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
+  GET_FAVORITES: (state, action) => ({ ...state, favorites: action.data }),
 }, initialState);

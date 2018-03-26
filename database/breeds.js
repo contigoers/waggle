@@ -1,5 +1,5 @@
 const breeds = [
-  'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akbash', 'Akita', 'Alaskan Malamute',
+  'Any Breed', 'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akbash', 'Akita', 'Alaskan Malamute',
   'American Bulldog', 'American Eskimo Dog', 'American Hairless Terrier',
   'American Staffordshire Terrier', 'American Water Spaniel', 'Anatolian Shepherd',
   'Appenzell Mountain Dog', 'Australian Cattle Dog / Blue Heeler', 'Australian Kelpie',
