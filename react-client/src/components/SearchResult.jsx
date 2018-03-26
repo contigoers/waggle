@@ -17,7 +17,6 @@ class SearchResult extends React.Component {
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {

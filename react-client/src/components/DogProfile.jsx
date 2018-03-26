@@ -21,7 +21,6 @@ class DogProfile extends React.Component {
       id: +this.props.location.pathname.slice(5),
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
