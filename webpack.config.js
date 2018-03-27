@@ -1,5 +1,5 @@
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const SRC_DIR = path.join(__dirname, '/react-client/src');
 const DIST_DIR = path.join(__dirname, '/react-client/dist');
@@ -29,7 +29,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|mp4)$/,
         use: [
           {
             loader: 'file-loader',
@@ -38,9 +38,9 @@ module.exports = {
         ],
       }],
   },
-  plugins: [
-    new UglifyJsPlugin(),
-  ],
+  // plugins: [
+  //   new UglifyJsPlugin(),
+  // ],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
