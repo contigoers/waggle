@@ -25,8 +25,17 @@ class DogProfile extends React.Component {
   }
 
   componentDidMount() {
-    const { favorites } = this.props;
-    favorites.forEach(favorite => this.setState({ favorite: favorite.id === this.state.id }));
+    const { user } = this.props;
+    if (user.org_id > 1) {
+      console.log('heres path', this.props);
+    } else {
+      const { favorites } = this.props;
+      favorites.forEach((favorite) => {
+        if (favorite.id === this.state.id) {
+          this.setState({ favorite: true });
+        }
+      });
+    }
   }
 
   toggleFavorite() {

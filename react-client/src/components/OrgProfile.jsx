@@ -1,61 +1,42 @@
 import React from 'react';
-import axios from 'axios';
 import { Card, Divider, Row, Col } from 'antd';
 import { connect } from 'react-redux';
-import OrgDog from './OrgDog';
+import { map, isEmpty } from 'lodash';
+import SearchResult from './SearchResult';
+import { getOrgDogs } from '../actions/searchActions';
 
 class OrgProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      org: this.props.profile.org,
-      dogs: this.props.profile.dog,
-      request: [],
+      org: '',
     };
   }
 
   componentDidMount() {
-    console.log('PROPS:', this.props);
     this.getOrgDogs();
   }
 
   getOrgDogs() {
-    axios.get('/orgInfo', {
-      params: {
-        type: 'orgId',
-        value: this.state.org.id,
-      },
-    })
-      .then((response) => {
-        console.log('Successful rendering of dogs!', response);
-        this.setState({
-          request: response.data.orgDogs,
-        });
-      })
-      .catch((error) => {
-        console.log('error adding dog', error);
-      });
+    const { orgParams } = this.props;
+    this.props.getOrgDogs({ params: orgParams });
   }
 
   render() {
-    const phone = `(${this.state.org.phone.slice(0, 3)}) ${this.state.org.phone.slice(3, 6)}-${this.state.org.phone.slice(6)}`;
-    let stage = this.state.dogs.lifestage.charAt(0).toUpperCase()
-    + this.state.dogs.lifestage.slice(1);
-    if (this.state.dogs.age) {
-      stage += ` (age ${this.state.dogs.age})`;
-    }
+    const { user } = this.props;
+    const phone = `(${user.phone.slice(0, 3)}) ${user.phone.slice(3, 6)}-${user.phone.slice(6)}`;
     return (
       <div>
         <Row style={{ marginTop: 30, marginBottom: 30 }} >
           <Col span={15} offset={3} >
             <Card>
-              <h1> {this.state.org.name} </h1>
+              <h1> {user.name} </h1>
               <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
               Organization Profile
               </span>
               <Divider type="vertical" />
               <span style={{ fontWeight: 600, fontSize: 16 }} >
-              Username: {this.state.org.username}
+              Username: {user.username}
               </span>
 
               <Divider />
@@ -63,83 +44,20 @@ class OrgProfile extends React.Component {
               <h2> Location </h2>
 
               <h3 style={{ marginLeft: 20 }}> Address </h3>
-              <div style={{ marginLeft: 20 }}> {this.state.org.address} </div>
+              <div style={{ marginLeft: 20 }}> {user.address} </div>
               <div style={{ marginLeft: 20 }}>
-                {this.state.org.city}, {this.state.org.state} {this.state.org.zipcode}
+                {user.city}, {user.state} {user.zipcode}
               </div>
 
               <h2 style={{ marginTop: 20 }} > Contact Info </h2>
 
               <h3 style={{ marginLeft: 20 }}> Phone & E-mail </h3>
               <div style={{ marginLeft: 20 }} > {phone} </div>
-              <div style={{ marginLeft: 20 }} > {this.state.org.email} </div>
+              <div style={{ marginLeft: 20 }} > {user.email} </div>
             </Card>
           </Col>
         </Row>
-        <Row style={{ marginBottom: 50 }} gutter={8}>
-          <Col span={5} offset={3} >
-            <Card
-              style={{ width: 250 }}
-              cover={<img
-                alt="pupper"
-                src={this.state.dogs.photo}
-              />}
-            >
-              <Card.Meta title={this.state.dogs.name} />
-              <div style={{ marginTop: 10 }}>
-                <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
-                <Divider type="vertical" />
-                <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
-                <Divider type="vertical" />
-                <span> {stage} </span>
-              </div>
-            </Card>
-          </Col>
-          <Col span={5} >
-            <Card
-              style={{ width: 250 }}
-              cover={<img
-                alt="pupper"
-                src={this.state.dogs.photo}
-              />}
-            >
-              <Card.Meta title={this.state.dogs.name} />
-              <div style={{ marginTop: 10 }}>
-                <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
-                <Divider type="vertical" />
-                <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
-                <Divider type="vertical" />
-                <span> {stage} </span>
-              </div>
-            </Card>
-          </Col>
-          <Col span={5} >
-            <Card
-              style={{ width: 250 }}
-              cover={<img
-                alt="pupper"
-                src={this.state.dogs.photo}
-              />}
-            >
-              <Card.Meta title={this.state.dogs.name} />
-              <div style={{ marginTop: 10 }}>
-                <span> {this.state.dogs.breed} {this.state.dogs.mix ? 'mix' : ''} </span>
-                <Divider type="vertical" />
-                <span> {this.state.dogs.male ? 'Male' : 'Female'} </span>
-                <Divider type="vertical" />
-                <span> {stage} </span>
-              </div>
-            </Card>
-
-          </Col>
-        </Row>
-
-        {this.state.request.length > 0 && (
-          this.state.request.map(dog => (<OrgDog key={dog.id} dog={dog} />))
-        ) // im pretty sure this can now just be the same thing as the search results
-        // component, just makign sure to check correctly whether the dogs are yours or
-        // not (should be easy i think bc they're all in the list!))
-        }
+        {!isEmpty(this.props.results) ? map(this.props.results, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
 
       </div>
     );
@@ -147,9 +65,19 @@ class OrgProfile extends React.Component {
 }
 
 
-const mapStateToProps = (state) => {
-  console.log('STATE', state);
-  return state;
+const mapStateToProps = ({ search, storeUser }) => (
+  {
+    results: search.results,
+    user: storeUser.user,
+    orgParams: {
+      type: 'orgId',
+      value: !storeUser.user ? 1 : storeUser.user.org_id,
+    },
+  }
+);
+
+const mapDispatchToProps = {
+  getOrgDogs,
 };
 
-export default connect(mapStateToProps, null)(OrgProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(OrgProfile);

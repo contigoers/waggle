@@ -210,12 +210,24 @@ router.get('/orgInfo', async (ctx) => {
       orgId = +data.value;
     }
     const orgProfile = await db.getOrgProfile(orgId);
-    const orgDogs = await db.getOrgDogs(orgId);
-    ctx.body = {
-      status: 'success',
-      orgProfile: orgProfile[0],
-      orgDogs: orgDogs[0],
-    };
+    let dogs = await db.getOrgDogs(orgId);
+    if (dogs.length) {
+      dogs = mapKeys(dogs[0], 'id');
+      const orgDogs = {
+        dogs,
+      };
+      ctx.body = {
+        status: 'success',
+        orgProfile: orgProfile[0],
+        orgDogs,
+      };
+    } else {
+      ctx.body = {
+        orgDogs: {
+          dogs: {},
+        },
+      };
+    }
   } catch (err) {
     ctx.status = 400;
     ctx.body = {

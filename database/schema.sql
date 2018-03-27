@@ -4,7 +4,7 @@ DROP DATABASE IF EXISTS waggl;
 CREATE DATABASE waggl;
 
 USE waggl;
-
+-- mysql -u root -p < ./database/schema.sql
 -- ---
 -- Globals
 -- ---
