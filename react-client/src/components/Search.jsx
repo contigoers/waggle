@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Row, Col, Checkbox, Button, AutoComplete, BackTop } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { updateSearchQuery, dogsSearch, getFavorites } from '../actions/searchActions';
 import { updateSearchView } from '../actions/searchViewActions';
@@ -198,26 +198,32 @@ class Search extends React.Component {
           <div className="breed-filter">
             Breed
             <div className="breed-list">
-              <AutoComplete
-                dataSource={breedDataSource}
-                style={{ width: 500 }}
-                id="breed"
-                placeholder="enter breed"
-                defaultValue="Any Breed"
-                filterOption={(inputValue, option) => option.props.children
-                  .toUpperCase()
-                  .indexOf(inputValue.toUpperCase()) !== -1}
-                onSelect={inputValue => this.addBreedToFilterState(inputValue)}
-              />
+              <AutoComplete dataSource={breedDataSource} style={{ width: 500 }} id="breed" placeholder="enter breed" defaultValue="Any Breed" filterOption={(inputValue, option) => option.props.children
+                    .toUpperCase()
+                    .indexOf(
+                      inputValue.toUpperCase()
+                    ) !== -1} onSelect={inputValue => this.addBreedToFilterState(inputValue)} />
             </div>
           </div>
           <div className="gender-filter">
             Gender
             <div className="gender-list">
               <Row>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.anyGender} id="male" value="anyGender" onChange={this.addsToFilterState}>Any Gender</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.male} id="male" value="male" onChange={this.addsToFilterState}>Male</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.female} id="male" value="female" onChange={this.addsToFilterState}>Female</Checkbox></Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.anyGender} id="male" value="anyGender" onChange={this.addsToFilterState}>
+                    Any Gender
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.male} id="male" value="male" onChange={this.addsToFilterState}>
+                    Male
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.female} id="male" value="female" onChange={this.addsToFilterState}>
+                    Female
+                  </Checkbox>
+                </Col>
               </Row>
             </div>
           </div>
@@ -225,12 +231,36 @@ class Search extends React.Component {
             Size
             <div className="size-list">
               <Row>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.anySize} id="size" value="anySize" onChange={this.addsToFilterState}>Any Size</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.tiny} id="size" value="tiny" onChange={this.addsToFilterState}>Tiny</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.small} id="size" value="small" onChange={this.addsToFilterState}>Small</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.medium} id="size" value="medium" onChange={this.addsToFilterState}>Medium</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.large} id="size" value="large" onChange={this.addsToFilterState}>Large</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.giant} id="size" value="giant" onChange={this.addsToFilterState}>Giant</Checkbox></Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.anySize} id="size" value="anySize" onChange={this.addsToFilterState}>
+                    Any Size
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.tiny} id="size" value="tiny" onChange={this.addsToFilterState}>
+                    Tiny
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.small} id="size" value="small" onChange={this.addsToFilterState}>
+                    Small
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.medium} id="size" value="medium" onChange={this.addsToFilterState}>
+                    Medium
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.large} id="size" value="large" onChange={this.addsToFilterState}>
+                    Large
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.giant} id="size" value="giant" onChange={this.addsToFilterState}>
+                    Giant
+                  </Checkbox>
+                </Col>
               </Row>
             </div>
           </div>
@@ -238,11 +268,31 @@ class Search extends React.Component {
             Life Stage
             <div className="age-list">
               <Row>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.anyLifestage} id="lifestage" value="anyLifestage" onChange={this.addsToFilterState}>Any Lifestage</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.puppy} id="lifestage" value="puppy" onChange={this.addsToFilterState}>Puppy</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.adolescent} id="lifestage" value="adolescent" onChange={this.addsToFilterState}>Adolescent</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.adult} id="lifestage" value="adult" onChange={this.addsToFilterState}>Adult</Checkbox></Col>
-                <Col span={4}><Checkbox checked={this.props.searchSelections.senior} id="lifestage" value="senior" onChange={this.addsToFilterState}>Senior</Checkbox></Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.anyLifestage} id="lifestage" value="anyLifestage" onChange={this.addsToFilterState}>
+                    Any Lifestage
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.puppy} id="lifestage" value="puppy" onChange={this.addsToFilterState}>
+                    Puppy
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.adolescent} id="lifestage" value="adolescent" onChange={this.addsToFilterState}>
+                    Adolescent
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.adult} id="lifestage" value="adult" onChange={this.addsToFilterState}>
+                    Adult
+                  </Checkbox>
+                </Col>
+                <Col span={4}>
+                  <Checkbox checked={this.props.searchSelections.senior} id="lifestage" value="senior" onChange={this.addsToFilterState}>
+                    Senior
+                  </Checkbox>
+                </Col>
               </Row>
             </div>
           </div>
@@ -250,9 +300,8 @@ class Search extends React.Component {
         <Button className="submit-search" onClick={this.submitData}>
           Submit
         </Button>
-        {(keys(this.props.results).length > 0 && (
-          <SearchResults />
-        ))}
+        {keys(this.props.results).length > 0 && <SearchResults />}
+        <BackTop />
       </div>
     );
   }
