@@ -267,11 +267,11 @@ router.post('/login', passport.authenticate('local-login'), async (ctx) => {
     const adopter = await db.getAdopterId(ctx.state.user.id);
     adopterId = adopter[0].id;
   }
+  const user = Object.assign(ctx.state.user, { adopterId });
   ctx.status = 201;
   ctx.body = {
     status: 'success',
-    user: ctx.state.user,
-    adopterId,
+    user,
   };
 });
 

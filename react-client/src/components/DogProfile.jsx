@@ -51,7 +51,7 @@ class DogProfile extends React.Component {
 
   render() {
     const { dog } = this.state;
-
+    console.log('hello user', this.props.user);
     const org = this.props.results.orgs[dog.org_id];
     // const { user } = this.props.storeUser;
 
@@ -147,13 +147,13 @@ class DogProfile extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, profile, storeUser }) => (
+const mapStateToProps = ({ search, storeUser }) => (
   {
     results: search.results,
     favorites: search.favorites,
     user: storeUser.user,
     favoriteParams: {
-      adopterId: profile.adopter.id,
+      adopterId: storeUser.user.adopterId,
       dogId: null,
     },
   }
