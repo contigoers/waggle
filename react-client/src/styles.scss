@@ -2,14 +2,33 @@
 $primary: #cd5360;
 $primary-dark: #972036;
 
+$z-index: (
+  body: 20,
+  nav-bar: 20,
+  splash-items: 1,
+  splash-media: 0,
+);
+
 #app {
   height: 100%;
   font-size: 18px;
 }
 
-.splash > img {
+// .splash > img {
+//   width: 100%;
+//   max-height: 100%;
+// }
+
+.splash {
+  height: 100vh;
+  z-index: map-get($z-index, splash-media);
+  position: relative;
+}
+
+.splash-media > video {
   width: 100%;
-  max-height: 100%;
+  filter: grayscale(50%) brightness(70%);
+  z-index: map-get($z-index, splash-media);
 }
 
 .splash-items {
@@ -18,6 +37,7 @@ $primary-dark: #972036;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: map-get($z-index, splash-items);
 }
 
 .splash-item {
@@ -51,6 +71,11 @@ $primary-dark: #972036;
   font-size: 24px;
 }
 
+.nav-bar-container {
+  z-index: map-get($z-index, nav-bar);
+  position: relative;  
+}
+
 .nav-bar {
   height: 85px;
   display: grid;
@@ -58,6 +83,7 @@ $primary-dark: #972036;
   background: $primary;
   color: white;
   border-bottom: 4px solid $primary-dark;
+  z-index: map-get($z-index, nav-bar);
 }
 
 .logo-div > img {
@@ -89,6 +115,11 @@ $primary-dark: #972036;
     background-color: $primary-dark;
     border: 1px solid white;
   }
+}
+
+.body {
+  z-index: map-get($z-index, body);  
+  position: relative;  
 }
 
 .content-divs:nth-child(odd) {

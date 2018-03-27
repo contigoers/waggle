@@ -11,7 +11,7 @@ import RegistrationLandingModal from './RegistrationLandingModal';
 
 const NavBar = props =>
   (
-    <div>
+    <div className="nav-bar-container">
       <div name="nav-bar" className="nav-bar">
         <div className="logo-div nav-item">
           <img src={Logo} alt="waggl-logo" />
