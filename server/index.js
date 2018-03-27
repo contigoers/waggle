@@ -243,6 +243,25 @@ router.get('/adopterInfo', async (ctx) => {
   }
 });
 
+router.get('/randomDog', async (ctx) => {
+  let dog;
+  try {
+    [dog] = await db.getRandomDog();
+  } catch (err) {
+    console.log(err);
+  }
+  const [org] = await db.getOrgProfile(dog.org_id);
+  ctx.status = 200;
+  ctx.body = {
+    dogs: {
+      [dog.id]: dog,
+    },
+    orgs: {
+      [org.id]: org,
+    },
+  };
+});
+
 // not being used for now except for passport debugging purposes
 router.get('/user', (ctx) => {
   ctx.status = 200;
