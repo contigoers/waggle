@@ -90,7 +90,7 @@ const mapStateToProps = ({ search, storeUser }) => (
     favorites: search.favorites,
     user: storeUser.user,
     favoriteParams: {
-      adopterId: storeUser.user.adopterId,
+      adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
       dogId: null,
     },
   }
