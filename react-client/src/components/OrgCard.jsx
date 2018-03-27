@@ -1,9 +1,9 @@
 import React from 'react';
-import { Col, Card, Divider } from 'antd';
+import { Card, Divider } from 'antd';
 
 const OrgCard = (props) => {
   const { org } = props;
-  const phone = `(${org.phone.slice(1, 4)}) ${org.phone.slice(4, 7)}-${org.phone.slice(7)}`;
+  const phone = `(${org.phone.slice(0, 3)}) ${org.phone.slice(3, 6)}-${org.phone.slice(6)}`;
   return (
     <Card>
       <Card.Meta title="Shelter Info" />

@@ -8,11 +8,13 @@ import { addFavorite, removeFavorite } from '../actions/searchActions';
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
+
+    const { id } = this.props.match.params;
+
     this.state = {
       favorite: false,
-      dog: this.props.results.dogs[this.props.match.params.id],
-      adopted: this.props.results.dogs[this.props.match.params.id].adopted,
-      id: this.props.match.params.id,
+      dog: this.props.results.dogs[id],
+      adopted: this.props.results.dogs[id].adopted,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
@@ -46,10 +48,8 @@ class DogProfile extends React.Component {
   render() {
     const { dog } = this.state;
     const org = this.props.results.orgs[dog.org_id];
-    // const { user } = this.props.storeUser;
 
     let stage = startCase(dog.lifestage);
-    console.log('stage', stage);
     if (dog.age) {
       stage += ` (age ${dog.age})`;
     }

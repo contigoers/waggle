@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { startCase } from 'lodash';
 import { Card, Divider, Icon, message } from 'antd';
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
@@ -24,7 +25,6 @@ class DogCard extends React.Component {
     });
   }
 
-  // onclick sets state to send to profile page at /dog/:id
   onClick() {
     this.setState({ seeProfile: true });
   }
@@ -46,14 +46,11 @@ class DogCard extends React.Component {
     const { dog } = this.props;
 
     const url = `/dog/${dog.id}`;
-
     if (this.state.seeProfile) {
       return <Redirect to={url} />;
     }
 
-    const stage = dog.lifestage
-      .charAt(0)
-      .toUpperCase() + dog.lifestage.slice(1);
+    const stage = startCase(dog.lifestage);
 
     const adoptedStyle = { color: '#00db19', fontWeight: 700, marginTop: 5 };
     const notAdoptedStyle = { color: '#db0000', fontWeight: 700, marginTop: 5 };
@@ -62,7 +59,10 @@ class DogCard extends React.Component {
       <Card
         style={{ width: 300, margin: 30, marginLeft: 200 }}
         cover={<img alt="pupper" src={dog.photo} />}
-        actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+        actions={
+          this.props.user && this.props.user.org_id === 1 ?
+          [<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />] : null
+        }
         onClick={this.onClick}
       >
         <Card.Meta title={dog.name} />
