@@ -1,10 +1,6 @@
-import { TOGGLE_LOGIN_MODAL } from '../actions/loginActions';
+import { TOGGLE_LOGIN_MODAL, STORE_USER_ID } from '../actions/loginActions';
 
-const defaultState = {
-  visible: false,
-};
-
-const loginModal = (state = defaultState, action) => {
+const loginModal = (state = { visible: null }, action) => {
   switch (action.type) {
     case TOGGLE_LOGIN_MODAL:
       return {
@@ -15,4 +11,16 @@ const loginModal = (state = defaultState, action) => {
   }
 };
 
-export default loginModal;
+const storeUser = (state = { user: null }, action) => {
+  switch (action.type) {
+    case STORE_USER_ID:
+      return {
+        ...state,
+        user: action.user,
+      };
+    default:
+      return state;
+  }
+};
+
+export { loginModal, storeUser };

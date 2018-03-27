@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { map, isEmpty } from 'lodash';
 import SearchResult from './SearchResult';
 
-
 const SearchResults = props => (
   <div>
     {!isEmpty(props.dogs) ? map(props.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'No Results'}

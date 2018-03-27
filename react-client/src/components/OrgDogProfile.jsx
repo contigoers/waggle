@@ -10,20 +10,11 @@ class OrgDogProfile extends React.Component {
       adopted: this.props.location.state.orgDog.adopted,
     };
     this.toggleAdopted = this.toggleAdopted.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
+  //  this.componentDidMount = this.componentDidMount.bind(this);
   }
 
-  componentDidMount() {
-    // get id from url
-    // var id = this.props.match.url; // '/dog/id/'
-    // id = id.slice(5, id.length - 1);
-    // gets dog at key id from store
-    // const dog = null;
-    // gets org at key dog.orgId from store
-    // const org = null;
-    // const dog = this.props.results.dogs['39'];
-    // const org = this.props.results.orgs[dog[org_id]];
-  }
+  // componentDidMount() {
+  // }
 
   toggleAdopted() {
     this.setState({ adopted: !this.state.adopted }, () => {

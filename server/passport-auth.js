@@ -23,7 +23,7 @@ module.exports = () => {
         } else if (res === false) {
           cb(null, false); // password does not match
         }
-        cb(null, user);
+        cb(null, user); // user here is whole user object yeah
       });
     } else {
       cb(null, false); // username does not exist

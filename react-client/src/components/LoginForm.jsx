@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Modal } from 'antd';
 import axios from 'axios';
 
-import { toggleLoginModal } from '../actions/loginActions';
+import { toggleLoginModal, storeUserId } from '../actions/loginActions';
 
 const FormItem = Form.Item;
 
@@ -13,15 +13,20 @@ const WrappedLoginForm = Form.create()(class extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleLoginModal.bind(this);
+    this.storeUser = this.props.storeUserId.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        axios.post('/login', values);
+        axios.post('/login', values).then((response) => {
+          console.log('response data', response.data.user);
+          this.toggleModal();
+          this.storeUser({ user: response.data.user });
+        });
         this.props.form.resetFields();
-        this.toggleModal();
+        // this.toggleModal();
       }
     });
   }
@@ -67,10 +72,11 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = ({ loginModal: { visible } }) => (
+const mapStateToProps = state => (
   {
-    visible,
+    visible: state.loginModal.visible,
+    user: state.storeUser.user,
   }
 );
 
-export default connect(mapStateToProps, { toggleLoginModal })(WrappedLoginForm);
+export default connect(mapStateToProps, { toggleLoginModal, storeUserId })(WrappedLoginForm);

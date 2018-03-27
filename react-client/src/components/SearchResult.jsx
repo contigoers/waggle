@@ -12,11 +12,11 @@ class SearchResult extends React.Component {
     super(props);
     this.state = {
       favorite: false,
+      // fix ^ (how without get request? might need to do a get request on componentdidmount)
       seeProfile: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
@@ -28,9 +28,8 @@ class SearchResult extends React.Component {
     });
   }
 
-  // onclick sends to profile page
+  // onclick sets state to send to profile page at /dog/:id
   onClick() {
-    // reroute to url /dog/[dog.id]
     this.setState({ seeProfile: true });
   }
 
@@ -60,6 +59,9 @@ class SearchResult extends React.Component {
       .charAt(0)
       .toUpperCase() + dog.lifestage.slice(1);
 
+    const adoptedStyle = { color: '#00db19', fontWeight: 700 };
+    const notAdoptedStyle = { color: '#db0000', fontWeight: 700 };
+
     return (
       <Card
         style={{ width: 300, margin: 30, marginLeft: 200 }}
@@ -75,18 +77,20 @@ class SearchResult extends React.Component {
           <Divider type="vertical" />
           <span> {stage} </span>
         </div>
+        <div style={dog.adopted ? adoptedStyle : notAdoptedStyle}> {dog.adopted ? 'Adopted' : 'Not adopted' } </div>
 
       </Card>
     );
   }
 }
 
-const mapStateToProps = ({ search, profile }) => (
+const mapStateToProps = ({ search, storeUser }) => (
   {
     results: search.results,
     favorites: search.favorites,
+    user: storeUser.user,
     favoriteParams: {
-      adopterId: profile.adopter.id,
+      adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
       dogId: null,
     },
   }

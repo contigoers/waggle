@@ -72,12 +72,13 @@ class DogForm extends React.Component {
   }
 
   render() {
+    const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
     return (
       <div style={{ margin: 50 }}>
         <Form layout="inline" onSubmit={this.onSubmit}>
 
-          <Row>
+          <Row style={rowStyle}>
 
             <Form.Item label="Name">
               {getFieldDecorator('name', {
@@ -93,7 +94,7 @@ class DogForm extends React.Component {
 
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item label="Breed">
               {getFieldDecorator('breed', {
                   rules: [{
@@ -125,7 +126,7 @@ class DogForm extends React.Component {
             </Form.Item>
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item label="Gender">
               {getFieldDecorator('isMale', {
                   rules: [{
@@ -156,7 +157,7 @@ class DogForm extends React.Component {
             </Form.Item>
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item label="Life stage">
               {getFieldDecorator('lifestage', {
                   rules: [{
@@ -164,7 +165,7 @@ class DogForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 300 }} placeholder="Select">
+              })(<Select style={{ width: 175 }} placeholder="Select">
                 <Option value="puppy"> Puppy </Option>
                 <Option value="adolescent"> Adolescent </Option>
                 <Option value="adult"> Adult </Option>
@@ -179,7 +180,7 @@ class DogForm extends React.Component {
             </Form.Item>
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item label="Size">
               {getFieldDecorator('size', {
                   rules: [{
@@ -187,7 +188,7 @@ class DogForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-              })(<Select style={{ width: 300 }} placeholder="Select">
+              })(<Select style={{ width: 200 }} placeholder="Select">
                 <Option value="tiny"> Tiny </Option>
                 <Option value="small"> Small </Option>
                 <Option value="medium"> Medium </Option>
@@ -198,7 +199,7 @@ class DogForm extends React.Component {
             </Form.Item>
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item label="Energy Level">
               {getFieldDecorator('energyLevel', {
                 rules: [{
@@ -213,8 +214,8 @@ class DogForm extends React.Component {
               </Select>)}
             </Form.Item>
           </Row>
-          <div style={{ marginLeft: 10, fontWeight: 600 }}> Temperament: </div>
-          <Row style={{ marginLeft: 15 }}>
+          <div style={{ marginLeft: 10, fontWeight: 700 }}> Temperament: </div>
+          <Row style={{ marginLeft: 15, marginBottom: 10 }}>
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
@@ -227,8 +228,8 @@ class DogForm extends React.Component {
               })(<Checkbox checked={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
-          <div style={{ marginLeft: 10, fontWeight: 500 }} > Special needs: </div>
-          <Row style={{ marginLeft: 15 }}>
+          <div style={{ marginLeft: 10, fontWeight: 700 }} > Special needs: </div>
+          <Row style={{ marginLeft: 15, marginBottom: 10 }}>
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
@@ -242,14 +243,14 @@ class DogForm extends React.Component {
             </Form.Item>
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item label="Photo">
               {getFieldDecorator('photo', {
                 })(<Input style={{ width: 500 }} placeholder="Photo URL" />)}
             </Form.Item>
           </Row>
 
-          <Row>
+          <Row style={rowStyle}>
             <Form.Item style={{ marginTop: 10 }} label="Description">
               {getFieldDecorator('description', {})(<TextArea rows={4} style={{ width: 600 }} />)}
             </Form.Item>
