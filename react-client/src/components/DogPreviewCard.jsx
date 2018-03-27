@@ -4,10 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { Card, Divider, Icon, message } from 'antd';
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
-// onclick should render a new profile page with org signed in (from state?)
-// and dog from that result
-
-class SearchResult extends React.Component {
+class DogCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,6 +97,6 @@ const mapDispatchToProps = {
   removeFavorite,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);
+export default connect(mapStateToProps, mapDispatchToProps)(DogCard);
 
 // TODO: make photo in card view square

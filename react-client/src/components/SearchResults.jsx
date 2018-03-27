@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty } from 'lodash';
-import SearchResult from './SearchResult';
+import DogCard from './DogPreviewCard';
 
 const SearchResults = props => (
   <div>
-    {!isEmpty(props.dogs) ? map(props.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'No Results'}
+    {!isEmpty(props.dogs) ? map(props.dogs, dog => (<DogCard key={dog.id} dog={dog} />)) : 'No Results'}
   </div>
 );
 
