@@ -136,7 +136,9 @@ class OrgProfile extends React.Component {
 
         {this.state.request.length > 0 && (
           this.state.request.map(dog => (<OrgDog key={dog.id} dog={dog} />))
-        ) // im pretty sure this can now just be the same thing as the search results component, just makign sure to check correctly whether the dogs are yours or not (should be easy i think bc they're all in the list!))
+        ) // im pretty sure this can now just be the same thing as the search results
+        // component, just makign sure to check correctly whether the dogs are yours or
+        // not (should be easy i think bc they're all in the list!))
         }
 
       </div>

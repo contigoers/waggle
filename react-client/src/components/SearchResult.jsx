@@ -83,12 +83,13 @@ class SearchResult extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, profile }) => (
+const mapStateToProps = ({ search, storeUser }) => (
   {
     results: search.results,
     favorites: search.favorites,
+    user: storeUser.user,
     favoriteParams: {
-      adopterId: profile.adopter.id,
+      adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
       dogId: null,
     },
   }
