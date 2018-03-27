@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'antd';
 import { scroller } from 'react-scroll';
-import splashImage from '../assets/splash-image.jpg';
+import splashImage from '../assets/dog-video.mp4';
 
 function scrollToNav() {
   scroller.scrollTo('nav-bar', {
@@ -19,11 +19,17 @@ const Splash = () =>
           waggl
         </div>
         <button className="adopt-button splash-item" onClick={() => { scrollToNav(); }} >
-          Adopt a new best friend <Icon className="down-icon" type="down" />
+          Find your new best friend <Icon className="down-icon" type="down" />
         </button>
       </div>
-      <img src={splashImage} alt="" />
+      <div className="splash-media">
+        <video autoPlay loop>
+          <source src={splashImage} type="video/mp4" />
+        </video>
+      </div>
     </div>
   );
 
 export default Splash;
+
+// <img src={splashImage} alt="" />
