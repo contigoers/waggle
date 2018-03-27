@@ -307,7 +307,7 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, searchSelections, profile }) => (
+const mapStateToProps = ({ search, searchSelections, storeUser }) => (
   {
     params: {
       breed: search.breed,
@@ -318,8 +318,9 @@ const mapStateToProps = ({ search, searchSelections, profile }) => (
     results: search.results,
     searchSelections,
     favorites: search.favorites,
+    user: storeUser.user,
     adopterParams: {
-      adopterId: profile.adopter.id,
+      adopterId: storeUser.user ? 1 : storeUser.user.adopterId,
     },
   }
 );
