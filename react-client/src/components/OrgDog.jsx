@@ -15,10 +15,8 @@ class OrgDog extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  // onclick sends to profile page
-  handleClick() {
-    // reroute to url /dog/[dog.id]
-    this.setState({ seeProfile: true });
+  handleClick() { // onclick sends to profile page
+    this.setState({ seeProfile: true }); // reroutes to url /dog/[dog.id]
   }
 
   render() {
@@ -33,9 +31,7 @@ class OrgDog extends React.Component {
       />);
     }
 
-    const stage = dog.lifestage
-      .charAt(0)
-      .toUpperCase() + dog.lifestage.slice(1);
+    const stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
 
     return (
       <Card
@@ -51,7 +47,7 @@ class OrgDog extends React.Component {
           <Divider type="vertical" />
           <span> {stage} </span>
           <Divider type="vertical" />
-          <span> {dog.adopted ? 'Adopted' : 'Not Adopted'} </span>
+          <span> {dog.adopted ? 'Adopted' : 'Not yet adopted'} </span>
         </div>
 
       </Card>

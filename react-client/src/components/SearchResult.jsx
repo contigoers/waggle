@@ -12,7 +12,6 @@ class SearchResult extends React.Component {
     super(props);
     this.state = {
       favorite: false,
-      // fix ^ (how without get request? might need to do a get request on componentdidmount)
       seeProfile: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
@@ -59,8 +58,8 @@ class SearchResult extends React.Component {
       .charAt(0)
       .toUpperCase() + dog.lifestage.slice(1);
 
-    const adoptedStyle = { color: '#00db19', fontWeight: 700 };
-    const notAdoptedStyle = { color: '#db0000', fontWeight: 700 };
+    const adoptedStyle = { color: '#00db19', fontWeight: 700, marginTop: 5 };
+    const notAdoptedStyle = { color: '#db0000', fontWeight: 700, marginTop: 5 };
 
     return (
       <Card
