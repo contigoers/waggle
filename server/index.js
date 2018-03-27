@@ -215,10 +215,10 @@ router.get('/orgInfo', async (ctx) => {
       dogs = mapKeys(dogs[0], 'id');
       const orgDogs = {
         dogs,
+        org: orgProfile[0],
       };
       ctx.body = {
         status: 'success',
-        orgProfile: orgProfile[0],
         orgDogs,
       };
     } else {
