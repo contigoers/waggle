@@ -21,15 +21,17 @@ class SearchResult extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user.org_id > 1) {
-      console.log('yay search result');
-    } else {
-      const { favorites } = this.props;
-      favorites.forEach((favorite) => {
-        if (favorite.id === this.props.dog.id) {
-          this.setState({ favorite: true });
-        }
-      });
+    if (user !== null) {
+      if (user.org_id > 1) {
+        console.log('yay search result');
+      } else {
+        const { favorites } = this.props;
+        favorites.forEach((favorite) => {
+          if (favorite.id === this.props.dog.id) {
+            this.setState({ favorite: true });
+          }
+        });
+      }
     }
   }
 
