@@ -22,8 +22,10 @@ class Search extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user.adopterId) {
-      this.getFavorites();
+    if (user) {
+      if (user.adopterId) {
+        this.getFavorites();
+      }
     }
   }
 
