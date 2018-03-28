@@ -30,11 +30,11 @@ class DogProfile extends React.Component {
     if (user !== null) {
       if (user.org_id === 1) {
         const { favorites } = this.props;
-        favorites.forEach((favorite) => {
-          if (favorite.id === this.state.id) {
-            this.setState({ favorite: true });
+        favorites.some(((favorite) => {
+          if (favorite.id === +this.state.id) {
+            return this.setState({ favorite: true });
           }
-        });
+        }));
       }
     }
   }
