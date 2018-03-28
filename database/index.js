@@ -186,30 +186,32 @@ const getRandomDog = () => knex.select()
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-const getContacts = userId => knex.select('sender_id', 'recipient_id')
-  .from(knex.raw(''))
-  .where(`sender_id = ${userId} or recipient_id = ${userId}`);
-
 const addMessage = (senderId, recipientId, message) => {
   knex.insert({
     sender_id: senderId,
     recipient_id: recipientId,
     message,
   }).orderBy('id', 'asc');
-  return {
+  const timestamp = knex('messages').select('timestamp').where('message', message);
+  return { // need to do get request for message to get timestamp
     sender_id: senderId,
     recipient_id: recipientId,
     message,
-  }
+    timestamp,
+  };
 };
-
-const getMessagesForChat = (userId, contactId) => knex.select()
-  .from(knex.raw('messages'))
-  .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
 
 const deleteMessage = messageId => knex('messages')
   .where('id', messageId)
   .update('deleted', true);
+
+const getContacts = userId => knex.select('sender_id', 'recipient_id')
+  .from(knex.raw(''))
+  .where(`sender_id = ${userId} or recipient_id = ${userId}`); // need to return probably names (another query?)
+
+const getMessagesForChat = (userId, contactId) => knex.select()
+  .from(knex.raw('messages'))
+  .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
 
 module.exports = {
   getAdopterProfile,

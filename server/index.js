@@ -314,6 +314,47 @@ router.post('/logout', isLoggedIn, async (ctx) => {
   };
 });
 
+// request body should have user id, message
+router.post('/addMessage', async (ctx) => {
+  const { senderId } = ctx.request.body;
+  const { recipientId } = ctx.request.body;
+  const { message } = ctx.request.body;
+  const msg = db.addMessage(senderId, recipientId, message);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    msg,
+  };
+});
+
+router.post('/deleteMessage', async (ctx) => {
+  await db.deleteMessage(ctx.request.body.id);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+  };
+});
+
+router.post('/getMessages', async (ctx) => {
+  const { userId } = ctx.request.body;
+  const { contactId } = ctx.request.body;
+  const messages = await db.getMessagesForChat(userId, contactId);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    messages,
+  };
+});
+
+router.post('/getContacts', async (ctx) => {
+  const contacts = await db.getContacts(ctx.body.id);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    contacts,
+  };
+});
+
 app
   .use(router.routes())
   .use(router.allowedMethods())
