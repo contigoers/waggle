@@ -2,16 +2,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Checkbox, Button, AutoComplete, BackTop } from 'antd';
 import { forOwn, keys } from 'lodash';
-import { updateSearchQuery, dogsSearch, getFavorites } from '../actions/searchActions';
+import { Redirect } from 'react-router-dom';
+
+
+import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog } from '../actions/searchActions';
 import { updateSearchView } from '../actions/searchViewActions';
 import breedList from '../../../database/breeds';
 import SearchResults from './SearchResults';
 
 class Search extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    this.state = { redirect: false };
     this.addsToFilterState = this.addsToFilterState.bind(this);
     this.submitData = this.submitData.bind(this);
+    this.fetchAndRedirect = this.fetchAndRedirect.bind(this);
   }
 
   componentDidMount() {
@@ -190,10 +196,25 @@ class Search extends React.Component {
     this.props.dogsSearch(searchObject);
   }
 
+  async fetchAndRedirect() {
+    await this.props.getRandomDog();
+    let id;
+    forOwn(this.props.results.dogs, (value, key) => {
+      id = key;
+    });
+
+    this.setState({
+      redirect: true,
+      id,
+    });
+  }
+
   render() {
     const breedDataSource = breedList;
     return (
       <div className="search-div">
+        <Button onClick={this.fetchAndRedirect}>I&apos;m feeling lucky</Button>
+        {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
         <div className="search-filters">
           <div className="breed-filter">
             Breed
@@ -336,6 +357,7 @@ const mapDispatchToProps = {
   dogsSearch,
   updateSearchView,
   getFavorites,
+  getRandomDog,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

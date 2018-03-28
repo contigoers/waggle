@@ -4,7 +4,6 @@ const bodyParser = require('koa-bodyparser');
 const passport = require('koa-passport');
 const session = require('koa-session');
 const serve = require('koa-static');
-const randomPuppy = require('random-puppy');
 const db = require('../database/index');
 const { mapKeys } = require('lodash');
 
@@ -29,10 +28,6 @@ const isLoggedIn = (ctx, next) => {
   return ctx.throw(401, 'You must be logged in!');
   // ctx.redirect('/');  <---redirect to home page??
 };
-
-router.get('/picture', async (ctx) => {
-  ctx.body = await randomPuppy();
-});
 
 // get all organizations and contact info
 router.get('/allOrgInfo', async (ctx) => {
@@ -263,14 +258,18 @@ router.get('/randomDog', async (ctx) => {
     console.log(err);
   }
   const [org] = await db.getOrgProfile(dog.org_id);
-  ctx.status = 200;
-  ctx.body = {
+  const dogsAndOrgs = {
     dogs: {
       [dog.id]: dog,
     },
     orgs: {
       [org.id]: org,
     },
+  };
+
+  ctx.status = 200;
+  ctx.body = {
+    dogsAndOrgs,
   };
 });
 
