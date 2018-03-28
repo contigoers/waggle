@@ -205,7 +205,6 @@ class Search extends React.Component {
     forOwn(this.props.results.dogs, (value, key) => {
       id = key;
     });
-
     this.setState({
       redirect: true,
       id,

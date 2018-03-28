@@ -106,6 +106,23 @@ CREATE TABLE `favoritedogs` (
 );
 
 -- ---
+-- Table 'messages'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `messages`;
+
+CREATE TABLE `messages`
+(
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `sender_id` INTEGER NOT NULL,
+  `recipient_id` INTEGER NOT NULL,
+  `message` VARCHAR(1000) NOT NULL,
+  `sent` TIMESTAMP NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (`id`)
+);
+
+-- ---
 -- Foreign Keys 
 -- ---
 
@@ -114,6 +131,8 @@ ALTER TABLE `dogs` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (adopter_id) REFERENCES `adopters` (`id`);
 ALTER TABLE `favoritedogs` ADD FOREIGN KEY (dog_id) REFERENCES `dogs` (`id`);
 ALTER TABLE `users` ADD FOREIGN KEY (org_id) REFERENCES `orgs` (`id`);
+ALTER TABLE `messages` ADD FOREIGN KEY (sender_id) REFERENCES `users` (`id`);
+ALTER TABLE `messages` ADD FOREIGN KEY (recipient_id) REFERENCES `users` (`id`);
 
 -- ---
 -- Table Properties
@@ -243,3 +262,12 @@ INSERT INTO `dogs` (`name`,`breed`,`mix`,`male`,`size`,`aggressive`,`anxious`,`l
 ('Marley', 'Dutch Shepherd', true, true, 'huge', true, false, 'adolescent', 3, false, true, true, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Cooper', 'Yellow Labrador Retriever', true, true, 'tiny', false, true, 'adolescent', 12, false, false, false, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Lexi', 'Feist', true, false, 'large', false, false, 'senior', 6, true, false, true, 'high', 'INSERT_URL_HERE', 'INSERT_DESCRIPTION_HERE', true, 2);
+('Manik','German Shepherd Dog',true,true,'medium',true,true,'adult',3,true,false,true,'medium',NULL,'Diet: needs p terrys every day', false,true,2),
+
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('1', '2', 'hi');
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('1', '3', 'take me to your leader');
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('2', '3', 'how do you write a for loop?');
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('3', '2', 'give me all your dogs');
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('3', '1', 'whats a dog');
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('2', '1', 'sah dude');
+INSERT INTO messages (sender_id, recipient_id, message) VALUES ('1', '2', 'You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose. Youre on your own. And you know what you know. And YOU are the one wholl decide where to go...');
