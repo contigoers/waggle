@@ -21,7 +21,10 @@ class Search extends React.Component {
   }
 
   componentDidMount() {
-    this.getFavorites();
+    const { user } = this.props;
+    if (user.adopterId) {
+      this.getFavorites();
+    }
   }
 
   getFavorites() {
@@ -349,7 +352,7 @@ const mapStateToProps = ({ search, searchSelections, storeUser }) => (
     favorites: search.favorites,
     user: storeUser.user,
     adopterParams: {
-      adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
+      adopterId: !storeUser.user ? null : storeUser.user.adopterId,
     },
   }
 );
