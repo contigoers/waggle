@@ -21,7 +21,7 @@ class LandingModal extends Component {
     ref.props.form.validateFieldsAndScroll((err, values) => {
       const newValues = {
         ...values,
-        type: e.target.id === 'org' ? 'organiztion' : 'adopter',
+        type: e.target.id === 'org' ? 'organization' : 'adopter',
       };
 
       ref.setState({ phoneDirty: true });

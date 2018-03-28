@@ -29,8 +29,8 @@ const createUser = async (user, username, password) => {
   if (user.type === 'adopter') {
     await knex('adopters').insert({
       name: user.name,
-      pets: user.pets,
-      house_type: user.houseType,
+      pets: user.pets === 'yes',
+      house_type: user.house,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
   } else if (user.type === 'organization') {
