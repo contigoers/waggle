@@ -204,11 +204,10 @@ class Search extends React.Component {
   async fetchAndRedirect() {
     await this.props.getRandomDog();
     let id;
-    
+
     forOwn(this.props.results.dogs, (value, key) => {
       id = key;
     });
-
     this.setState({
       redirect: true,
       id,
@@ -219,7 +218,9 @@ class Search extends React.Component {
     const breedDataSource = breedList;
     return (
       <div className="search-div">
-        <Button onClick={this.fetchAndRedirect}>I&apos;m feeling lucky</Button>
+        <Button onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
+          I&apos;m feeling lucky
+        </Button>
         {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
         <div className="search-filters">
           <div className="breed-filter">

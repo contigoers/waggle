@@ -21,6 +21,7 @@ const OrgCard = (props) => {
           </div>
         }
 
+
         <Divider />
 
         <h2> Location </h2>
