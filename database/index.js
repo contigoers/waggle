@@ -186,7 +186,30 @@ const getRandomDog = () => knex.select()
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-// search dogs with various parameters for dogs
+const getContacts = userId => knex.select('sender_id', 'recipient_id')
+  .from(knex.raw(''))
+  .where(`sender_id = ${userId} or recipient_id = ${userId}`);
+
+const addMessage = (senderId, recipientId, message) => {
+  knex.insert({
+    sender_id: senderId,
+    recipient_id: recipientId,
+    message,
+  }).orderBy('id', 'asc');
+  return {
+    sender_id: senderId,
+    recipient_id: recipientId,
+    message,
+  }
+};
+
+const getMessagesForChat = (userId, contactId) => knex.select()
+  .from(knex.raw('messages'))
+  .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
+
+const deleteMessage = messageId => knex('messages')
+  .where('id', messageId)
+  .update('deleted', true);
 
 module.exports = {
   getAdopterProfile,
@@ -209,5 +232,8 @@ module.exports = {
   getOrgsAfterDogs,
   getAdopterId,
   getRandomDog,
+  getMessagesForChat,
+  getContacts,
+  deleteMessage,
+  addMessage,
 };
-
