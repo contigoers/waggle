@@ -15,6 +15,7 @@ class Splash extends React.Component {
   constructor() {
     super();
     this.state = {
+      cycleIntervalId: null,
       count: 1,
       isHovered: false,
       dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend'],
@@ -23,19 +24,26 @@ class Splash extends React.Component {
     this.handleHover = this.handleHover.bind(this);
   }
 
-  componentDidMount() {
-    // setInterval(() => {
-    //   this.setState({
-    //     currentName: this.getNextName(this.state.count),
-    //   });
-    //   if (this.state.count !== this.state.dogNicknames.length - 1) {
-    //     this.setState({
-    //       count: (this.state.count = this.state.count + 1),
-    //     });
-    //   } else {
-    //     this.setState({ count: 0 });
-    //   }
-    // }, 1500);
+  componentWillMount() {
+    const cycle = setInterval(() => {
+      this.setState({
+        currentName: this.getNextName(this.state.count),
+      });
+      if (this.state.count !== this.state.dogNicknames.length - 1) {
+        this.setState({
+          count: (this.state.count = this.state.count + 1),
+        });
+      } else {
+        this.setState({ count: 0 });
+      }
+    }, 1500);
+    this.setState({
+      cycleIntervalId: cycle,
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.cycleIntervalId);
   }
 
   getNextName() {
@@ -84,5 +92,3 @@ class Splash extends React.Component {
 }
 
 export default Splash;
-
-// <img src={splashImage} alt="" />
