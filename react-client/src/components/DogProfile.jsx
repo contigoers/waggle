@@ -8,6 +8,7 @@ import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
 
 import { addFavorite, removeFavorite } from '../actions/searchActions';
+import { toggleInquiryModal } from '../actions/messagingActions';
 
 class DogProfile extends React.Component {
   constructor(props) {
@@ -122,6 +123,7 @@ class DogProfile extends React.Component {
 
     const adoptButton = () => (<Button type="primary" onClick={this.toggleAdopted} > {this.state.adopted ? 'Mark as not adopted' : 'Mark as adopted'} </Button>);
     const favoriteIcon = () => (<Icon type={this.state.favorite ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />);
+    const inquiryIcon = <Icon type="message" onClick={this.props.toggleInquiryModal} />;
 
     let cardActions = null;
     let cardButton = null;
@@ -129,7 +131,9 @@ class DogProfile extends React.Component {
     if (this.props.user && dog.org_id === this.props.user.org_id) {
       cardButton = [adoptButton()];
     } else if (this.props.user && this.props.user.org_id === 1) {
-      cardActions = [favoriteIcon()];
+      cardActions = [inquiryIcon(), favoriteIcon];
+    } else if (!this.props.user) {
+      cardActions = [inquiryIcon];
     }
 
     return (
@@ -208,6 +212,7 @@ const mapStateToProps = ({ search, storeUser }) => (
 const mapDispatchToProps = {
   addFavorite,
   removeFavorite,
+  toggleInquiryModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DogProfile);
