@@ -1,18 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { startCase } from 'lodash';
 import { Card, Divider, Icon, message } from 'antd';
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
-// onclick should render a new profile page with org signed in (from state?)
-// and dog from that result
-
-class SearchResult extends React.Component {
+class DogCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       favorite: false,
-      // fix ^ (how without get request? might need to do a get request on componentdidmount)
       seeProfile: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
@@ -21,19 +18,20 @@ class SearchResult extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user.org_id > 1) {
-      console.log('yay search result');
-    } else {
-      const { favorites } = this.props;
-      favorites.forEach((favorite) => {
-        if (favorite.id === this.props.dog.id) {
-          this.setState({ favorite: true });
-        }
-      });
+    if (user !== null) {
+      if (user.org_id > 1) {
+        console.log('yay search result');
+      } else {
+        const { favorites } = this.props;
+        favorites.forEach((favorite) => {
+          if (favorite.id === this.props.dog.id) {
+            this.setState({ favorite: true });
+          }
+        });
+      }
     }
   }
 
-  // onclick sets state to send to profile page at /dog/:id
   onClick() {
     this.setState({ seeProfile: true });
   }
@@ -55,23 +53,23 @@ class SearchResult extends React.Component {
     const { dog } = this.props;
 
     const url = `/dog/${dog.id}`;
-
     if (this.state.seeProfile) {
       return <Redirect to={url} />;
     }
 
-    const stage = dog.lifestage
-      .charAt(0)
-      .toUpperCase() + dog.lifestage.slice(1);
+    const stage = startCase(dog.lifestage);
 
-    const adoptedStyle = { color: '#00db19', fontWeight: 700 };
-    const notAdoptedStyle = { color: '#db0000', fontWeight: 700 };
+    const adoptedStyle = { color: '#00db19', fontWeight: 700, marginTop: 5 };
+    const notAdoptedStyle = { color: '#db0000', fontWeight: 700, marginTop: 5 };
 
     return (
       <Card
-        style={{ width: 300, margin: 30, marginLeft: 200 }}
-        cover={<img alt="pupper" src={dog.photo} />}
-        actions={[<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />]}
+        style={{ width: 300, margin: 30, float: 'left' }}
+        cover={<img alt="pupper" src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
+        actions={
+          this.props.user && this.props.user.org_id === 1 ?
+          [<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />] : null
+        }
         onClick={this.onClick}
       >
         <Card.Meta title={dog.name} />
@@ -106,6 +104,6 @@ const mapDispatchToProps = {
   removeFavorite,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);
+export default connect(mapStateToProps, mapDispatchToProps)(DogCard);
 
 // TODO: make photo in card view square
