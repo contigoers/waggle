@@ -6,6 +6,7 @@ const OrgCard = (props) => {
   const { org } = props;
   console.log(org);
   const phone = `(${org.phone.slice(0, 3)}) ${org.phone.slice(3, 6)}-${org.phone.slice(6)}`;
+
   return (
     <Col>
       <Card>
