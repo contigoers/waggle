@@ -48,4 +48,5 @@ export default [
   'WA',
   'WV',
   'WI',
-  'WY'];
+  'WY',
+];

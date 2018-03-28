@@ -22,6 +22,14 @@ const dogsSearch = async (searchObject) => {
   };
 };
 
+const getOrgDogs = async (orgObject) => {
+  const { data } = await axios.get('/orgInfo', orgObject);
+  return {
+    type: SEARCH_DOGS,
+    data: data.orgDogs,
+  };
+};
+
 const getFavorites = async (adopterObject) => {
   const { data } = await axios.get('/adopterInfo', adopterObject);
   return {
@@ -48,5 +56,5 @@ const removeFavorite = async (favoritesObject) => {
 
 export {
   UPDATE_SEARCH_QUERY, updateSearchQuery, SEARCH_DOGS, dogsSearch,
-  GET_FAVORITES, getFavorites, addFavorite, removeFavorite,
+  GET_FAVORITES, getFavorites, addFavorite, removeFavorite, getOrgDogs,
 };

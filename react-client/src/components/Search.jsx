@@ -198,11 +198,17 @@ class Search extends React.Component {
           <div className="breed-filter">
             Breed
             <div className="breed-list">
-              <AutoComplete dataSource={breedDataSource} style={{ width: 500 }} id="breed" placeholder="enter breed" defaultValue="Any Breed" filterOption={(inputValue, option) => option.props.children
-                    .toUpperCase()
-                    .indexOf(
-                      inputValue.toUpperCase()
-                    ) !== -1} onSelect={inputValue => this.addBreedToFilterState(inputValue)} />
+              <AutoComplete
+                dataSource={breedDataSource}
+                style={{ width: 500 }}
+                id="breed"
+                placeholder="enter breed"
+                defaultValue="Any Breed"
+                filterOption={(inputValue, option) => option.props.children
+                  .toUpperCase()
+                  .indexOf(inputValue.toUpperCase()) !== -1}
+                onSelect={inputValue => this.addBreedToFilterState(inputValue)}
+              />
             </div>
           </div>
           <div className="gender-filter">
@@ -307,7 +313,7 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, searchSelections, profile }) => (
+const mapStateToProps = ({ search, searchSelections, storeUser }) => (
   {
     params: {
       breed: search.breed,
@@ -318,8 +324,9 @@ const mapStateToProps = ({ search, searchSelections, profile }) => (
     results: search.results,
     searchSelections,
     favorites: search.favorites,
+    user: storeUser.user,
     adopterParams: {
-      adopterId: profile.adopter.id,
+      adopterId: storeUser.user ? 1 : storeUser.user.adopterId,
     },
   }
 );

@@ -21,8 +21,15 @@ class DogProfile extends React.Component {
   }
 
   componentDidMount() {
-    const { favorites } = this.props;
-    favorites.forEach(favorite => this.setState({ favorite: favorite.id === this.state.id }));
+    const { user } = this.props;
+    if (user.org_id === 1) {
+      const { favorites } = this.props;
+      favorites.forEach((favorite) => {
+        if (favorite.id === this.state.id) {
+          this.setState({ favorite: true });
+        }
+      });
+    }
   }
 
   toggleFavorite() {
@@ -47,7 +54,11 @@ class DogProfile extends React.Component {
 
   render() {
     const { dog } = this.state;
-    const org = this.props.results.orgs[dog.org_id];
+
+    // const org = this.props.results.orgs[dog.org_id];
+    if (this.props.user.org_id === 1) {
+      const org = this.props.results.orgs[dog.org_id];
+    }
 
     let stage = startCase(dog.lifestage);
     if (dog.age) {

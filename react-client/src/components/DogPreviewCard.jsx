@@ -17,12 +17,17 @@ class DogCard extends React.Component {
   }
 
   componentDidMount() {
-    const { favorites } = this.props;
-    favorites.forEach((favorite) => {
-      if (favorite.id === this.props.dog.id) {
-        this.setState({ favorite: true });
-      }
-    });
+    const { user } = this.props;
+    if (user.org_id > 1) {
+      console.log('yay search result');
+    } else {
+      const { favorites } = this.props;
+      favorites.forEach((favorite) => {
+        if (favorite.id === this.props.dog.id) {
+          this.setState({ favorite: true });
+        }
+      });
+    }
   }
 
   onClick() {

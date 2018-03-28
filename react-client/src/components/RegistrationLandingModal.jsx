@@ -19,12 +19,17 @@ class LandingModal extends Component {
     e.preventDefault();
     const ref = e.target.id === 'org' ? this.orgRef : this.adopterRef;
     ref.props.form.validateFieldsAndScroll((err, values) => {
+      const newValues = {
+        ...values,
+        type: e.target.id === 'org' ? 'organization' : 'adopter',
+      };
+
       ref.setState({ phoneDirty: true });
       if (!err && ref.state.numberIsValid) {
-        axios.post('/register', values);
-        // ref.setState({ phoneDirty: false });
-        // ref.props.form.resetFields();
-        // this.toggleModal();
+        axios.post('/register', newValues);
+        ref.setState({ phoneDirty: false });
+        ref.props.form.resetFields();
+        this.toggleModal();
       }
     });
   }
