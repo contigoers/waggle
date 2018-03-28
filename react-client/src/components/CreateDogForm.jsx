@@ -26,8 +26,6 @@ class DogForm extends React.Component {
   }
 
   onCheckChange({ target: { id } }) {
-    console.log(id);
-    console.log('change');
     this.setState({
       [id]: !this.state[id],
     });
