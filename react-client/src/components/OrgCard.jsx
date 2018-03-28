@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Col, Card, Divider } from 'antd';
+import { Col, Card, Divider, Icon } from 'antd';
+import { toggleInquiryModal } from '../actions/messagingActions';
 
 const OrgCard = (props) => {
   const { org } = props;
@@ -8,7 +9,11 @@ const OrgCard = (props) => {
   const phone = `(${org.phone.slice(0, 3)}) ${org.phone.slice(3, 6)}-${org.phone.slice(6)}`;
   return (
     <Col>
-      <Card>
+      <Card
+        actions={[
+          <Icon type="message" />,
+        ]}
+      >
         <div style={{ fontWeight: 700 }}> PLACEHOLDER </div>
         {props.user && org.id === props.user.org_id &&
           <div>
@@ -48,4 +53,4 @@ const mapStateToProps = ({ storeUser }) => (
   }
 );
 
-export default connect(mapStateToProps, null)(OrgCard);
+export default connect(mapStateToProps, { toggleInquiryModal })(OrgCard);
