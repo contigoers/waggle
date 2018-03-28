@@ -26,7 +26,7 @@ class DogProfile extends React.Component {
     this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { user } = this.props;
     if (user !== null) {
       if (user.org_id === 1) {
