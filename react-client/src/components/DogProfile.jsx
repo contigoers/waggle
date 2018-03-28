@@ -3,7 +3,10 @@ import axios from 'axios';
 import { Card, Divider, Row, Col, Icon, message, Button } from 'antd';
 import { connect } from 'react-redux';
 import { startCase } from 'lodash';
+
 import OrgCard from './OrgCard';
+import InquiryModal from './InquiryModal';
+
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
 class DogProfile extends React.Component {
@@ -184,6 +187,7 @@ class DogProfile extends React.Component {
             </Card>
           </Row>
         </Col>
+        <InquiryModal />
       </div>
     );
   }
