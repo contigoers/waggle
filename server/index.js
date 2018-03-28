@@ -210,12 +210,24 @@ router.get('/orgInfo', async (ctx) => {
       orgId = +data.value;
     }
     const orgProfile = await db.getOrgProfile(orgId);
-    const orgDogs = await db.getOrgDogs(orgId);
-    ctx.body = {
-      status: 'success',
-      orgProfile: orgProfile[0],
-      orgDogs: orgDogs[0],
-    };
+    let dogs = await db.getOrgDogs(orgId);
+    if (dogs.length) {
+      dogs = mapKeys(dogs[0], 'id');
+      const orgDogs = {
+        dogs,
+        org: orgProfile[0],
+      };
+      ctx.body = {
+        status: 'success',
+        orgDogs,
+      };
+    } else {
+      ctx.body = {
+        orgDogs: {
+          dogs: {},
+        },
+      };
+    }
   } catch (err) {
     ctx.status = 400;
     ctx.body = {
@@ -241,6 +253,25 @@ router.get('/adopterInfo', async (ctx) => {
       message: err.message || 'Sorry, an error has occurred.',
     };
   }
+});
+
+router.get('/randomDog', async (ctx) => {
+  let dog;
+  try {
+    [dog] = await db.getRandomDog();
+  } catch (err) {
+    console.log(err);
+  }
+  const [org] = await db.getOrgProfile(dog.org_id);
+  ctx.status = 200;
+  ctx.body = {
+    dogs: {
+      [dog.id]: dog,
+    },
+    orgs: {
+      [org.id]: org,
+    },
+  };
 });
 
 // not being used for now except for passport debugging purposes

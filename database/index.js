@@ -1,11 +1,7 @@
 const config = {
-  client: process.env.CLIENT || 'pg',
+  client: 'mysql',
   connection: process.env.DATABASE_URL,
 };
-
-if (config.client === 'pg') {
-  config.ssl = true;
-}
 
 const knex = require('knex')(config);
 
@@ -33,8 +29,8 @@ const createUser = async (user, username, password) => {
   if (user.type === 'adopter') {
     await knex('adopters').insert({
       name: user.name,
-      pets: user.pets,
-      house_type: user.houseType,
+      pets: user.pets === 'yes',
+      house_type: user.house,
       user_id: userId[0].id,
     }).orderBy('id', 'asc');
   } else if (user.type === 'organization') {
@@ -184,6 +180,10 @@ const getOrgsAfterDogs = (orgs) => {
     .where(knex.raw(whereQuery));
 };
 
+const getRandomDog = () => knex.select()
+  .from(knex.raw('dogs'))
+  .where(knex.raw('adopted = false order by rand() limit 1'));
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 // search dogs with various parameters for dogs
@@ -208,5 +208,6 @@ module.exports = {
   removeFavoriteDog,
   getOrgsAfterDogs,
   getAdopterId,
+  getRandomDog,
 };
 
