@@ -5,21 +5,29 @@ import { Modal, Button } from 'antd';
 import { toggleInquiryModal } from '../actions/messagingActions';
 
 
-const InquiryModal = props => (
-  <Modal
-    id="inquiry"
-    title={`Send a message about ${'DOG_NAME_HERE'}`}
-    visible={props.visible}
-    onCancel={props.toggleInquiryModal}
-    footer={[
-      <Button key="back" onClick={props.toggleInquiryModal}>Cancel</Button>,
-    ]}
-  />
-);
+const InquiryModal = (props) => {
+  console.log(props);
 
-const mapStateToProps = ({ inquiryModal: { visible } }) => (
+  return (
+    <Modal
+      id="inquiry"
+      title={`Send a message about ${props.results.dogs[props.id].name}`}
+      visible={props.visible}
+      onCancel={props.toggleInquiryModal}
+      footer={[
+        <Button key="back" onClick={props.toggleInquiryModal}>Cancel</Button>,
+      ]}
+    >
+      {!props.user && 'Please log in to send a message.'}
+    </Modal>
+  );
+};
+
+const mapStateToProps = ({ inquiryModal, storeUser, search }) => (
   {
-    visible,
+    visible: inquiryModal.visible,
+    user: storeUser.user,
+    results: search.results,
   }
 );
 

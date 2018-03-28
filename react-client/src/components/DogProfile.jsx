@@ -194,7 +194,7 @@ class DogProfile extends React.Component {
             </Card>
           </Row>
         </Col>
-        <InquiryModal />
+        <InquiryModal id={this.props.match.params.id} />
       </div>
     );
   }
