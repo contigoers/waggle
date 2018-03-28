@@ -1,24 +1,20 @@
 import React from 'react';
-import { Card, Divider, Row, Col, Icon, message } from 'antd';
+import { Card, Divider, Row, Col, Icon, message, Button } from 'antd';
 import { connect } from 'react-redux';
+import { startCase } from 'lodash';
 import OrgCard from './OrgCard';
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
+
+    const { id } = this.props.match.params;
+
     this.state = {
       favorite: false,
-      dog: this.props.results.dogs[this.props.location.pathname.slice(5)],
-      // this ^ should set the dog equal to the dog object
-      adopted: this.props.results.dogs[this.props.location.pathname.slice(5)].favorite,
-      // making this ^ its own property so we can change it with set state, for now
-      isMyDog: this.props.user ?
-        this.props.user.org_id ===
-        this.props.results.dogs[this.props.location.pathname.slice(5)].org_id : false,
-      // this.state.dog.org_id === this.props.storeUser.user.org_id,
-      // ^ boolean for if user in props has the same org id as the dog
-      id: +this.props.location.pathname.slice(5),
+      dog: this.props.results.dogs[id],
+      adopted: this.props.results.dogs[id].adopted,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
@@ -60,12 +56,13 @@ class DogProfile extends React.Component {
 
   render() {
     const { dog } = this.state;
-    // if (this.props.user.org_id === 1) {
-    const org = this.props.results.orgs[dog.org_id];
-    // }
-    // const { user } = this.props.storeUser;
 
-    let stage = dog.lifestage.charAt(0).toUpperCase() + dog.lifestage.slice(1);
+    let org;
+    if (!this.props.user || this.props.user.org_id !== dog.org_id) {
+      org = this.props.results.orgs[dog.org_id];
+    }
+
+    let stage = startCase(dog.lifestage);
     if (dog.age) {
       stage += ` (age ${dog.age})`;
     }
@@ -92,14 +89,22 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const favoriteIcon = this.state.favorite ? 'heart' : 'heart-o';
-    const adoptIcon = this.state.adopted ? 'smile' : 'smile-o';
-    const cardType = this.state.isMyDog ? adoptIcon : favoriteIcon;
+    const adoptButton = () => (<Button type="primary" > {this.state.adopted ? 'Mark as adopted' : 'Mark as not adopted'} </Button>);
+    const favoriteIcon = () => (<Icon type={this.state.favorite ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />);
+
+    let cardActions = null;
+    let cardButton = null;
+
+    if (this.props.user && dog.org_id === this.props.user.org_id) {
+      cardButton = [adoptButton()];
+    } else if (this.props.user && this.props.user.org_id === 1) {
+      cardActions = [favoriteIcon()];
+    }
 
     return (
       <div>
-        <Row style={{ marginTop: 30, marginBottom: 30 }} >
-          <Col span={10} offset={3} >
+        <Col span={10} offset={3} >
+          <Row style={{ marginTop: 30, marginBottom: 30 }} >
             <Card>
               <h1> {dog.name} </h1>
               <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
@@ -132,26 +137,25 @@ class DogProfile extends React.Component {
               <h2 style={{ marginTop: 20 }} > Bio </h2>
               <div style={{ marginLeft: 20 }} > {dog.description} </div>
             </Card>
-          </Col>
-          <Col span={8} offset={1}>
+          </Row>
+          <Row style={{ marginBottom: 50 }} >
+            {(!this.props.user || (this.props.user.org_id !== dog.org_id)) && <OrgCard org={org} />}
+          </Row>
+        </Col>
+        <Col span={8} offset={1}>
+          <Row style={{ marginTop: 30 }}>
             <Card
               style={{ width: 350 }}
               cover={<img
                 alt="pupper"
                 src={dog.photo}
               />}
-              actions={
-                [<Icon
-                  onClick={this.state.isMyDog ? this.toggleAdopted : this.toggleFavorite}
-                  type={cardType}
-                />]
-              }
-            />
-          </Col>
-        </Row>
-        <Row style={{ marginBottom: 50 }} >
-          {!this.state.isMyDog && <OrgCard org={org} />}
-        </Row>
+              actions={cardActions}
+            >
+              {cardButton}
+            </Card>
+          </Row>
+        </Col>
       </div>
     );
   }

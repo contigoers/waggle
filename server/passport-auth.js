@@ -19,14 +19,14 @@ module.exports = () => {
       const user = userInfo[0];
       bcrypt.compare(password, user.password, (err, res) => {
         if (err) {
-          cb(err, null); // error thrown
+          cb(err, null);
         } else if (res === false) {
-          cb(null, false); // password does not match
+          cb(null, false);
         }
-        cb(null, user); // user here is whole user object yeah
+        cb(null, user);
       });
     } else {
-      cb(null, false); // username does not exist
+      cb(null, false);
     }
   }));
 

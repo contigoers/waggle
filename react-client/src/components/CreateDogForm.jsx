@@ -1,6 +1,7 @@
 /* eslint react/jsx-closing-tag-location: 1 */
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
 import breeds from '../../../database/breeds';
 
@@ -54,7 +55,7 @@ class DogForm extends React.Component {
         energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
         photo: values.photo || null,
         description: values.description || null,
-        orgId: 1,
+        orgId: this.props.user.org_id,
       };
       console.log(dog);
       axios.post('/createOrgDog', dog)
@@ -266,7 +267,13 @@ class DogForm extends React.Component {
 
 const CreateDogForm = Form.create()(DogForm);
 
-export default CreateDogForm;
+const mapStateToProps = ({ storeUser }) => (
+  {
+    user: storeUser.user,
+  }
+);
+
+export default connect(mapStateToProps, null)(CreateDogForm);
 
 // TODO: format fields with columns (ughhh)
 // TODO: unfuck falsy validation/checkbox stuff in object
