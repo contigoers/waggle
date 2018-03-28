@@ -33,9 +33,11 @@ const NavBar = (props) => {
         <div className="about-div nav-item">
           <Link className="nav-link" to="/about">About Us</Link>
         </div>
+        {props.user && props.user.org_id > 1 &&
         <div className="create-dog nav-item">
           <Link className="nav-link" to="/create">Add a Dog</Link>
         </div>
+        }
         {props.user && props.user.org_id > 1 &&
         <div className="org-profile nav-item">
           <Link className="nav-link" to="/org">Org Profile</Link>
