@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import { Col, Card, Divider, Icon } from 'antd';
 import { toggleInquiryModal } from '../actions/messagingActions';
 
 class OrgCard extends Component {
   constructor(props) {
     super(props);
-
     this.handleClick = this.handleClick.bind(this);
   }
 
