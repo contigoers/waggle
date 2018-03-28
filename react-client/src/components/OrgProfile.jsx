@@ -10,7 +10,7 @@ class OrgProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // name: 'PLACEHOLDER',
+      name: 'PLACEHOLDER',
     };
   }
 
@@ -26,11 +26,12 @@ class OrgProfile extends React.Component {
   render() {
     const { user } = this.props;
     const { results } = this.props;
+
     return (
       <div>
         <Row style={{ marginTop: 30 }} >
           <Col span={15} offset={3}>
-            <div>{!isEmpty(results.org) ? <OrgCard org={user} /> : 'Loading...'} </div>
+            <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
           </Col>
         </Row>
         <div>
