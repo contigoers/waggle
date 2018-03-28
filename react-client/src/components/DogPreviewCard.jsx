@@ -64,7 +64,7 @@ class DogCard extends React.Component {
 
     return (
       <Card
-        style={{ width: 300, margin: 30, marginLeft: 200 }}
+        style={{ width: 300, margin: 30, float: 'left' }}
         cover={<img alt="pupper" src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
           this.props.user && this.props.user.org_id === 1 ?
