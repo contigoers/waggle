@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
@@ -15,6 +15,7 @@ const NavBar = (props) => {
     axios.post('/logout').then((response) => {
       console.log(response);
       props.storeUserId({ user: null });
+      props.history.push('/');
     });
   };
 
@@ -80,4 +81,4 @@ const mapStateToProps = state => (
 export default connect(
   mapStateToProps,
   { toggleLoginModal, toggleRegistrationModal, storeUserId },
-)(NavBar);
+)(withRouter(NavBar));
