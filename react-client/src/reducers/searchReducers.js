@@ -7,7 +7,7 @@ const initialState = {
   lifestage: [],
   size: [],
   results: {},
-  favorites: {},
+  favorites: [],
 };
 
 export default handleActions({

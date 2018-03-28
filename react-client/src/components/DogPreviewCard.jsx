@@ -16,19 +16,14 @@ class DogCard extends React.Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { user } = this.props;
+    const { id } = this.props.dog;
     if (user !== null) {
-      if (user.org_id > 1) {
-        console.log('yay search result');
-      } else {
-        const { favorites } = this.props;
-        favorites.forEach((favorite) => {
-          if (favorite.id === this.props.dog.id) {
-            this.setState({ favorite: true });
-          }
-        });
-      }
+      const { favorites } = this.props;
+      this.setState({
+        favorite: favorites.some(fav => fav.id === +id),
+      });
     }
   }
 
