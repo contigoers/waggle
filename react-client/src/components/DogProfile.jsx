@@ -22,13 +22,15 @@ class DogProfile extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user.org_id === 1) {
-      const { favorites } = this.props;
-      favorites.forEach((favorite) => {
-        if (favorite.id === this.state.id) {
-          this.setState({ favorite: true });
-        }
-      });
+    if (user !== null) {
+      if (user.org_id === 1) {
+        const { favorites } = this.props;
+        favorites.forEach((favorite) => {
+          if (favorite.id === this.state.id) {
+            this.setState({ favorite: true });
+          }
+        });
+      }
     }
   }
 

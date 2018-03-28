@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty } from 'lodash';
-import SearchResult from './SearchResult';
+import SearchResult from './DogPreviewCard';
 import { getOrgDogs } from '../actions/searchActions';
 import OrgCard from './OrgCard';
 
@@ -9,7 +9,7 @@ class OrgProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: 'PLACEHOLDER',
+      // name: 'PLACEHOLDER',
     };
   }
 

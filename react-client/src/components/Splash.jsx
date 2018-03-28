@@ -24,18 +24,18 @@ class Splash extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
-      this.setState({
-        currentName: this.getNextName(this.state.count),
-      });
-      if (this.state.count !== this.state.dogNicknames.length - 1) {
-        this.setState({
-          count: (this.state.count = this.state.count + 1),
-        });
-      } else {
-        this.setState({ count: 0 });
-      }
-    }, 1500);
+    // setInterval(() => {
+    //   this.setState({
+    //     currentName: this.getNextName(this.state.count),
+    //   });
+    //   if (this.state.count !== this.state.dogNicknames.length - 1) {
+    //     this.setState({
+    //       count: (this.state.count = this.state.count + 1),
+    //     });
+    //   } else {
+    //     this.setState({ count: 0 });
+    //   }
+    // }, 1500);
   }
 
   getNextName() {
