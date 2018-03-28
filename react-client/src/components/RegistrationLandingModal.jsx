@@ -21,11 +21,12 @@ class LandingModal extends Component {
     ref.props.form.validateFieldsAndScroll((err, values) => {
       const newValues = {
         ...values,
-        type: e.target.id === 'org' ? 'organiztion' : 'adopter',
+        type: e.target.id === 'org' ? 'organization' : 'adopter',
       };
 
       ref.setState({ phoneDirty: true });
       if (!err && ref.state.numberIsValid) {
+        console.log(newValues);
         axios.post('/register', newValues);
         ref.setState({ phoneDirty: false });
         ref.props.form.resetFields();
