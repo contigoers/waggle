@@ -39,8 +39,13 @@ const NavBar = (props) => {
         </div>
         }
         {props.user && props.user.org_id > 1 &&
-        <div className="org-profile nav-item">
-          <Link className="nav-link" to="/org">Org Profile</Link>
+        <div className="profile nav-item">
+          <Link className="nav-link" to="/profile">Org Profile</Link>
+        </div>
+        }
+        {props.user && props.user.org_id === 1 &&
+        <div className="profile nav-item">
+          <Link className="nav-link" to="/profile">Adopter Profile</Link>
         </div>
         }
         {props.user ?
