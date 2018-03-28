@@ -226,8 +226,8 @@ class Search extends React.Component {
                 placeholder="enter breed"
                 defaultValue="Any Breed"
                 filterOption={(inputValue, option) => option.props.children
-                    .toUpperCase()
-                    .indexOf(inputValue.toUpperCase()) !== -1}
+                  .toUpperCase()
+                  .indexOf(inputValue.toUpperCase()) !== -1}
                 onSelect={inputValue => this.addBreedToFilterState(inputValue)}
               />
             </div>
