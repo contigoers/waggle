@@ -15,7 +15,6 @@ class Splash extends React.Component {
   constructor() {
     super();
     this.state = {
-      cycleNames: null,
       count: 1,
       isHovered: false,
       dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend'],
@@ -24,29 +23,26 @@ class Splash extends React.Component {
     this.handleHover = this.handleHover.bind(this);
   }
 
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({
+        currentName: this.getNextName(this.state.count),
+      });
+      if (this.state.count !== this.state.dogNicknames.length - 1) {
+        this.setState({
+          count: (this.state.count = this.state.count + 1),
+        });
+      } else {
+        this.setState({ count: 0 });
+      }
+    }, 1500);
+  }
+
   getNextName() {
     return this.state.dogNicknames[this.state.count];
   }
 
   handleHover() {
-    if (!this.state.isHovered) {
-      this.setState({
-        cycleNames: setInterval(() => {
-          this.setState({
-            currentName: this.getNextName(this.state.count),
-          });
-          if (this.state.count !== this.state.dogNicknames.length - 1) {
-            this.setState({
-              count: (this.state.count = this.state.count + 1),
-            });
-          } else {
-            this.setState({ count: 0 });
-          }
-        }, 1200),
-      });
-    } else {
-      clearInterval(this.state.cycleNames);
-    }
     this.setState({
       isHovered: !this.state.isHovered,
     });

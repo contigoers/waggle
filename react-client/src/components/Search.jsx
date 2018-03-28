@@ -198,11 +198,17 @@ class Search extends React.Component {
           <div className="breed-filter">
             Breed
             <div className="breed-list">
-              <AutoComplete dataSource={breedDataSource} style={{ width: 500 }} id="breed" placeholder="enter breed" defaultValue="Any Breed" filterOption={(inputValue, option) => option.props.children
-                    .toUpperCase()
-                    .indexOf(
-                      inputValue.toUpperCase()
-                    ) !== -1} onSelect={inputValue => this.addBreedToFilterState(inputValue)} />
+              <AutoComplete
+                dataSource={breedDataSource}
+                style={{ width: 500 }}
+                id="breed"
+                placeholder="enter breed"
+                defaultValue="Any Breed"
+                filterOption={(inputValue, option) => option.props.children
+                  .toUpperCase()
+                  .indexOf(inputValue.toUpperCase()) !== -1}
+                onSelect={inputValue => this.addBreedToFilterState(inputValue)}
+              />
             </div>
           </div>
           <div className="gender-filter">
