@@ -18,7 +18,6 @@ module.exports = () => {
     if (userInfo.length) {
       const user = userInfo[0];
       bcrypt.compare(password, user.password, (err, res) => {
-        console.log(err, res, user)
         if (err) {
           cb(err, null);
         } else if (res === false) {

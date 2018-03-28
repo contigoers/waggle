@@ -312,7 +312,6 @@ router.post('/logout', isLoggedIn, async (ctx) => {
     status: 'success',
     message: 'You have been logged out successfully!',
   };
-  // ctx.redirect('/');  <---redirect to home page??
 });
 
 app

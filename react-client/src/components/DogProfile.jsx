@@ -58,7 +58,7 @@ class DogProfile extends React.Component {
     const { dog } = this.state;
 
     let org;
-    if (!this.props.user || this.props.user.org_id === 1) {
+    if (!this.props.user || this.props.user.org_id !== dog.org_id) {
       org = this.props.results.orgs[dog.org_id];
     }
 
