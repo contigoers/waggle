@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty } from 'lodash';
+import { Row, Col } from 'antd';
 import SearchResult from './DogPreviewCard';
 import { getOrgDogs } from '../actions/searchActions';
 import OrgCard from './OrgCard';
@@ -27,7 +28,11 @@ class OrgProfile extends React.Component {
     const { results } = this.props;
     return (
       <div>
-        <div>{!isEmpty(results.org) ? <OrgCard org={user} /> : 'Loading...'} </div>
+        <Row style={{ marginTop: 30 }} >
+          <Col span={15} offset={3}>
+            <div>{!isEmpty(results.org) ? <OrgCard org={user} /> : 'Loading...'} </div>
+          </Col>
+        </Row>
         <div>
           {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
         </div>

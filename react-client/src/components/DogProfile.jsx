@@ -57,9 +57,9 @@ class DogProfile extends React.Component {
   render() {
     const { dog } = this.state;
 
-    // const org = this.props.results.orgs[dog.org_id];
-    if (this.props.user.org_id === 1) {
-      const org = this.props.results.orgs[dog.org_id];
+    let org;
+    if (!this.props.user || this.props.user.org_id === 1) {
+      org = this.props.results.orgs[dog.org_id];
     }
 
     let stage = startCase(dog.lifestage);
@@ -139,7 +139,7 @@ class DogProfile extends React.Component {
             </Card>
           </Row>
           <Row style={{ marginBottom: 50 }} >
-            {!this.state.isMyDog && <OrgCard org={org} />}
+            {(!this.props.user || (this.props.user.org_id !== dog.org_id)) && <OrgCard org={org} />}
           </Row>
         </Col>
         <Col span={8} offset={1}>

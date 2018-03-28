@@ -1,22 +1,27 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Col, Row, Card, Divider } from 'antd';
 
 const OrgCard = (props) => {
   const { org } = props;
+  console.log(org);
   const phone = `(${org.phone.slice(0, 3)}) ${org.phone.slice(3, 6)}-${org.phone.slice(6)}`;
   return (
 
-    <Row style={{ marginTop: 30, marginBottom: 30 }} >
-      <Col span={15} offset={3} >
+      <Col>
         <Card>
           <div style={{ fontWeight: 700 }}> PLACEHOLDER </div>
-          <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
-    Organization Profile
-          </span>
-          <Divider type="vertical" />
-          <span style={{ color: '#00db19', fontWeight: 600, fontSize: 16 }} >
-    Username: {org.username}
-          </span>
+          {props.user && org.id === props.user.org_id &&
+            <div>
+              <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
+              Organization Profile
+              </span>
+              <Divider type="vertical" />
+              <span style={{ color: '#00db19', fontWeight: 600, fontSize: 16 }} >
+              Username: {props.user.username}
+              </span>
+            </div>
+          }
 
           <Divider />
 
@@ -35,8 +40,13 @@ const OrgCard = (props) => {
           <div style={{ marginLeft: 20 }} > {org.email} </div>
         </Card>
       </Col>
-    </Row>
   );
 };
 
-export default OrgCard;
+const mapStateToProps = ({ storeUser }) => (
+  {
+    user: storeUser.user,
+  }
+);
+
+export default connect(mapStateToProps, null)(OrgCard);
