@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Card, Divider, Row, Col, Icon, message, Button } from 'antd';
 import { connect } from 'react-redux';
 import { startCase } from 'lodash';
@@ -15,6 +16,7 @@ class DogProfile extends React.Component {
     const { id } = this.props.match.params;
 
     this.state = {
+      id,
       favorite: false,
       dog: this.props.results.dogs[id],
       adopted: this.props.results.dogs[id].adopted,
@@ -51,10 +53,36 @@ class DogProfile extends React.Component {
   }
 
   toggleAdopted() {
+    if (this.state.adopted) {
+      this.unmarkAdopted();
+    } else {
+      this.markAdopted();
+    }
     this.setState({ adopted: !this.state.adopted }, () => {
-      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted');
-      // should actually update dog's adopted status in the database eventually
+      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted.');
     });
+  }
+
+  markAdopted() {
+    console.log('adopted!', this.state.id);
+    axios.post('/adopted', { dogId: this.state.id })
+      .then((response) => {
+        console.log('yay', response);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  }
+
+  unmarkAdopted() {
+    console.log('not adopted!', this.state.id);
+    axios.post('/adopted/remove', { dogId: this.state.id })
+      .then((response) => {
+        console.log('yay', response);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
   }
 
   render() {
@@ -92,7 +120,7 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const adoptButton = () => (<Button type="primary" > {this.state.adopted ? 'Mark as adopted' : 'Mark as not adopted'} </Button>);
+    const adoptButton = () => (<Button type="primary" onClick={this.toggleAdopted} > {this.state.adopted ? 'Mark as not adopted' : 'Mark as adopted'} </Button>);
     const favoriteIcon = () => (<Icon type={this.state.favorite ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />);
 
     let cardActions = null;
