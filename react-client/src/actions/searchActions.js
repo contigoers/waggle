@@ -24,7 +24,6 @@ const dogsSearch = async (searchObject) => {
 
 const getRandomDog = async () => {
   const { data } = await axios.get('/randomDog');
-  console.log(data)
   return {
     type: SEARCH_DOGS,
     data: data.dogsAndOrgs,
