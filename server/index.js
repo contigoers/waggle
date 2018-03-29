@@ -333,8 +333,9 @@ router.post('/logout', isLoggedIn, async (ctx) => {
 router.post('/messages/post', async (ctx) => {
   const { senderId } = ctx.request.body;
   const { recipientId } = ctx.request.body;
+  const { dogName } = ctx.request.body;
   const msg = ctx.request.body.message;
-  const fullMessage = await db.addMessage(senderId, recipientId, msg);
+  const fullMessage = await db.addMessage(senderId, recipientId, msg, dogName);
   const message = fullMessage[0];
   ctx.status = 201;
   ctx.body = {
@@ -366,6 +367,15 @@ router.post('/messages/fetch', async (ctx) => {
 
 router.get('/messages', async (ctx) => {
   const contacts = await db.getContacts(ctx.body.id);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    contacts,
+  };
+});
+
+router.post('/contacts/org', async (ctx) => {
+  const contacts = await db.getOrgContacts(1);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
