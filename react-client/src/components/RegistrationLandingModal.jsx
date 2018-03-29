@@ -90,4 +90,5 @@ const mapStateToProps = ({ registrationModal: { landing, org, adopter } }) => (
   }
 );
 
-export default connect(mapStateToProps, { toggleRegistrationModal, updateModalView, storeUserId })(LandingModal);
+export default
+connect(mapStateToProps, { toggleRegistrationModal, updateModalView, storeUserId })(LandingModal);

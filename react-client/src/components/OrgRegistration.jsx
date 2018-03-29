@@ -19,8 +19,6 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     };
 
     this.handleBlur = this.handleBlur.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-//    this.handleSubmit = this.handleSubmit.bind(this);
     this.validateNumber = this.validateNumber.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
@@ -61,41 +59,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     callback();
   }
 
-  toggleModal() {
-    this.props.toggleRegistrationModal('org');
-  }
-
-  // async handleSubmit() {
-  //   const { form } = this.props;
-  //   let info;
-  //   form.validateFieldsAndScroll((err, values) => {
-  //     console.log('one')
-  //     this.setState({ phoneDirty: true });
-  //     if (!err && this.state.numberIsValid) {
-  //       console.log('two');
-  //       info = values;
-  //       // axios.post('/register', values)
-  //       //   .then((response) => {
-  //       //     console.log('three')
-  //       //     this.storeUser({ user: response.data.user });
-  //       //     this.setState({ phoneDirty: false });
-  //       //     form.resetFields();
-  //       //     this.toggleModal();
-  //       //   });
-  //     }
-  //   });
-  //   try {
-  //     const { data } = axios.post('/register', info);
-  //     console.log(data);
-  //     this.storeUser({ user: data.user });
-  //     this.setState({ })
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
   render() {
-    console.log(this.props)
     const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {
@@ -116,7 +80,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     </Select>); // eslint-disable-line
 
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form>
         <FormItem
           {...formItemLayout}
           label="E-mail"
@@ -244,7 +208,5 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     );
   }
 });
-
-
 
 export default WrappedOrgRegistration;
