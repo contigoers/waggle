@@ -327,9 +327,10 @@ router.post('/messages/post', async (ctx) => {
   };
 });
 
-router.post('/messages/delete', async (ctx) => {
+router.patch('/messages/delete', async (ctx) => {
   console.log('deleting message', ctx.request.body);
-  await db.deleteMessage(ctx.request.body.messageId);
+  const msg = await db.deleteMessage(ctx.request.body.messageId);
+  console.log('deleted message', msg);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -337,11 +338,9 @@ router.post('/messages/delete', async (ctx) => {
 });
 
 router.post('/messages/fetch', async (ctx) => {
-  console.log('fetch request body:', ctx.request.body);
   const { userId } = ctx.request.body;
   const { contactId } = ctx.request.body;
   const messages = await db.getMessagesForChat(userId, contactId);
-  console.log('messages fetched:', messages);
   ctx.status = 201;
   ctx.body = {
     status: 'success',

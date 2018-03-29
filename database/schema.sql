@@ -112,13 +112,12 @@ CREATE TABLE `favoritedogs` (
 
 DROP TABLE IF EXISTS `messages`;
 
-CREATE TABLE `messages`
-(
+CREATE TABLE `messages` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `sender_id` INTEGER NOT NULL,
   `recipient_id` INTEGER NOT NULL,
   `message` VARCHAR(1000) NOT NULL,
-  `deleted` BOOLEAN NOT NULL DEFAULT 0;
+  `deleted` BOOLEAN NOT NULL DEFAULT 0,
   `sent` TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY (`id`)
 );
@@ -272,3 +271,9 @@ INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('3', '2
 INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('3', '1', 'whats a dog', false);
 INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('2', '1', 'sah dude', false);
 INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('1', '2', 'You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose. Youre on your own. And you know what you know. And YOU are the one wholl decide where to go...', false);
+INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('1', '2', 'my spoon is too big', true);
+INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('1', '3', 'i am a banana', false);
+INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('2', '3', 'so take a nap and zen fire ze missiles', false);
+INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('3', '2', 'dogs dogs dogs dogs dogs', false);
+INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('3', '1', 'yabois back', false);
+INSERT INTO messages (sender_id, recipient_id, message, deleted) VALUES ('2', '1', 'we should have a balcony', false);
