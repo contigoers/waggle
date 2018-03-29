@@ -142,7 +142,7 @@ class DogProfile extends React.Component {
     }
 
     return (
-      <div>
+      <Row>
         <Col span={10} offset={3} >
           <Row style={{ marginTop: 30, marginBottom: 30 }} >
             <Card>
@@ -197,7 +197,7 @@ class DogProfile extends React.Component {
           </Row>
         </Col>
         <InquiryModal id={this.props.match.params.id} />
-      </div>
+      </Row>
     );
   }
 }
