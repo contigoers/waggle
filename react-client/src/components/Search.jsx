@@ -3,10 +3,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Checkbox, Button, AutoComplete, BackTop } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { Redirect } from 'react-router-dom';
-
-
 import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog } from '../actions/searchActions';
-import { updateSearchView } from '../actions/searchViewActions';
 import breedList from '../../../database/breeds';
 import SearchResults from './SearchResults';
 
@@ -334,7 +331,7 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({ search, searchSelections, storeUser }) => (
+const mapStateToProps = ({ search, storeUser }) => (
   {
     params: {
       breed: search.breed,
@@ -343,7 +340,6 @@ const mapStateToProps = ({ search, searchSelections, storeUser }) => (
       size: search.size,
     },
     results: search.results,
-    searchSelections,
     favorites: search.favorites,
     user: storeUser.user,
     adopterParams: {
@@ -355,7 +351,6 @@ const mapStateToProps = ({ search, searchSelections, storeUser }) => (
 const mapDispatchToProps = {
   updateSearchQuery,
   dogsSearch,
-  updateSearchView,
   getFavorites,
   getRandomDog,
 };

@@ -6,8 +6,35 @@ $primary-dark: #972036;
   margin: 30px;
 }
 
-.search-filters > div {
+.default-filters {
   margin-bottom: 20px;
+}
+
+.default-filters, .more-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  grid-row-gap: 20px;
+  div {
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.select-bar {
+  width: 300px;
+  .ant-select-selection__placeholder {
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
+
+.focused {
+  .ant-select-selection__placeholder {
+    color: rgba(191, 191, 191, 1);
+  }
 }
 
 .submit-search {
