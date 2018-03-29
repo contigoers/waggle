@@ -1,17 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty } from 'lodash';
-import { Row, Col } from 'antd';
+import { Row, Col, Menu, Icon } from 'antd';
+
 import SearchResult from './DogPreviewCard';
-import { getOrgDogs, getFavorites } from '../actions/searchActions';
 import OrgCard from './OrgCard';
+import { getOrgDogs, getFavorites } from '../actions/searchActions';
 
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       type: this.props.user.org_id === 1 ? 'adopter' : 'org',
+      menuSelection: 'messages',
     };
+
+    this.updateMenu = this.updateMenu.bind(this);
   }
 
   componentDidMount() {
@@ -33,30 +38,53 @@ class UserProfile extends React.Component {
     this.props.getFavorites({ params: adopterParams });
   }
 
+  updateMenu({ key }) {
+    this.setState({
+      menuSelection: key,
+    });
+  }
+
   render() {
     const { user } = this.props;
     const { results } = this.props;
+    const { menuSelection } = this.state;
 
     return (
       <div>
-        <Row style={{ marginTop: 30 }} >
-          <Col span={15} offset={3}>
-            {this.state.type === 'org' &&
-            <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
-            }
-            {this.state.type === 'adopter' &&
-            <div>HALLO</div>
-            }
-          </Col>
-        </Row>
-        {this.state.type === 'org' &&
+        <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu}>
+          <Menu.Item key="messages">
+            <Icon type="mail" />Messages
+          </Menu.Item>
+          {this.state.type === 'adopter' &&
+          <Menu.Item key="favorites">
+            <Icon type="heart" />Favorites
+          </Menu.Item>}
+          {this.state.type === 'org' &&
+          <Menu.Item key="dogs">
+            <Icon type="bars" />Dogs
+          </Menu.Item>}
+        </Menu>
+        {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
         <div>
-          {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-        </div>
-        }
-        {this.state.type === 'adopter' &&
-        <div>HALLO</div>
-        }
+          <Row style={{ marginTop: 30 }} >
+            <Col span={15} offset={3}>
+              {this.state.type === 'org' &&
+              <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
+              }
+              {this.state.type === 'adopter' &&
+              <div>HALLO</div>
+              }
+            </Col>
+          </Row>
+          {this.state.type === 'org' &&
+          <div>
+            {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+          </div>
+          }
+          {this.state.type === 'adopter' &&
+          <div>HALLO</div>
+          }
+        </div>}
       </div>
     );
   }
@@ -68,7 +96,7 @@ const mapStateToProps = ({ search, storeUser }) => (
     favorites: search.favorites,
     user: storeUser.user,
     adopterParams: {
-      adopterId: !storeUser.user ? null : storeUser.user.adopterId,
+      adopterId: storeUser.user || storeUser.user.adopterId,
     },
     orgParams: {
       type: 'orgId',
