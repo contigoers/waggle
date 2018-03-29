@@ -6,6 +6,7 @@ import { Row, Col, Menu, Icon } from 'antd';
 import SearchResult from './DogPreviewCard';
 import OrgCard from './OrgCard';
 import { getOrgDogs, getFavorites } from '../actions/searchActions';
+import { getContacts, getMessages } from '../actions/messagingActions';
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class UserProfile extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     console.log(this.state.type);
     if (this.state.type === 'org') {
       this.getOrgDogs();
@@ -80,21 +82,32 @@ class UserProfile extends React.Component {
           </Row>
           {this.state.type === 'org' &&
           <div>
-            {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+            {!isEmpty(results.dogs) ?
+              map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) :
+              <div style={{ margin: 'auto' }}> You have no dogs! <a href="/create"> Add your first dog... </a> </div>
+            }
           </div>
           }
           {this.state.type === 'adopter' &&
           <div>
-            {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+            {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) :
+            <div style={{ margin: 'auto' }}> You have no favorite dogs! <a href="/search">Find some dogs...</a> </div>
+            }
           </div>
           }
         </div>}
+
+
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ search, storeUser }) => (
+// {(menuSelection === 'messages') &&
+
+
+// }
+const mapStateToProps = ({ search, storeUser, fetchContacts, fetchMessages }) => (
   {
     results: search.results,
     favorites: search.favorites,
@@ -106,12 +119,18 @@ const mapStateToProps = ({ search, storeUser }) => (
       type: 'orgId',
       value: !storeUser.user ? 1 : storeUser.user.org_id,
     },
+    messaging: {
+      contacts: fetchContacts.contacts,
+      messages: fetchMessages.messages,
+    },
   }
 );
 
 const mapDispatchToProps = {
   getOrgDogs,
   getFavorites,
+  getContacts,
+  getMessages,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
