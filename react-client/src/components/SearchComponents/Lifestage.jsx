@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'antd';
 import { connect } from 'react-redux';
-import { updatesSearchQuery } from '../../actions/searchQueryActions';
+import { updateSearchQuery } from '../../actions/searchActions';
 
 class Lifestage extends React.Component {
   constructor() {
@@ -20,7 +20,7 @@ class Lifestage extends React.Component {
   }
 
   handleChange(value) {
-    this.props.updatesSearchQuery(value, 'lifestage');
+    this.props.updateSearchQuery(value, 'lifestage');
   }
 
   render() {
@@ -52,7 +52,7 @@ class Lifestage extends React.Component {
 }
 
 const mapDispatchToProps = {
-  updatesSearchQuery,
+  updateSearchQuery,
 };
 
 export default connect(null, mapDispatchToProps)(Lifestage);

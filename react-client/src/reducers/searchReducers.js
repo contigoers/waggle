@@ -1,37 +1,41 @@
 import { handleActions } from 'redux-actions';
-import { uniq } from 'lodash';
 
 const initialState = {
   breed: [],
-  male: [],
+  gender: [],
   lifestage: [],
   size: [],
+  mix: [],
+  neutered: [],
+  diet: [],
+  medical: [],
+  energy: [],
   results: {},
   favorites: [],
 };
 
 export default handleActions({
-  UPDATE_SEARCH_QUERY: (state, action) => {
-    if (action.id === 'breed') {
+  UPDATE_SEARCH_QUERY: (state, { filterType, values }) => {
+    if (filterType === 'breed' || filterType === 'lifestage' ||
+      filterType === 'size' || filterType === 'energy') {
       return {
         ...state,
-        [action.id]: [action.value],
+        [filterType]: values,
       };
-    } else if (action.value === 'default') {
+    } else if (filterType === 'gender' || filterType === 'mix' || filterType === 'neutered' ||
+      filterType === 'diet' || filterType === 'medical') {
+      if (values === undefined) {
+        return {
+          ...state,
+          [filterType]: [],
+        };
+      }
       return {
         ...state,
-        [action.id]: [],
-      };
-    } else if (action.checked) {
-      return {
-        ...state,
-        [action.id]: uniq([...state[action.id], action.value]),
+        [filterType]: [values],
       };
     }
-    return {
-      ...state,
-      [action.id]: [...state[action.id]].filter(element => element !== action.value),
-    };
+    return state;
   },
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
   GET_FAVORITES: (state, action) => ({ ...state, favorites: action.data }),

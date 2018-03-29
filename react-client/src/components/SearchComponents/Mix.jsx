@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'antd';
 import { connect } from 'react-redux';
-import { updatesSearchQuery } from '../../actions/searchQueryActions';
+import { updateSearchQuery } from '../../actions/searchActions';
 
 class Mix extends React.Component {
   constructor() {
@@ -20,7 +20,7 @@ class Mix extends React.Component {
   }
 
   handleChange(value) {
-    this.props.updatesSearchQuery(value, 'mix');
+    this.props.updateSearchQuery(value, 'mix');
   }
 
   render() {
@@ -50,7 +50,7 @@ class Mix extends React.Component {
 }
 
 const mapDispatchToProps = {
-  updatesSearchQuery,
+  updateSearchQuery,
 };
 
 export default connect(null, mapDispatchToProps)(Mix);
