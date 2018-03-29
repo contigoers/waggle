@@ -184,11 +184,12 @@ const getRandomDog = () => knex.select()
   .from(knex.raw('dogs'))
   .where(knex.raw('adopted = false order by rand() limit 1'));
 
-const addMessage = async (senderId, recipientId, message) => {
+const addMessage = async (senderId, recipientId, message, dogName) => {
   const id = await knex('messages').insert({
     sender_id: senderId,
     recipient_id: recipientId,
     message,
+    dogName,
   }).orderBy('id', 'asc');
   return knex('messages').select().where('id', id);
 };
@@ -197,11 +198,42 @@ const deleteMessage = messageId => knex('messages')
   .where('id', messageId)
   .update('deleted', true);
 
-const getMessagesForChat = (userId, contactId) => knex.distinct().select()
+const getMessagesForChat = (userId, contactId) => knex.select()
   .from(knex.raw('messages'))
   .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
+
+const getOrgContacts = async (userId) => {
+  const messages = await knex('messages').select('sender_id', 'dogName')
+    .where('recipient_id', userId);
+    // messages is a list of objects with {sender_id: 1, dogName: 'name'}
+  console.log('messages', messages);
+  // const namesAndDogs = {};
+  // messages.forEach((message) => {
+  //   if (!namesAndDogs.hasOwnProperty(message.sender_id)) {
+  //     namesAndDogs[message.sender_id] = { name: null, dogs: [] };
+  //   }
+  //   namesAndDogs[message.sender_id].dogs.push(message.dogName);
+  // });
+  // // namesAndDogs is a list of objects with {id: {name: null, dogs: [dog1, dog2]}}
+  // console.log('namesAndDogs', namesAndDogs);
+  // const ids = Object.keys(namesAndDogs);
+  // // ids is a list of USER IDS
+  // const names = await knex.raw('select user_id, name from adopters where user_id in (?)', [ids]);
+  // console.log('names', names);
+  // names.forEach((obj) => {
+  //   if (namesAndDogs.hasOwnProperty(obj.user_id)) {
+  //     namesAndDogs[obj.user_id].name = obj.name;
+  //   }
+  // })
+  // console.log('namesAndDogs2', namesAndDogs);
+  // return namesAndDogs;
+};
+
+// const getAdopterContacts = async () {
+
+// };
 
 module.exports = {
   getAdopterProfile,
@@ -227,4 +259,6 @@ module.exports = {
   getMessagesForChat,
   deleteMessage,
   addMessage,
+  getOrgContacts,
+  //getAdopterContacts,
 };
