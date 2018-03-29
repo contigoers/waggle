@@ -66,29 +66,31 @@ class UserProfile extends React.Component {
             <Icon type="bars" />Dogs
           </Menu.Item>}
         </Menu>
-        {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
-        <div>
-          <Row style={{ marginTop: 30 }} >
-            <Col span={15} offset={3}>
-              {this.state.type === 'org' &&
-              <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
-              }
-              {this.state.type === 'adopter' &&
-              <div>{!isEmpty(favorites.adopter) ? <OrgCard org={favorites.adopter} adopterUser={user} /> : 'Loading...'} </div>
-              }
-            </Col>
-          </Row>
-          {this.state.type === 'org' &&
+        <Row>
+          {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
           <div>
-            {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-          </div>
-          }
-          {this.state.type === 'adopter' &&
-          <div>
-            {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
-          </div>
-          }
-        </div>}
+            <Row style={{ marginTop: 30 }} >
+              <Col span={15} offset={3}>
+                {this.state.type === 'org' &&
+                <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
+                }
+                {this.state.type === 'adopter' &&
+                <div>{!isEmpty(favorites.adopter) ? <OrgCard org={favorites.adopter} adopterUser={user} /> : 'Loading...'} </div>
+                }
+              </Col>
+            </Row>
+            {this.state.type === 'org' &&
+            <div>
+              {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+            </div>
+            }
+            {this.state.type === 'adopter' &&
+            <div>
+              {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+            </div>
+            }
+          </div>}
+        </Row>
       </div>
     );
   }
