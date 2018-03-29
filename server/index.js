@@ -253,6 +253,7 @@ router.get('/adopterInfo', async (ctx) => {
       ctx.body = {
         adopterFavoriteDogs: {
           favoriteDogs: {},
+          adopter: adopterProfile[0],
         },
       };
     }

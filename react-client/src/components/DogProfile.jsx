@@ -32,9 +32,11 @@ class DogProfile extends React.Component {
       if (user.org_id === 1) {
         const { favorites } = this.props;
         const { id } = this.props.match.params;
-        this.setState({
-          favorite: favorites.some(fav => fav.id === +id),
-        });
+        if (favorites.length) {
+          this.setState({
+            favorite: favorites.some(fav => fav.id === +id),
+          });
+        }
       }
     }
   }
