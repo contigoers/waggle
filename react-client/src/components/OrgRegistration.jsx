@@ -4,6 +4,7 @@ import { Form, Input, Select } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import axios from 'axios';
 
+import { storeUserId } from '../actions/loginActions';
 import states from '../assets/states';
 
 const FormItem = Form.Item;
@@ -26,6 +27,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     this.validateNumber = this.validateNumber.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
+    this.storeUser = this.props.storeUserId.bind(this);
   }
 
   handleBlur({ target: { id, value } }) {
@@ -72,7 +74,10 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
-        axios.post('/register', values);
+        axios.post('/register', values)
+          .then((response) => {
+            this.storeUser({ user: response.data.user });
+          });
         this.setState({ phoneDirty: false });
         form.resetFields();
         this.toggleModal();
@@ -81,6 +86,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
   }
 
   render() {
+    console.log(this.props)
     const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {
@@ -230,4 +236,10 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
   }
 });
 
-export default WrappedOrgRegistration;
+const mapStateToProps = state => (
+  {
+    user: state.storeUser.user,
+  }
+);
+
+export default connect(mapStateToProps, { storeUserId })(WrappedOrgRegistration);

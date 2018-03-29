@@ -26,7 +26,6 @@ class LandingModal extends Component {
 
       ref.setState({ phoneDirty: true });
       if (!err && ref.state.numberIsValid) {
-        axios.post('/register', newValues);
         ref.setState({ phoneDirty: false });
         ref.props.form.resetFields();
         this.toggleModal();

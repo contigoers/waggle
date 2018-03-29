@@ -298,7 +298,7 @@ router.post('/login', passport.authenticate('local-login'), async (ctx) => {
     adopterId = adopter[0].id;
   }
   const user = Object.assign(ctx.state.user, { adopterId });
-  ctx.status = 201;
+  ctx.status =  201;
   ctx.body = {
     status: 'success',
     user,
@@ -348,7 +348,7 @@ router.post('/messages/fetch', async (ctx) => {
   };
 });
 
-router.get('/contacts/:id', async (ctx) => {
+router.get('/messages', async (ctx) => {
   const contacts = await db.getContacts(ctx.body.id);
   ctx.status = 201;
   ctx.body = {
