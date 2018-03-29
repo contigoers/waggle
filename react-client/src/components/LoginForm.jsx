@@ -23,9 +23,8 @@ const WrappedLoginForm = Form.create()(class extends Component {
         axios.post('/login', values).then((response) => {
           this.toggleModal();
           this.storeUser({ user: response.data.user });
+          this.props.form.resetFields();
         });
-        this.props.form.resetFields();
-        // this.toggleModal();
       }
     }); 
   }
