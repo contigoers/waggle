@@ -19,7 +19,6 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
     };
 
     this.handleBlur = this.handleBlur.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
     this.validateNumber = this.validateNumber.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
@@ -58,10 +57,6 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
       form.validateFields(['confirm'], { force: true });
     }
     callback();
-  }
-
-  toggleModal() {
-    this.props.toggleRegistrationModal('org');
   }
 
   render() {
