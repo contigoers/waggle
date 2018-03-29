@@ -45,12 +45,9 @@ class LandingModal extends Component {
         onCancel={this.props.toggleRegistrationModal}
         footer={(!adopter && !org && [
           <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-          ]) || (!adopter && org && [
+          ]) || ((adopter || org) && [
             <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-            <Button id="org" key="register" type="primary" onClick={this.handleSubmit}>Register</Button>,
-          ]) || (adopter && !org && [
-            <Button key="back" onClick={this.props.toggleRegistrationModal}>Cancel</Button>,
-            <Button id="adopter" key="register" type="primary" onClick={this.handleSubmit}>Register</Button>,
+            <Button id={org ? 'org' : 'adopter'} key="register" type="primary" onClick={this.handleSubmit}>Register</Button>,
           ])}
       >
 
