@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import promise from 'redux-promise';
+import { ScrollContext } from 'react-router-scroll-4';
 
 import './styles.scss';
 import './search-styles.scss';
@@ -27,19 +28,21 @@ const store = createStore(reducers, composeEnhancers(applyMiddleware(promise)));
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <div>
-        <Route exact path="/" component={Splash} />
-        <NavBar />
-        <Switch>
-          <Route path="/search" component={Search} />
-          <Route path="/create" component={CreateDogForm} />
-          <Route path="/profile" component={UserProfile} />
-          <Route path="/searchResults" component={SearchResults} />
-          <Route path="/dog/:id" component={DogProfile} />
-          <Route path="/" component={Landing} />
-        </Switch>
-        <Footer />
-      </div>
+      <ScrollContext>
+        <div>
+          <Route exact path="/" component={Splash} />
+          <NavBar />
+          <Switch>
+            <Route path="/search" component={Search} />
+            <Route path="/create" component={CreateDogForm} />
+            <Route path="/profile" component={UserProfile} />
+            <Route path="/searchResults" component={SearchResults} />
+            <Route path="/dog/:id" component={DogProfile} />
+            <Route path="/" component={Landing} />
+          </Switch>
+          <Footer />
+        </div>
+      </ScrollContext>
     </BrowserRouter>
 
   </Provider>
