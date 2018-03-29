@@ -22,9 +22,11 @@ class DogCard extends React.Component {
     if (user !== null) {
       if (user.org_id === 1) {
         const { favorites } = this.props;
-        this.setState({
-          favorite: favorites.some(fav => fav.id === +id),
-        });
+        if (favorites.length) {
+          this.setState({
+            favorite: favorites.some(fav => fav.id === +id),
+          });
+        }
       }
     }
   }

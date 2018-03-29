@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, mapKeys } from 'lodash';
 import { Row, Col, Menu, Icon } from 'antd';
 
 import SearchResult from './DogPreviewCard';
@@ -48,6 +48,8 @@ class UserProfile extends React.Component {
     const { user } = this.props;
     const { results } = this.props;
     const { menuSelection } = this.state;
+    const { favorites } = this.props;
+    const faves = mapKeys(favorites.favoriteDogs, 'id');
 
     return (
       <div>
@@ -72,7 +74,7 @@ class UserProfile extends React.Component {
               <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
               }
               {this.state.type === 'adopter' &&
-              <div>HALLO</div>
+              <div>{!isEmpty(favorites.adopter) ? <OrgCard org={favorites.adopter} adopterUser={user} /> : 'Loading...'} </div>
               }
             </Col>
           </Row>
@@ -82,7 +84,9 @@ class UserProfile extends React.Component {
           </div>
           }
           {this.state.type === 'adopter' &&
-          <div>HALLO</div>
+          <div>
+            {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+          </div>
           }
         </div>}
       </div>
@@ -96,7 +100,7 @@ const mapStateToProps = ({ search, storeUser }) => (
     favorites: search.favorites,
     user: storeUser.user,
     adopterParams: {
-      adopterId: storeUser.user || storeUser.user.adopterId,
+      adopterId: !storeUser.user ? null : storeUser.user.adopterId,
     },
     orgParams: {
       type: 'orgId',
