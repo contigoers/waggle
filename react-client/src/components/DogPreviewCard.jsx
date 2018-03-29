@@ -20,10 +20,12 @@ class DogCard extends React.Component {
     const { user } = this.props;
     const { id } = this.props.dog;
     if (user !== null) {
-      const { favorites } = this.props;
-      this.setState({
-        favorite: favorites.some(fav => fav.id === +id),
-      });
+      if (user.org_id === 1) {
+        const { favorites } = this.props;
+        this.setState({
+          favorite: favorites.some(fav => fav.id === +id),
+        });
+      }
     }
   }
 
@@ -59,16 +61,16 @@ class DogCard extends React.Component {
 
     return (
       <Card
+        hoverable
         style={{ width: 300, margin: 30, float: 'left' }}
-        cover={<img alt="pupper" src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
+        cover={<img alt="pupper" onClick={this.onClick} src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
           this.props.user && this.props.user.org_id === 1 ?
           [<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />] : null
         }
-        onClick={this.onClick}
       >
-        <Card.Meta title={dog.name} />
-        <div style={{ marginTop: 10 }}>
+        <Card.Meta title={dog.name} onClick={this.onClick} />
+        <div style={{ marginTop: 10 }} >
           <span> {dog.breed} {dog.mix ? 'mix' : ''} </span>
           <Divider type="vertical" />
           <span> {dog.male ? 'Male' : 'Female'} </span>
