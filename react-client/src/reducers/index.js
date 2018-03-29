@@ -5,7 +5,7 @@ import { loginModal, storeUser } from './loginReducers';
 import searchSelections from './searchViewReducers';
 import inquiryModal from './messagingReducers';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   registrationModal,
   search,
   loginModal,
@@ -13,5 +13,12 @@ const rootReducer = combineReducers({
   searchSelections,
   inquiryModal,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
 
 export default rootReducer;

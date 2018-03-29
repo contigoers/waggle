@@ -1,5 +1,6 @@
 const TOGGLE_LOGIN_MODAL = 'TOGGLE_LOGIN_MODAL';
 const STORE_USER_ID = 'STORE_USER_ID';
+const LOGOUT = 'LOGOUT';
 
 const toggleLoginModal = () => (
   {
@@ -14,4 +15,10 @@ const storeUserId = ({ user }) => (
   }
 );
 
-export { TOGGLE_LOGIN_MODAL, toggleLoginModal, STORE_USER_ID, storeUserId };
+const logoutUser = () => (
+  {
+    type: LOGOUT,
+  }
+);
+
+export { TOGGLE_LOGIN_MODAL, toggleLoginModal, STORE_USER_ID, storeUserId, LOGOUT, logoutUser };
