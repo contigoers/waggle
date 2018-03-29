@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty } from 'lodash';
 import { Row, Col } from 'antd';
-import SearchResult from './DogPreviewCard';
+import DogCard from './DogPreviewCard';
 import { getOrgDogs, getFavorites } from '../actions/searchActions';
 import OrgCard from './OrgCard';
 
@@ -51,7 +51,7 @@ class UserProfile extends React.Component {
         </Row>
         {this.state.type === 'org' &&
         <div>
-          {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+          {!isEmpty(results.dogs) ? map(results.dogs, dog => (<DogCard key={dog.id} dog={dog} />)) : 'You have no dogs'}
         </div>
         }
         {this.state.type === 'adopter' &&

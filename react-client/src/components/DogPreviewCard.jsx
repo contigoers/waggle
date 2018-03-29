@@ -88,7 +88,7 @@ class DogCard extends React.Component {
 const mapStateToProps = ({ search, storeUser }) => (
   {
     results: search.results,
-    favorites: search.favorites,
+    favorites: search.favorites.favoriteDogs,
     user: storeUser.user,
     favoriteParams: {
       adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
