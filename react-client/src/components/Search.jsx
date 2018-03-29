@@ -74,9 +74,6 @@ class Search extends React.Component {
   render() {
     return (
       <div className="search-div">
-        <Button onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
-          I&apos;m feeling lucky
-        </Button>
         {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
         <div className="default-filters">
           <div className="breed">
@@ -124,6 +121,9 @@ class Search extends React.Component {
         }
         <Button className="submit-search" onClick={this.toggleFilter}>
           {this.state.moreFilters ? 'Less' : 'More'} Filters
+        </Button>
+        <Button onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
+          I&apos;m feeling lucky
         </Button>
         <Button className="submit-search" onClick={this.submitData}>
           Submit
