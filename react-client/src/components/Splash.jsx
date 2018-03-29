@@ -15,7 +15,6 @@ class Splash extends React.Component {
   constructor() {
     super();
     this.state = {
-      cycleIntervalId: null,
       count: 1,
       isHovered: false,
       dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend'],
