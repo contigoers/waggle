@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Button } from 'antd';
 import axios from 'axios';
 
+import { storeUserId } from '../actions/loginActions';
 import { toggleRegistrationModal, updateModalView } from '../actions/registrationActions';
 import WrappedAdopterRegistration from './AdopterRegistration';
 import WrappedOrgRegistration from './OrgRegistration';
@@ -13,6 +14,7 @@ class LandingModal extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleRegistrationModal.bind(this);
+    this.storeUser = this.props.storeUserId.bind(this);
   }
 
   handleSubmit(e) {
@@ -23,13 +25,14 @@ class LandingModal extends Component {
         ...values,
         type: e.target.id === 'org' ? 'organization' : 'adopter',
       };
-
       ref.setState({ phoneDirty: true });
       if (!err && ref.state.numberIsValid) {
-        axios.post('/register', newValues);
-        ref.setState({ phoneDirty: false });
-        ref.props.form.resetFields();
-        this.toggleModal();
+        axios.post('/register', newValues).then((response) => {
+          ref.setState({ phoneDirty: false });
+          this.toggleModal();
+          this.storeUser({ user: response.data.user });
+          ref.props.form.resetFields();
+        });
       }
     });
   }
@@ -87,4 +90,5 @@ const mapStateToProps = ({ registrationModal: { landing, org, adopter } }) => (
   }
 );
 
-export default connect(mapStateToProps, { toggleRegistrationModal, updateModalView })(LandingModal);
+export default
+connect(mapStateToProps, { toggleRegistrationModal, updateModalView, storeUserId })(LandingModal);
