@@ -8,7 +8,10 @@ const OrgCard = (props) => {
   return (
     <Col>
       <Card>
-        <h2 style={{ fontWeight: 700 }}> {org.org_name} </h2>
+        {org.org_name && <h2 style={{ fontWeight: 700 }}> {org.org_name} </h2>
+        }
+        {org.name && <h2 style={{ fontWeight: 700 }}> {org.name} </h2>
+        }
         {props.orgUser && org.id === props.orgUser.org_id &&
           <div>
             <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
@@ -17,6 +20,18 @@ const OrgCard = (props) => {
             <Divider type="vertical" />
             <span style={{ color: '#00db19', fontWeight: 600, fontSize: 16 }} >
             Username: {props.orgUser.username}
+            </span>
+          </div>
+        }
+
+        {props.adopterUser && org.id === props.adopterUser.adopterId &&
+          <div>
+            <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
+            Adopter Profile
+            </span>
+            <Divider type="vertical" />
+            <span style={{ color: '#00db19', fontWeight: 600, fontSize: 16 }} >
+            Username: {props.adopterUser.username}
             </span>
           </div>
         }

@@ -22,12 +22,9 @@ class Search extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
-    const { orgParams } = this.props;
     if (user) {
       if (user.adopterId) {
         this.getFavorites();
-      } else {
-        this.props.getOrgDogs({ params: orgParams });
       }
     }
   }
@@ -354,7 +351,7 @@ const mapStateToProps = ({ search, searchSelections, storeUser }) => (
     },
     results: search.results,
     searchSelections,
-    favorites: search.favorites,
+    favorites: search.favorites.favoriteDogs,
     user: storeUser.user,
     adopterParams: {
       adopterId: !storeUser.user ? null : storeUser.user.adopterId,

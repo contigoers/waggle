@@ -96,8 +96,9 @@ router.post('/createOrgDog', async (ctx) => {
 // add new org dog to favorites - for adopters
 router.post('/favoriteDog', async (ctx) => {
   try {
-    const data = await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
-    if (data === 'already exists!') {
+    const favoriteDogs =
+      await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
+    if (favoriteDogs === 'already exists!') {
       ctx.status = 409;
       ctx.body = {
         status: 'error',
@@ -105,10 +106,11 @@ router.post('/favoriteDog', async (ctx) => {
       };
     } else {
       const newFaveDog = await db.getDogById(ctx.request.body.dogId);
+      const adopterFavoriteDogs = { favoriteDogs };
       ctx.status = 201;
       ctx.body = {
         status: 'success',
-        faveDogs: data,
+        adopterFavoriteDogs,
         newFaveDog: newFaveDog[0],
       };
     }
@@ -124,19 +126,21 @@ router.post('/favoriteDog', async (ctx) => {
 // remove org dog from favorites - for adopters
 router.post('/favoriteDog/remove', async (ctx) => {
   try {
-    const data = await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
-    if (data === 'favorite does not exist!') {
+    const favoriteDogs =
+      await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
+    if (favoriteDogs === 'favorite does not exist!') {
       ctx.status = 409;
       ctx.body = {
         status: 'error',
         message: 'dog not does exist under favorites!',
       };
     } else {
+      const adopterFavoriteDogs = { favoriteDogs };
       ctx.status = 201;
       ctx.body = {
         status: 'success',
         message: 'dog has been removed from favorites!',
-        faveDogs: data,
+        adopterFavoriteDogs,
       };
     }
   } catch (err) {
@@ -235,12 +239,24 @@ router.get('/orgInfo', async (ctx) => {
 router.get('/adopterInfo', async (ctx) => {
   try {
     const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
-    const adopterFavoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
-    ctx.body = {
-      status: 'success',
-      adopterProfile: adopterProfile[0],
-      adopterFavoriteDogs,
-    };
+    const favoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
+    if (favoriteDogs.length) {
+      const adopterFavoriteDogs = {
+        favoriteDogs,
+        adopter: adopterProfile[0],
+      };
+      ctx.body = {
+        status: 'success',
+        adopterFavoriteDogs,
+      };
+    } else {
+      ctx.body = {
+        adopterFavoriteDogs: {
+          favoriteDogs: {},
+          adopter: adopterProfile[0],
+        },
+      };
+    }
   } catch (err) {
     ctx.status = 400;
     ctx.body = {

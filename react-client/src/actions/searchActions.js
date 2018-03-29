@@ -50,7 +50,7 @@ const addFavorite = async (favoritesObject) => {
   const { data } = await axios.post('/favoriteDog', favoritesObject);
   return {
     type: GET_FAVORITES,
-    data: data.faveDogs,
+    data: data.adopterFavoriteDogs,
   };
 };
 
@@ -58,7 +58,7 @@ const removeFavorite = async (favoritesObject) => {
   const { data } = await axios.post('/favoriteDog/remove', favoritesObject);
   return {
     type: GET_FAVORITES,
-    data: data.faveDogs,
+    data: data.adopterFavoriteDogs,
   };
 };
 
