@@ -26,7 +26,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
           this.props.form.resetFields();
         });
       }
-    }); 
+    });
   }
 
   render() {
