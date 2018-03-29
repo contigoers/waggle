@@ -57,8 +57,7 @@ const NavBar = (props) => {
             <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
           </div>
         }
-        {props.user ?
-          '' :
+        {!props.user &&
           <div className="signup nav-item">
             <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
           </div>

@@ -348,7 +348,7 @@ router.post('/messages/fetch', async (ctx) => {
   };
 });
 
-router.get('/contacts/:id', async (ctx) => {
+router.get('/messages', async (ctx) => {
   const contacts = await db.getContacts(ctx.body.id);
   ctx.status = 201;
   ctx.body = {
