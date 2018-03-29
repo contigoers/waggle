@@ -329,6 +329,49 @@ router.post('/logout', isLoggedIn, async (ctx) => {
   };
 });
 
+router.post('/messages/post', async (ctx) => {
+  const { senderId } = ctx.request.body;
+  const { recipientId } = ctx.request.body;
+  const msg = ctx.request.body.message;
+  const fullMessage = await db.addMessage(senderId, recipientId, msg);
+  const message = fullMessage[0];
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    message,
+  };
+});
+
+router.patch('/messages/delete', async (ctx) => {
+  console.log('deleting message', ctx.request.body);
+  const msg = await db.deleteMessage(ctx.request.body.messageId);
+  console.log('deleted message', msg);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+  };
+});
+
+router.post('/messages/fetch', async (ctx) => {
+  const { userId } = ctx.request.body;
+  const { contactId } = ctx.request.body;
+  const messages = await db.getMessagesForChat(userId, contactId);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    messages,
+  };
+});
+
+router.get('/contacts/:id', async (ctx) => {
+  const contacts = await db.getContacts(ctx.body.id);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    contacts,
+  };
+});
+
 app
   .use(router.routes())
   .use(router.allowedMethods())
