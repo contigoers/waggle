@@ -203,7 +203,7 @@ const getContacts = userId => knex.select('sender_id', 'recipient_id')
   .from(knex.raw(''))
   .where(`sender_id = ${userId} or recipient_id = ${userId}`); // need to return probably names (another query?)
 
-const getMessagesForChat = (userId, contactId) => knex.select()
+const getMessagesForChat = (userId, contactId) => knex.distinct().select()
   .from(knex.raw('messages'))
   .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
 
