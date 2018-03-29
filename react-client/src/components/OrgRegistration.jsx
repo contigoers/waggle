@@ -4,7 +4,6 @@ import { Form, Input, Select } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import axios from 'axios';
 
-import { toggleRegistrationModal } from '../actions/registrationActions';
 import states from '../assets/states';
 
 const FormItem = Form.Item;
@@ -231,10 +230,4 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = ({ registrationModal: { org } }) => (
-  {
-    org,
-  }
-);
-
-export default connect(mapStateToProps, { toggleRegistrationModal })(WrappedOrgRegistration);
+export default WrappedOrgRegistration;

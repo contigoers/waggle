@@ -207,7 +207,7 @@ class Search extends React.Component {
   async fetchAndRedirect() {
     await this.props.getRandomDog();
     let id;
-    console.log('dogs: ', this.props.results);
+
     forOwn(this.props.results.dogs, (value, key) => {
       id = key;
     });
