@@ -4,23 +4,38 @@ import { Col, Card, Divider } from 'antd';
 
 const OrgCard = (props) => {
   const { org } = props;
-  console.log(org);
   const phone = `(${org.phone.slice(0, 3)}) ${org.phone.slice(3, 6)}-${org.phone.slice(6)}`;
   return (
     <Col>
       <Card>
-        <div style={{ fontWeight: 700 }}> PLACEHOLDER </div>
-        {props.user && org.id === props.user.org_id &&
+        {org.org_name && <h2 style={{ fontWeight: 700 }}> {org.org_name} </h2>
+        }
+        {org.name && <h2 style={{ fontWeight: 700 }}> {org.name} </h2>
+        }
+        {props.orgUser && org.id === props.orgUser.org_id &&
           <div>
             <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
             Organization Profile
             </span>
             <Divider type="vertical" />
             <span style={{ color: '#00db19', fontWeight: 600, fontSize: 16 }} >
-            Username: {props.user.username}
+            Username: {props.orgUser.username}
             </span>
           </div>
         }
+
+        {props.adopterUser && org.id === props.adopterUser.adopterId &&
+          <div>
+            <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
+            Adopter Profile
+            </span>
+            <Divider type="vertical" />
+            <span style={{ color: '#00db19', fontWeight: 600, fontSize: 16 }} >
+            Username: {props.adopterUser.username}
+            </span>
+          </div>
+        }
+
 
         <Divider />
 

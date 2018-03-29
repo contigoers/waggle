@@ -4,7 +4,7 @@ import { map, isEmpty } from 'lodash';
 import DogCard from './DogPreviewCard';
 
 const SearchResults = props => (
-  <div>
+  <div style={{ marginTop: 30 }} >
     {!isEmpty(props.dogs) ? map(props.dogs, dog => (<DogCard key={dog.id} dog={dog} />)) : 'No Results'}
   </div>
 );

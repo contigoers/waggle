@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Form, Icon, Input, Button, Modal } from 'antd';
 import axios from 'axios';
 
@@ -10,7 +11,7 @@ const FormItem = Form.Item;
 const WrappedLoginForm = Form.create()(class extends Component {
   constructor(props) {
     super(props);
-
+    this.state = { loggedIn: false };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleLoginModal.bind(this);
     this.storeUser = this.props.storeUserId.bind(this);
@@ -21,17 +22,20 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios.post('/login', values).then((response) => {
-          console.log('response data', response.data.user);
           this.toggleModal();
           this.storeUser({ user: response.data.user });
+          this.props.form.resetFields();
+          this.setState({ loggedIn: true });
+          this.setState({ loggedIn: false });
         });
-        this.props.form.resetFields();
-        // this.toggleModal();
       }
     });
   }
 
   render() {
+    if (this.state.loggedIn) {
+      return <Redirect to="/profile" />;
+    }
     const { getFieldDecorator } = this.props.form;
     return (
       <Modal

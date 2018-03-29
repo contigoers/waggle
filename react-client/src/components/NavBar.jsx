@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
 import WrappedLoginForm from './LoginForm';
-import { toggleLoginModal, storeUserId } from '../actions/loginActions';
+import { toggleLoginModal, storeUserId, logoutUser } from '../actions/loginActions';
 import { toggleRegistrationModal } from '../actions/registrationActions';
 import RegistrationLandingModal from './RegistrationLandingModal';
 
@@ -15,6 +15,8 @@ const NavBar = (props) => {
     axios.post('/logout').then((response) => {
       console.log(response);
       props.storeUserId({ user: null });
+      props.logoutUser();
+      props.history.push('/');
     });
   };
 
@@ -33,12 +35,19 @@ const NavBar = (props) => {
         <div className="about-div nav-item">
           <Link className="nav-link" to="/about">About Us</Link>
         </div>
+        {props.user && props.user.org_id > 1 &&
         <div className="create-dog nav-item">
           <Link className="nav-link" to="/create">Add a Dog</Link>
         </div>
+        }
         {props.user && props.user.org_id > 1 &&
-        <div className="org-profile nav-item">
-          <Link className="nav-link" to="/org">Org Profile</Link>
+        <div className="profile nav-item">
+          <Link className="nav-link" to="/profile">Org Profile</Link>
+        </div>
+        }
+        {props.user && props.user.org_id === 1 &&
+        <div className="profile nav-item">
+          <Link className="nav-link" to="/profile">Adopter Profile</Link>
         </div>
         }
         {props.user ?
@@ -49,8 +58,7 @@ const NavBar = (props) => {
             <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
           </div>
         }
-        {props.user ?
-          '' :
+        {!props.user &&
           <div className="signup nav-item">
             <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
           </div>
@@ -72,5 +80,7 @@ const mapStateToProps = state => (
 
 export default connect(
   mapStateToProps,
-  { toggleLoginModal, toggleRegistrationModal, storeUserId },
-)(NavBar);
+  {
+    toggleLoginModal, toggleRegistrationModal, storeUserId, logoutUser,
+  },
+)(withRouter(NavBar));

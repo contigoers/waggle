@@ -96,8 +96,9 @@ router.post('/createOrgDog', async (ctx) => {
 // add new org dog to favorites - for adopters
 router.post('/favoriteDog', async (ctx) => {
   try {
-    const data = await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
-    if (data === 'already exists!') {
+    const favoriteDogs =
+      await db.addFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
+    if (favoriteDogs === 'already exists!') {
       ctx.status = 409;
       ctx.body = {
         status: 'error',
@@ -105,10 +106,11 @@ router.post('/favoriteDog', async (ctx) => {
       };
     } else {
       const newFaveDog = await db.getDogById(ctx.request.body.dogId);
+      const adopterFavoriteDogs = { favoriteDogs };
       ctx.status = 201;
       ctx.body = {
         status: 'success',
-        faveDogs: data,
+        adopterFavoriteDogs,
         newFaveDog: newFaveDog[0],
       };
     }
@@ -124,19 +126,21 @@ router.post('/favoriteDog', async (ctx) => {
 // remove org dog from favorites - for adopters
 router.post('/favoriteDog/remove', async (ctx) => {
   try {
-    const data = await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
-    if (data === 'favorite does not exist!') {
+    const favoriteDogs =
+      await db.removeFavoriteDog(ctx.request.body.adopterId, ctx.request.body.dogId);
+    if (favoriteDogs === 'favorite does not exist!') {
       ctx.status = 409;
       ctx.body = {
         status: 'error',
         message: 'dog not does exist under favorites!',
       };
     } else {
+      const adopterFavoriteDogs = { favoriteDogs };
       ctx.status = 201;
       ctx.body = {
         status: 'success',
         message: 'dog has been removed from favorites!',
-        faveDogs: data,
+        adopterFavoriteDogs,
       };
     }
   } catch (err) {
@@ -235,12 +239,24 @@ router.get('/orgInfo', async (ctx) => {
 router.get('/adopterInfo', async (ctx) => {
   try {
     const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
-    const adopterFavoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
-    ctx.body = {
-      status: 'success',
-      adopterProfile: adopterProfile[0],
-      adopterFavoriteDogs,
-    };
+    const favoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
+    if (favoriteDogs.length) {
+      const adopterFavoriteDogs = {
+        favoriteDogs,
+        adopter: adopterProfile[0],
+      };
+      ctx.body = {
+        status: 'success',
+        adopterFavoriteDogs,
+      };
+    } else {
+      ctx.body = {
+        adopterFavoriteDogs: {
+          favoriteDogs: {},
+          adopter: adopterProfile[0],
+        },
+      };
+    }
   } catch (err) {
     ctx.status = 400;
     ctx.body = {
@@ -312,7 +328,49 @@ router.post('/logout', isLoggedIn, async (ctx) => {
     status: 'success',
     message: 'You have been logged out successfully!',
   };
-  // ctx.redirect('/');  <---redirect to home page??
+});
+
+router.post('/messages/post', async (ctx) => {
+  const { senderId } = ctx.request.body;
+  const { recipientId } = ctx.request.body;
+  const msg = ctx.request.body.message;
+  const fullMessage = await db.addMessage(senderId, recipientId, msg);
+  const message = fullMessage[0];
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    message,
+  };
+});
+
+router.patch('/messages/delete', async (ctx) => {
+  console.log('deleting message', ctx.request.body);
+  const msg = await db.deleteMessage(ctx.request.body.messageId);
+  console.log('deleted message', msg);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+  };
+});
+
+router.post('/messages/fetch', async (ctx) => {
+  const { userId } = ctx.request.body;
+  const { contactId } = ctx.request.body;
+  const messages = await db.getMessagesForChat(userId, contactId);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    messages,
+  };
+});
+
+router.get('/messages', async (ctx) => {
+  const contacts = await db.getContacts(ctx.body.id);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    contacts,
+  };
 });
 
 app
