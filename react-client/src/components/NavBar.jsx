@@ -53,13 +53,13 @@ const NavBar = (props) => {
           <div className="logout nav-item">
             <Button className="logout-button user-button" onClick={() => { logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>
           </div> :
-          <div>
-            <span className="login nav-item">
-              <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
-            </span>
-            <span className="signup nav-item">
-              <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
-            </span>
+          <div className="login nav-item">
+            <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
+          </div>
+        }
+        {!props.user &&
+          <div className="signup nav-item">
+            <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
           </div>
         }
       </div>
