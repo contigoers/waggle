@@ -26,6 +26,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
           this.storeUser({ user: response.data.user });
           this.props.form.resetFields();
           this.setState({ loggedIn: true });
+          this.setState({ loggedIn: false });
         });
       }
     });
@@ -33,7 +34,6 @@ const WrappedLoginForm = Form.create()(class extends Component {
 
   render() {
     if (this.state.loggedIn) {
-      this.setState({ loggedIn: false });
       return <Redirect to="/profile" />;
     }
     const { getFieldDecorator } = this.props.form;
