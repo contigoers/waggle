@@ -328,6 +328,7 @@ router.post('/messages/post', async (ctx) => {
 });
 
 router.post('/messages/delete', async (ctx) => {
+  console.log('deleting message', ctx.request.body);
   await db.deleteMessage(ctx.request.body.messageId);
   ctx.status = 201;
   ctx.body = {
@@ -336,10 +337,11 @@ router.post('/messages/delete', async (ctx) => {
 });
 
 router.post('/messages/fetch', async (ctx) => {
-  console.log('REQUEST:', ctx.request.body);
+  console.log('fetch request body:', ctx.request.body);
   const { userId } = ctx.request.body;
   const { contactId } = ctx.request.body;
   const messages = await db.getMessagesForChat(userId, contactId);
+  console.log('messages fetched:', messages);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -355,10 +357,6 @@ router.get('/contacts/:id', async (ctx) => {
     contacts,
   };
 });
-
-// router.get('/messages', async (ctx) => {
-//   const message = await db.addMessage('1', '2', 'yo');
-// });
 
 app
   .use(router.routes())
