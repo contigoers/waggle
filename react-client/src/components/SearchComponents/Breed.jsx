@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'antd';
 import { connect } from 'react-redux';
-import { updatesSearchQuery } from '../../actions/searchQueryActions';
+import { updateSearchQuery } from '../../actions/searchActions';
 import breedList from '../../../../database/breeds';
 
 class Breed extends React.Component {
@@ -21,7 +21,7 @@ class Breed extends React.Component {
   }
 
   handleChange(value) {
-    this.props.updatesSearchQuery(value, 'breed');
+    this.props.updateSearchQuery(value, 'breed');
   }
 
   render() {
@@ -51,7 +51,7 @@ class Breed extends React.Component {
 }
 
 const mapDispatchToProps = {
-  updatesSearchQuery,
+  updateSearchQuery,
 };
 
 export default connect(null, mapDispatchToProps)(Breed);

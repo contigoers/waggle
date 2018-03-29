@@ -135,18 +135,18 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = ({ searchQuery, search, storeUser }) => (
+const mapStateToProps = ({ search, storeUser }) => (
   {
     params: {
-      breed: searchQuery.breed,
-      male: searchQuery.gender,
-      lifestage: searchQuery.lifestage,
-      size: searchQuery.size,
-      mix: searchQuery.mix,
-      fixed: searchQuery.neutered,
-      diet: searchQuery.diet,
-      medical: searchQuery.medical,
-      energy_level: searchQuery.energy,
+      breed: search.breed,
+      male: search.gender,
+      lifestage: search.lifestage,
+      size: search.size,
+      mix: search.mix,
+      fixed: search.neutered,
+      diet: search.diet,
+      medical: search.medical,
+      energy_level: search.energy,
     },
     results: search.results,
     favorites: search.favorites.favoriteDogs,
