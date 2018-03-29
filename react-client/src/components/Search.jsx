@@ -5,7 +5,7 @@ import { forOwn, keys } from 'lodash';
 import { Redirect } from 'react-router-dom';
 
 
-import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog } from '../actions/searchActions';
+import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
 import { updateSearchView } from '../actions/searchViewActions';
 import breedList from '../../../database/breeds';
 import SearchResults from './SearchResults';
@@ -22,9 +22,12 @@ class Search extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
+    const { orgParams } = this.props;
     if (user) {
       if (user.adopterId) {
         this.getFavorites();
+      } else {
+        this.props.getOrgDogs({ params: orgParams });
       }
     }
   }
@@ -204,7 +207,7 @@ class Search extends React.Component {
   async fetchAndRedirect() {
     await this.props.getRandomDog();
     let id;
-    console.log('dogs: ', this.props.results);
+
     forOwn(this.props.results.dogs, (value, key) => {
       id = key;
     });
@@ -356,6 +359,10 @@ const mapStateToProps = ({ search, searchSelections, storeUser }) => (
     adopterParams: {
       adopterId: !storeUser.user ? null : storeUser.user.adopterId,
     },
+    orgParams: {
+      type: 'orgId',
+      value: !storeUser.user ? 1 : storeUser.user.org_id,
+    },
   }
 );
 
@@ -365,6 +372,7 @@ const mapDispatchToProps = {
   updateSearchView,
   getFavorites,
   getRandomDog,
+  getOrgDogs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

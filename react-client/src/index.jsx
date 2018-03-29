@@ -17,7 +17,7 @@ import Footer from './components/Footer';
 import CreateDogForm from './components/CreateDogForm';
 import DogProfile from './components/DogProfile';
 import SearchResults from './components/SearchResults';
-import OrgProfile from './components/OrgProfile';
+import UserProfile from './components/UserProfile';
 
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -33,7 +33,7 @@ ReactDOM.render(
         <Switch>
           <Route path="/search" component={Search} />
           <Route path="/create" component={CreateDogForm} />
-          <Route path="/org" component={OrgProfile} />
+          <Route path="/profile" component={UserProfile} />
           <Route path="/searchResults" component={SearchResults} />
           <Route path="/dog/:id" component={DogProfile} />
           <Route path="/" component={Landing} />

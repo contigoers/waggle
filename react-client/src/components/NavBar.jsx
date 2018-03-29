@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
@@ -15,6 +15,7 @@ const NavBar = (props) => {
     axios.post('/logout').then((response) => {
       console.log(response);
       props.storeUserId({ user: null });
+      props.history.push('/');
     });
   };
 
@@ -39,8 +40,13 @@ const NavBar = (props) => {
         </div>
         }
         {props.user && props.user.org_id > 1 &&
-        <div className="org-profile nav-item">
-          <Link className="nav-link" to="/org">Org Profile</Link>
+        <div className="profile nav-item">
+          <Link className="nav-link" to="/profile">Org Profile</Link>
+        </div>
+        }
+        {props.user && props.user.org_id === 1 &&
+        <div className="profile nav-item">
+          <Link className="nav-link" to="/profile">Adopter Profile</Link>
         </div>
         }
         {props.user ?
@@ -75,4 +81,4 @@ const mapStateToProps = state => (
 export default connect(
   mapStateToProps,
   { toggleLoginModal, toggleRegistrationModal, storeUserId },
-)(NavBar);
+)(withRouter(NavBar));
