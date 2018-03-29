@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Form, Input, Select, Radio } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
-import axios from 'axios';
 
 import states from '../assets/states';
 
@@ -23,7 +21,6 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
 
     this.handleBlur = this.handleBlur.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.validateNumber = this.validateNumber.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
@@ -68,19 +65,6 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
     this.props.toggleRegistrationModal('adopter');
   }
 
-  handleSubmit() {
-    const { form } = this.props;
-    form.validateFieldsAndScroll((err, values) => {
-      this.setState({ phoneDirty: true });
-      if (!err && this.state.numberIsValid) {
-        axios.post('/register', values);
-        this.setState({ phoneDirty: false });
-        form.resetFields();
-        this.toggleModal();
-      }
-    });
-  }
-
   render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -102,7 +86,7 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
     </Select>); // eslint-disable-line
 
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form>
         <FormItem
           {...formItemLayout}
           label="E-mail"
