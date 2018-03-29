@@ -356,9 +356,9 @@ router.get('/contacts/:id', async (ctx) => {
   };
 });
 
-router.get('/messages', async (ctx) => {
-  const message = await db.addMessage('1', '2', 'yo');
-});
+// router.get('/messages', async (ctx) => {
+//   const message = await db.addMessage('1', '2', 'yo');
+// });
 
 app
   .use(router.routes())

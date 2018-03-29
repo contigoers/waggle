@@ -23,7 +23,7 @@ class InquiryModal extends Component {
         recipientId: results.dogs[id].org_id,
         senderId: user.id,
       };
-      axios.post('/messages/post', body);
+      axios.post('/messages/post', body); // response.data.message has message object (id, sender_id, recipient_id, message, timestamp)
     });
   }
 
