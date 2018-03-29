@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import promise from 'redux-promise';
-import { ScrollContext } from 'react-router-scroll-4';
 
 import './styles.scss';
 import './search-styles.scss';
@@ -19,6 +18,7 @@ import CreateDogForm from './components/CreateDogForm';
 import DogProfile from './components/DogProfile';
 import SearchResults from './components/SearchResults';
 import UserProfile from './components/UserProfile';
+import ScrollToTop from './components/ScrollToTop';
 
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -27,8 +27,8 @@ const store = createStore(reducers, composeEnhancers(applyMiddleware(promise)));
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <ScrollContext>
+    <Router>
+      <ScrollToTop>
         <div>
           <Route exact path="/" component={Splash} />
           <NavBar />
@@ -42,8 +42,8 @@ ReactDOM.render(
           </Switch>
           <Footer />
         </div>
-      </ScrollContext>
-    </BrowserRouter>
+      </ScrollToTop>
+    </Router>
 
   </Provider>
   , document.getElementById('app'),
