@@ -314,28 +314,29 @@ router.post('/logout', isLoggedIn, async (ctx) => {
   };
 });
 
-// request body should have user id, message
-router.post('/addMessage', async (ctx) => {
+router.post('/messages/post', async (ctx) => {
   const { senderId } = ctx.request.body;
   const { recipientId } = ctx.request.body;
-  const { message } = ctx.request.body;
-  const msg = db.addMessage(senderId, recipientId, message);
+  const msg = ctx.request.body.message;
+  const fullMessage = await db.addMessage(senderId, recipientId, msg);
+  const message = fullMessage[0];
   ctx.status = 201;
   ctx.body = {
     status: 'success',
-    msg,
+    message,
   };
 });
 
-router.post('/deleteMessage', async (ctx) => {
-  await db.deleteMessage(ctx.request.body.id);
+router.post('/messages/delete', async (ctx) => {
+  await db.deleteMessage(ctx.request.body.messageId);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
   };
 });
 
-router.post('/getMessages', async (ctx) => {
+router.post('/messages/fetch', async (ctx) => {
+  console.log('REQUEST:', ctx.request.body);
   const { userId } = ctx.request.body;
   const { contactId } = ctx.request.body;
   const messages = await db.getMessagesForChat(userId, contactId);
@@ -346,13 +347,17 @@ router.post('/getMessages', async (ctx) => {
   };
 });
 
-router.post('/getContacts', async (ctx) => {
+router.get('/contacts/:id', async (ctx) => {
   const contacts = await db.getContacts(ctx.body.id);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
     contacts,
   };
+});
+
+router.get('/messages', async (ctx) => {
+  const message = await db.addMessage('1', '2', 'yo');
 });
 
 app

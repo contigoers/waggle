@@ -186,19 +186,13 @@ const getRandomDog = () => knex.select()
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-const addMessage = (senderId, recipientId, message) => {
-  knex.insert({
+const addMessage = async (senderId, recipientId, message) => {
+  const id = await knex('messages').insert({
     sender_id: senderId,
     recipient_id: recipientId,
     message,
   }).orderBy('id', 'asc');
-  const timestamp = knex('messages').select('timestamp').where('message', message);
-  return { // need to do get request for message to get timestamp
-    sender_id: senderId,
-    recipient_id: recipientId,
-    message,
-    timestamp,
-  };
+  return knex('messages').select().where('id', id);
 };
 
 const deleteMessage = messageId => knex('messages')
