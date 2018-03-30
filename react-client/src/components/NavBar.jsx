@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
 import WrappedLoginForm from './LoginForm';
-import { toggleLoginModal, storeUserId } from '../actions/loginActions';
+import { toggleLoginModal, storeUserId, logoutUser } from '../actions/loginActions';
 import { toggleRegistrationModal } from '../actions/registrationActions';
 import RegistrationLandingModal from './RegistrationLandingModal';
 
@@ -15,6 +15,7 @@ const NavBar = (props) => {
     axios.post('/logout').then((response) => {
       console.log(response);
       props.storeUserId({ user: null });
+      props.logoutUser();
       props.history.push('/');
     });
   };
@@ -79,5 +80,7 @@ const mapStateToProps = state => (
 
 export default connect(
   mapStateToProps,
-  { toggleLoginModal, toggleRegistrationModal, storeUserId },
+  {
+    toggleLoginModal, toggleRegistrationModal, storeUserId, logoutUser,
+  },
 )(withRouter(NavBar));

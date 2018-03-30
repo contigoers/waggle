@@ -4,6 +4,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
 import breeds from '../../../database/breeds';
+import Picture from './Picture';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -247,6 +248,10 @@ class DogForm extends React.Component {
               {getFieldDecorator('photo', {
                 })(<Input style={{ width: 500 }} placeholder="Photo URL" />)}
             </Form.Item>
+          </Row>
+          <Row>
+              OR upload a photo below:
+            <Picture />
           </Row>
 
           <Row style={rowStyle}>

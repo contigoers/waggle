@@ -5,13 +5,12 @@ const SEARCH_DOGS = 'SEARCH_DOGS';
 const GET_FAVORITES = 'GET_FAVORITES';
 const UPDATE_FAVORITES = 'UPDATE_FAVORITES';
 
-const updateSearchQuery = (id, value, checked) =>
+const updateSearchQuery = (values, filterType) =>
   (
     {
       type: UPDATE_SEARCH_QUERY,
-      id,
-      value,
-      checked,
+      values,
+      filterType,
     }
   );
 
