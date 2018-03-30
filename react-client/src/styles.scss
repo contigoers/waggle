@@ -15,11 +15,6 @@ $z-index: (
   font-size: 18px;
 }
 
-// .splash > img {
-//   width: 100%;
-//   max-height: 100%;
-// }
-
 .splash {
   height: 100vh;
   z-index: map-get($z-index, splash-media);
@@ -119,6 +114,7 @@ $z-index: (
   color: white;
   border-bottom: 4px solid $primary-dark;
   z-index: map-get($z-index, nav-bar);
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
 }
 
 .logo-div > img {
@@ -157,19 +153,59 @@ $z-index: (
   position: relative;  
 }
 
+.content-divs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 3%;
+  min-height: 300px;
+  color: $primary; 
+  // box-shadow: 0 8px 6px -6px hsla(0, 0%, 0%, 0.2);
+}
+
+.stats {
+  i {
+    font-size: 30px;
+    color: #52c41a;
+  }
+  p {
+    display: inline-block;
+    font-size: 26px;
+    margin-left: 10px;
+  }
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    filter: sepia(40%);
+    box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+    border-radius: 2px;
+  }
+}
+
+.test {
+  font-size: 20px;
+  text-align: center;
+  margin: 35px;
+  border: 2px solid $primary;
+  padding: 10%;
+  border-radius: 2px;
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);  
+}
+
+.author {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
 .content-divs:nth-child(odd) {
   background: white;
-  color: $primary-dark;  
 }
 
 .content-divs:nth-child(even) {
-  background: rgba($primary, 0.2);
-  color: $primary-dark;
-}
-
-.content-divs {
-  padding: 3%;
-  min-height: 500px;
+  background: rgba($primary, 0.05);
 }
 
 .loader {

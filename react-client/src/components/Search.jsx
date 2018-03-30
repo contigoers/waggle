@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, BackTop } from 'antd';
+import { Button, BackTop, Divider } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { Redirect } from 'react-router-dom';
 import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
@@ -74,9 +74,9 @@ class Search extends React.Component {
   render() {
     return (
       <div className="search-div">
-        <Button onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
-          I&apos;m feeling lucky
-        </Button>
+        <div className="title">
+          Find The Dog That Fits Your Lifestyle!
+        </div>
         {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
         <div className="default-filters">
           <div className="breed">
@@ -125,10 +125,16 @@ class Search extends React.Component {
         <Button className="submit-search" onClick={this.toggleFilter}>
           {this.state.moreFilters ? 'Less' : 'More'} Filters
         </Button>
+        <Button onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
+          I&apos;m feeling lucky
+        </Button>
         <Button className="submit-search" onClick={this.submitData}>
           Submit
         </Button>
-        {keys(this.props.results).length > 0 && <SearchResults />}
+        <div className="search-results">
+          {keys(this.props.results).length > 0 && <SearchResults />}
+        </div>
+        <Divider />
         <BackTop />
       </div>
     );
