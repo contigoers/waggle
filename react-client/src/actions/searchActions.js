@@ -3,6 +3,7 @@ import axios from 'axios';
 const UPDATE_SEARCH_QUERY = 'UPDATE_SEARCH_QUERY';
 const SEARCH_DOGS = 'SEARCH_DOGS';
 const GET_FAVORITES = 'GET_FAVORITES';
+const UPDATE_FAVORITES = 'UPDATE_FAVORITES';
 
 const updateSearchQuery = (id, value, checked) =>
   (
@@ -50,7 +51,7 @@ const getFavorites = async (adopterObject) => {
 const addFavorite = async (favoritesObject) => {
   const { data } = await axios.post('/favoriteDog', favoritesObject);
   return {
-    type: GET_FAVORITES,
+    type: UPDATE_FAVORITES,
     data: data.adopterFavoriteDogs,
   };
 };
@@ -58,7 +59,7 @@ const addFavorite = async (favoritesObject) => {
 const removeFavorite = async (favoritesObject) => {
   const { data } = await axios.post('/favoriteDog/remove', favoritesObject);
   return {
-    type: GET_FAVORITES,
+    type: UPDATE_FAVORITES,
     data: data.adopterFavoriteDogs,
   };
 };

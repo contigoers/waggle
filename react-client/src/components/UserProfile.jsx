@@ -18,7 +18,7 @@ class UserProfile extends React.Component {
 
     if (this.state.type === 'org') {
       this.getOrgDogs();
-    } else {
+    } else if (isEmpty(this.props.favorites)) {
       this.getFavorites();
     }
 
