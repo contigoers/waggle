@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { startCase } from 'lodash';
+import { startCase, isEmpty } from 'lodash';
 import { Card, Divider, Icon, message } from 'antd';
+
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
 class DogCard extends React.Component {
@@ -22,9 +23,9 @@ class DogCard extends React.Component {
     if (user !== null) {
       if (user.org_id === 1) {
         const { favorites } = this.props;
-        if (favorites.length) {
+        if (!isEmpty(favorites)) {
           this.setState({
-            favorite: favorites.some(fav => fav.id === +id),
+            favorite: favorites[id],
           });
         }
       }

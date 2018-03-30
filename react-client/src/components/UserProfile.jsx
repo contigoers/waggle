@@ -16,16 +16,13 @@ class UserProfile extends React.Component {
       menuSelection: 'messages',
     };
 
-    this.updateMenu = this.updateMenu.bind(this);
-  }
-
-  componentDidMount() {
-    console.log(this.state.type);
     if (this.state.type === 'org') {
       this.getOrgDogs();
     } else {
       this.getFavorites();
     }
+
+    this.updateMenu = this.updateMenu.bind(this);
   }
 
   getOrgDogs() {

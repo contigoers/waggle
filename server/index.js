@@ -5,7 +5,7 @@ const passport = require('koa-passport');
 const session = require('koa-session');
 const serve = require('koa-static');
 const db = require('../database/index');
-const { mapKeys, isEmpty } = require('lodash');
+const { mapKeys } = require('lodash');
 
 const app = new Koa();
 
@@ -240,9 +240,17 @@ router.get('/adopterInfo', async (ctx) => {
   try {
     const [adopterProfile] = await db.getAdopterProfile(ctx.request.query.adopterId);
     let favoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
-    favoriteDogs = mapKeys(favoriteDogs, 'id');
+    if (favoriteDogs.length) {
+      let orgs = {};
 
-    if (!isEmpty(favoriteDogs)) {
+      favoriteDogs = mapKeys(favoriteDogs, ({ id, org_id }) => {
+        orgs[org_id] = 1;
+        return id;
+      });
+
+      orgs = await db.getOrgsAfterDogs(Object.keys(orgs));
+      orgs = mapKeys(orgs, 'id');
+
       const adopterFavoriteDogs = {
         favoriteDogs,
         adopter: adopterProfile,
@@ -250,6 +258,7 @@ router.get('/adopterInfo', async (ctx) => {
       ctx.body = {
         status: 'success',
         adopterFavoriteDogs,
+        orgs,
       };
     } else {
       ctx.body = {

@@ -43,6 +43,7 @@ const getFavorites = async (adopterObject) => {
   return {
     type: GET_FAVORITES,
     data: data.adopterFavoriteDogs,
+    orgs: data.orgs,
   };
 };
 
