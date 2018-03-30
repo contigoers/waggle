@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { uniq } from 'lodash';
+import { uniq, isEmpty } from 'lodash';
 
 const initialState = {
   breed: [],
@@ -34,14 +34,21 @@ export default handleActions({
     };
   },
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
-  GET_FAVORITES: (state, action) => (
-    {
+  GET_FAVORITES: (state, action) => {
+    if (!isEmpty(state.results)) {
+      return {
+        ...state,
+        favorites: action.data,
+      };
+    }
+
+    return {
       ...state,
       favorites: action.data,
       results: {
         dogs: action.data.favoriteDogs,
         orgs: action.orgs,
       },
-    }
-  ),
+    };
+  },
 }, initialState);
