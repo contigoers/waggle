@@ -3,7 +3,7 @@ import registrationModal from './registrationReducers';
 import search from './searchReducers';
 import { loginModal, storeUser } from './loginReducers';
 import { inquiryModal, fetchContacts, fetchMessages } from './messagingReducers';
-import editModal from './editReducer';
+import editModal from './editReducers';
 
 const appReducer = combineReducers({
   registrationModal,
