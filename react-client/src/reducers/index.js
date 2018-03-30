@@ -3,6 +3,7 @@ import registrationModal from './registrationReducers';
 import search from './searchReducers';
 import { loginModal, storeUser } from './loginReducers';
 import { inquiryModal, fetchContacts, fetchMessages } from './messagingReducers';
+import editModal from './editReducer';
 
 const appReducer = combineReducers({
   registrationModal,
@@ -12,6 +13,7 @@ const appReducer = combineReducers({
   inquiryModal,
   fetchContacts,
   fetchMessages,
+  editModal,
 });
 
 const rootReducer = (state, action) => {
