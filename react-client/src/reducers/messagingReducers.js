@@ -1,4 +1,4 @@
-import { TOGGLE_INQUIRY_MODAL } from '../actions/messagingActions';
+import { TOGGLE_INQUIRY_MODAL, GET_CONTACTS, GET_MESSAGES } from '../actions/messagingActions';
 
 const inquiryModal = (state = { visible: false }, { type }) => {
   switch (type) {
@@ -12,4 +12,28 @@ const inquiryModal = (state = { visible: false }, { type }) => {
   }
 };
 
-export default inquiryModal;
+const fetchContacts = (state = { contacts: null }, action) => {
+  switch (action.type) {
+    case GET_CONTACTS:
+      return {
+        ...state,
+        contacts: action.users,
+      };
+    default:
+      return state;
+  }
+};
+
+const fetchMessages = (state = { messages: null }, action) => {
+  switch (action.type) {
+    case GET_MESSAGES:
+      return {
+        ...state,
+        messages: action.messages,
+      };
+    default:
+      return state;
+  }
+};
+
+export { inquiryModal, fetchContacts, fetchMessages };
