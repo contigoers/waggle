@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { startCase, isEmpty } from 'lodash';
+import { startCase } from 'lodash';
 import { Card, Divider, Icon, message } from 'antd';
 
 import { addFavorite, removeFavorite } from '../actions/searchActions';
@@ -10,47 +10,38 @@ class DogCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      favorite: false,
       seeProfile: false,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
   }
 
-  componentWillMount() {
-    const { user } = this.props;
-    const { id } = this.props.dog;
-    if (user !== null) {
-      if (user.org_id === 1) {
-        const { favorites } = this.props;
-        if (!isEmpty(favorites)) {
-          this.setState({
-            favorite: favorites[id],
-          });
-        }
-      }
-    }
-  }
-
   onClick() {
     this.setState({ seeProfile: true });
   }
 
-  toggleFavorite() {
+  async toggleFavorite() {
+    const { id } = this.props.dog;
+    const { favorites } = this.props;
     const { favoriteParams } = this.props;
-    favoriteParams.dogId = this.props.dog.id;
-    if (this.state.favorite) {
-      this.props.removeFavorite(favoriteParams);
+
+    const newFavoriteParams = {
+      ...favoriteParams,
+      dogId: id,
+    };
+
+    if (favorites[id]) {
+      await this.props.removeFavorite(newFavoriteParams);
     } else {
-      this.props.addFavorite(favoriteParams);
+      await this.props.addFavorite(newFavoriteParams);
     }
-    this.setState({ favorite: !this.state.favorite }, () => {
-      message.info(this.state.favorite ? 'Added to favorites!' : 'Remove from favorites');
-    });
+
+    message.info(!favorites[id] ? 'Added to favorites!' : 'Removed from favorites');
   }
 
   render() {
     const { dog } = this.props;
+    const { favorites } = this.props;
 
     const url = `/dog/${dog.id}`;
     if (this.state.seeProfile) {
@@ -69,7 +60,7 @@ class DogCard extends React.Component {
         cover={<img alt="pupper" onClick={this.onClick} src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
           this.props.user && this.props.user.org_id === 1 ?
-          [<Icon onClick={this.toggleFavorite} type={this.state.favorite ? 'heart' : 'heart-o'} />] : null
+          [<Icon onClick={this.toggleFavorite} type={favorites[dog.id] ? 'heart' : 'heart-o'} />] : null
         }
       >
         <Card.Meta title={dog.name} onClick={this.onClick} />
@@ -94,7 +85,6 @@ const mapStateToProps = ({ search, storeUser }) => (
     user: storeUser.user,
     favoriteParams: {
       adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
-      dogId: null,
     },
   }
 );
