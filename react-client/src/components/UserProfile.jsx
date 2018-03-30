@@ -21,7 +21,6 @@ class UserProfile extends React.Component {
       this.getOrgDogs();
     } else if (isEmpty(this.props.favorites)) {
       this.getFavorites();
-      this.props.dogsSearch();
     }
 
     this.updateMenu = this.updateMenu.bind(this);
