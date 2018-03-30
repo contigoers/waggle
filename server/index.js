@@ -57,20 +57,26 @@ router.get('/dogInfo', async (ctx) => {
 });
 
 // mark dog status as 'adopted' - for organization access only
-router.post('/adopted', async (ctx) => {
+router.patch('/adopted', async (ctx) => {
   await db.markAsAdopted(ctx.request.body.dogId);
+  const [dog] = await db.getDogById(ctx.request.body.dogId);
+
   ctx.status = 201;
   ctx.body = {
     status: 'success',
+    dog,
   };
 });
 
 // unmark dog status as 'adopted' - for organization access only
-router.post('/adopted/remove', async (ctx) => {
+router.patch('/adopted/remove', async (ctx) => {
   await db.unmarkAsAdopted(ctx.request.body.dogId);
+  const [dog] = await db.getDogById(ctx.request.body.dogId);
+
   ctx.status = 201;
   ctx.body = {
     status: 'success',
+    dog,
   };
 });
 
