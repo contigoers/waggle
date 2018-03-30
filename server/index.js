@@ -374,8 +374,19 @@ router.get('/messages', async (ctx) => {
   };
 });
 
-router.post('/contacts/org', async (ctx) => {
-  const contacts = await db.getOrgContacts(1);
+router.get('/contacts/org', async (ctx) => {
+  const contacts = await db.getOrgContacts(ctx.request.query.id);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    contacts,
+  };
+});
+
+router.post('/contacts/adopter', async (ctx) => {
+  console.log('getting contacts');
+  const contacts = await db.getAdopterContacts(1);
+  console.log('contacts', contacts);
   ctx.status = 201;
   ctx.body = {
     status: 'success',

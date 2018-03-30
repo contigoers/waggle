@@ -1,3 +1,5 @@
+const has = require('lodash/has');
+
 const config = {
   client: 'mysql',
   connection: process.env.DATABASE_URL,
@@ -207,33 +209,49 @@ const getMessagesForChat = (userId, contactId) => knex.select()
 const getOrgContacts = async (userId) => {
   const messages = await knex('messages').select('sender_id', 'dogName')
     .where('recipient_id', userId);
-    // messages is a list of objects with {sender_id: 1, dogName: 'name'}
-  console.log('messages', messages);
-  // const namesAndDogs = {};
-  // messages.forEach((message) => {
-  //   if (!namesAndDogs.hasOwnProperty(message.sender_id)) {
-  //     namesAndDogs[message.sender_id] = { name: null, dogs: [] };
-  //   }
-  //   namesAndDogs[message.sender_id].dogs.push(message.dogName);
-  // });
-  // // namesAndDogs is a list of objects with {id: {name: null, dogs: [dog1, dog2]}}
-  // console.log('namesAndDogs', namesAndDogs);
-  // const ids = Object.keys(namesAndDogs);
-  // // ids is a list of USER IDS
-  // const names = await knex.raw('select user_id, name from adopters where user_id in (?)', [ids]);
-  // console.log('names', names);
-  // names.forEach((obj) => {
-  //   if (namesAndDogs.hasOwnProperty(obj.user_id)) {
-  //     namesAndDogs[obj.user_id].name = obj.name;
-  //   }
-  // })
-  // console.log('namesAndDogs2', namesAndDogs);
-  // return namesAndDogs;
+  const namesAndDogs = {};
+  messages.forEach((message) => {
+    if (!has(namesAndDogs, message.sender_id)) {
+      namesAndDogs[message.sender_id] = { name: null, dogs: [] };
+    }
+    namesAndDogs[message.sender_id].dogs.push(message.dogName);
+  });
+  const ids = Object.keys(namesAndDogs);
+  const names = await knex.raw('select user_id, name from adopters where user_id in (?)', [ids]);
+  names[0].forEach((obj) => {
+    if (has(namesAndDogs, obj.user_id)) {
+      namesAndDogs[obj.user_id].name = obj.name;
+    }
+  });
+  return namesAndDogs;
 };
 
-// const getAdopterContacts = async () {
-
-// };
+const getAdopterContacts = async (userId) => {
+  console.log('getting adopter contacts')
+  const messages = await knex('messages').select('recipient_id', 'dogName')
+    .where('sender_id', userId);
+  console.log('messages', messages);
+  const namesAndDogs = {};
+  messages.forEach((message) => {
+    if (!has(namesAndDogs, message.recipient_id)) {
+      namesAndDogs[message.recipient_id] = { name: null, dogs: [] };
+    }
+    namesAndDogs[message.recipient_id].dogs.push(message.dogName);
+  });
+  console.log('namesAndDogs', namesAndDogs);
+  const ids = Object.keys(namesAndDogs);
+  console.log('ids', ids);
+  const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
+  console.log('names', names[0]);
+  names[0].forEach((obj) => {
+    console.log(obj)
+    if (has(namesAndDogs, obj.id)) {
+      namesAndDogs[obj.id].name = obj.org_name;
+    }
+  });
+  console.log('namesAndDogs2', namesAndDogs);
+  return namesAndDogs;
+};
 
 module.exports = {
   getAdopterProfile,
@@ -260,5 +278,5 @@ module.exports = {
   deleteMessage,
   addMessage,
   getOrgContacts,
-  //getAdopterContacts,
+  getAdopterContacts,
 };
