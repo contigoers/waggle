@@ -1,4 +1,4 @@
-/* eslint react/jsx-closing-tag-location: 1 */
+/* eslint react/jsx-closing-tag-location: 0 */
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -12,7 +12,7 @@ import {
   Modal,
 } from 'antd';
 import breeds from '../../../database/breeds';
-import { toggleEditModal } from '../actions/editAction';
+import { toggleEditModal, editDogInfo } from '../actions/editActions';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -24,11 +24,11 @@ class EditForm extends React.Component {
 
     this.defaultState = {
       // mix, aggression, anxiety, diet, medical
-      isMix: dog.mix,
-      isAggressive: dog.aggressive,
-      hasAnxiety: dog.anxious,
-      hasDiet: dog.diet,
-      hasMedical: dog.medical,
+      isMix: !!dog.mix,
+      isAggressive: !!dog.aggressive,
+      hasAnxiety: !!dog.anxious,
+      hasDiet: !!dog.diet,
+      hasMedical: !!dog.medical,
     };
     this.state = this.defaultState;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,23 +47,25 @@ class EditForm extends React.Component {
     this.props.form.validateFieldsAndScroll((errors, values) => {
       if (!errors) {
         const dog = {
+          ...dogInfo,
           name: values.name,
           breed: values.breed === 'null' ? null : values.breed,
-          isMix: Boolean(values.isMix),
-          isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
-          isAggressive: Boolean(values.isAggressive),
-          isAnxious: Boolean(values.hasAnxiety),
+          mix: +Boolean(this.state.isMix),
+          male: +(values.isMale === 'Good boy'),
+          aggressive: +Boolean(this.state.isAggressive),
+          anxious: +Boolean(this.state.hasAnxiety),
           lifestage: values.lifestage === 'null' ? null : values.lifestage,
           age: values.age || null,
           size: values.size === 'null' ? null : values.size,
-          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
-          hasDiet: Boolean(values.hasDiet),
-          hasMedical: Boolean(values.hasMedical),
-          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
+          fixed: values.isFixed === 'null' ? null : +Boolean(values.isFixed),
+          diet: +Boolean(this.state.hasDiet),
+          medical: +Boolean(this.state.hasMedical),
+          energy_level: values.energyLevel === 'null' ? null : values.energyLevel,
           photo: values.photo || null,
           description: values.description || null,
-          orgId: dogInfo.org_id,
+          org_id: dogInfo.org_id,
         };
+        this.props.editDogInfo(dog);
       }
     });
   }
@@ -81,7 +83,7 @@ class EditForm extends React.Component {
         footer={[
           <Button key="back" onClick={this.props.toggleEditModal}>Cancel</Button>,
           <Button id="login" key="login" type="primary" onClick={this.handleSubmit}>
-            Submit
+            Save Changes
           </Button>,
         ]}
       >
@@ -133,6 +135,7 @@ class EditForm extends React.Component {
             <Form.Item label="Mixed breed?">
               {getFieldDecorator('isMix', {
                 valuePropName: 'mixChecked',
+                initialValue: this.state.mixChecked,
               })(<Checkbox checked={this.state.isMix} onChange={this.onCheckChange} />)}
 
             </Form.Item>
@@ -147,7 +150,7 @@ class EditForm extends React.Component {
                     message: 'Please choose an option',
                   },
                 ],
-                initialValue: dog.male,
+                initialValue: dog.male ? 'Good boy' : 'Good girl',
               })(<Select style={{ width: 200 }} onChange={this.onChange} onBlur={this.onBlur} placeholder="Select">
                 <Option value="true"> Good boy </Option>
                 <Option value="false"> Good girl </Option>
@@ -241,12 +244,14 @@ class EditForm extends React.Component {
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
+                initialValue: this.state.aggressiveChecked,
               })(<Checkbox checked={this.state.isAggressive} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Anxiety">
               {getFieldDecorator('hasAnxiety', {
                 valuePropName: 'medicalChecked',
+                initialValue: this.state.medicalChecked,
               })(<Checkbox checked={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
@@ -255,12 +260,14 @@ class EditForm extends React.Component {
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
+                initialValue: this.state.dietChecked,
                 })(<Checkbox checked={this.state.hasDiet} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Medical">
               {getFieldDecorator('hasMedical', {
                 valuePropName: 'medicalChecked',
+                initialValue: this.state.medicalChecked,
               })(<Checkbox checked={this.state.hasMedical} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
@@ -294,4 +301,4 @@ const mapStateToProps = ({ search, editModal }) => (
   }
 );
 
-export default connect(mapStateToProps, { toggleEditModal })(EditModal);
+export default connect(mapStateToProps, { toggleEditModal, editDogInfo })(EditModal);

@@ -8,7 +8,7 @@ import InquiryModal from './InquiryModal';
 
 import { addFavorite, removeFavorite, markAdopted, unmarkAdopted } from '../actions/searchActions';
 import { toggleInquiryModal } from '../actions/messagingActions';
-import { toggleEditModal } from '../actions/editAction';
+import { toggleEditModal } from '../actions/editActions';
 import EditModal from './EditModal';
 
 class DogProfile extends React.Component {
