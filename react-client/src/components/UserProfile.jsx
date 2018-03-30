@@ -5,7 +5,7 @@ import { Row, Col, Menu, Icon } from 'antd';
 
 import SearchResult from './DogPreviewCard';
 import OrgCard from './OrgCard';
-import { getOrgDogs, getFavorites } from '../actions/searchActions';
+import { getOrgDogs, getFavorites, dogsSearch } from '../actions/searchActions';
 import { getContacts, getMessages } from '../actions/messagingActions';
 
 class UserProfile extends React.Component {
@@ -27,6 +27,7 @@ class UserProfile extends React.Component {
       this.getOrgDogs();
     } else {
       this.getFavorites();
+      this.props.dogsSearch();
     }
   }
 
@@ -126,6 +127,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = {
   getOrgDogs,
   getFavorites,
+  dogsSearch,
   getContacts,
   getMessages,
 };

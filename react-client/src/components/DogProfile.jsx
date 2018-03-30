@@ -16,7 +16,6 @@ class DogProfile extends React.Component {
     super(props);
 
     const { id } = this.props.match.params;
-
     this.state = {
       id,
       favorite: false,
@@ -43,6 +42,7 @@ class DogProfile extends React.Component {
   }
 
   toggleFavorite() {
+    console.log(this.state.dog);
     const { favoriteParams } = this.props;
     const newFavoriteParams = {
       ...favoriteParams,
