@@ -14,7 +14,8 @@ const sampleData = [
 class ContactsList extends React.Component {
   constructor(props) {
     super(props);
-    // this.onClick = this.onClick.bind(this);
+    this.state = { showMessages: false };
+    this.onClick = this.onClick.bind(this);
     this.getContacts = this.props.getContacts.bind(this);
   }
 
@@ -23,9 +24,10 @@ class ContactsList extends React.Component {
     this.getContacts({ id: this.props.user.id });
   }
 
-  //   onClick() {
-  //     // redirects to message history with user
-  //   }
+  onClick() {
+    // sets state to show message
+    this.setState({ showMessages: true });
+  }
 
   render() {
     console.log(this.props);
@@ -37,7 +39,7 @@ class ContactsList extends React.Component {
           <List.Item>
             <List.Item.Meta
               avatar={<Icon type="mail" />}
-              title={contact.name}
+              title={<span tabIndex={contact.id} role="link" style={{ color: 'blue' }} onClick={this.onClick}>{contact.name}</span>}
               description={contact.dogs.join(', ')}
             />
           </List.Item>
