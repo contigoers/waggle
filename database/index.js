@@ -160,7 +160,7 @@ const searchOrgDogs = (dogFilters) => {
   query = query.split(',').join(' ').split(' ');
   query.splice(query.length - 2, 2);
   query = query.join(' ');
-  return knex('dogs').where(knex.raw(query));
+  return knex('dogs').where(knex.raw(query)).andWhere('adopted', false);
 };
 
 const getOrgsAfterDogs = (orgs) => {

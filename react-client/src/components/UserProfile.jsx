@@ -5,7 +5,7 @@ import { Row, Col, Menu, Icon } from 'antd';
 
 import SearchResult from './DogPreviewCard';
 import OrgCard from './OrgCard';
-import { getOrgDogs, getFavorites } from '../actions/searchActions';
+import { getOrgDogs, getFavorites, dogsSearch } from '../actions/searchActions';
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -25,6 +25,7 @@ class UserProfile extends React.Component {
       this.getOrgDogs();
     } else {
       this.getFavorites();
+      this.props.dogsSearch();
     }
   }
 
@@ -114,6 +115,7 @@ const mapStateToProps = ({ search, storeUser }) => (
 const mapDispatchToProps = {
   getOrgDogs,
   getFavorites,
+  dogsSearch,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
