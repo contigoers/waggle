@@ -202,6 +202,10 @@ const getMessagesForChat = (userId, contactId) => knex.select()
   .from(knex.raw('messages'))
   .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
 
+const updateDogInfo = values => knex('dogs')
+  .where('id', values.id)
+  .update(values);
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 const getOrgContacts = async (userId) => {
@@ -260,5 +264,6 @@ module.exports = {
   deleteMessage,
   addMessage,
   getOrgContacts,
-  //getAdopterContacts,
+  // getAdopterContacts,
+  updateDogInfo,
 };
