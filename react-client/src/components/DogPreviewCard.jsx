@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { startCase } from 'lodash';
-import { Card, Divider, Icon, message } from 'antd';
+import { Card, Divider, Icon, message, Tooltip } from 'antd';
 
 import { addFavorite, removeFavorite } from '../actions/searchActions';
 
@@ -42,6 +42,7 @@ class DogCard extends React.Component {
   render() {
     const { dog } = this.props;
     const { favorites } = this.props;
+    const { id } = this.props.dog;
 
     const url = `/dog/${dog.id}`;
     if (this.state.seeProfile) {
@@ -60,7 +61,9 @@ class DogCard extends React.Component {
         cover={<img alt="pupper" onClick={this.onClick} src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
           this.props.user && this.props.user.org_id === 1 ?
-          [<Icon onClick={this.toggleFavorite} type={favorites[dog.id] ? 'heart' : 'heart-o'} />] : null
+          [(favorites[id] ?
+            <Tooltip title="Unfavorite"><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+            <Tooltip title="Favorite"><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>)] : null
         }
       >
         <Card.Meta title={dog.name} onClick={this.onClick} />
