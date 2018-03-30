@@ -383,9 +383,9 @@ router.get('/contacts/org', async (ctx) => {
   };
 });
 
-router.post('/contacts/adopter', async (ctx) => {
+router.get('/contacts/adopter', async (ctx) => {
   console.log('getting contacts');
-  const contacts = await db.getAdopterContacts(1);
+  const contacts = await db.getAdopterContacts(ctx.request.query.id);
   console.log('contacts', contacts);
   ctx.status = 201;
   ctx.body = {

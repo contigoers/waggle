@@ -4,6 +4,7 @@ import { map, isEmpty, mapKeys } from 'lodash';
 import { Row, Col, Menu, Icon } from 'antd';
 
 import SearchResult from './DogPreviewCard';
+import ContactsList from './ContactsList';
 import OrgCard from './OrgCard';
 import { getOrgDogs, getFavorites } from '../actions/searchActions';
 import { getContacts, getMessages } from '../actions/messagingActions';
@@ -92,6 +93,9 @@ class UserProfile extends React.Component {
             </div>
             }
           </div>}
+        </Row>
+        <Row>
+          <ContactsList />
         </Row>
       </div>
     );

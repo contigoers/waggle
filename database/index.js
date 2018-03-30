@@ -227,10 +227,8 @@ const getOrgContacts = async (userId) => {
 };
 
 const getAdopterContacts = async (userId) => {
-  console.log('getting adopter contacts')
   const messages = await knex('messages').select('recipient_id', 'dogName')
     .where('sender_id', userId);
-  console.log('messages', messages);
   const namesAndDogs = {};
   messages.forEach((message) => {
     if (!has(namesAndDogs, message.recipient_id)) {
@@ -238,18 +236,13 @@ const getAdopterContacts = async (userId) => {
     }
     namesAndDogs[message.recipient_id].dogs.push(message.dogName);
   });
-  console.log('namesAndDogs', namesAndDogs);
   const ids = Object.keys(namesAndDogs);
-  console.log('ids', ids);
   const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
-  console.log('names', names[0]);
   names[0].forEach((obj) => {
-    console.log(obj)
     if (has(namesAndDogs, obj.id)) {
       namesAndDogs[obj.id].name = obj.org_name;
     }
   });
-  console.log('namesAndDogs2', namesAndDogs);
   return namesAndDogs;
 };
 
