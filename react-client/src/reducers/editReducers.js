@@ -1,4 +1,4 @@
-import { TOGGLE_EDIT_MODAL } from '../actions/editAction';
+import { TOGGLE_EDIT_MODAL } from '../actions/editActions';
 
 const editModal = (state = { visible: false }, { type }) => {
   switch (type) {
