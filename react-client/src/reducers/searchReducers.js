@@ -65,4 +65,13 @@ export default handleActions({
       },
     }
   ),
+  UPDATE_ADOPTED_STATUS: (state, { dog }) => (
+    {
+      ...state,
+      results: {
+        ...state.results,
+        [dog.id]: dog,
+      },
+    }
+  ),
 }, initialState);
