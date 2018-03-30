@@ -64,6 +64,7 @@ class EditForm extends React.Component {
           photo: values.photo || null,
           description: values.description || null,
           org_id: dogInfo.org_id,
+          org_name: undefined,
         };
         this.props.editDogInfo(dog);
       }
