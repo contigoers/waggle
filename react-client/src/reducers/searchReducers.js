@@ -56,5 +56,13 @@ export default handleActions({
       },
     };
   },
-  UPDATE_FAVORITES: (state, { data }) => ({ ...state, favorites: data }),
+  UPDATE_FAVORITES: (state, { data }) => (
+    {
+      ...state,
+      favorites: {
+        ...state.favorites,
+        favoriteDogs: data,
+      },
+    }
+  ),
 }, initialState);
