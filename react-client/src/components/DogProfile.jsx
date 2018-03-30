@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
 import { startCase, isEmpty } from 'lodash';
-import ReactTooltip from 'react-tooltip';
 
 import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
@@ -127,10 +126,10 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const adoptIcon = <Icon data-tip data-for="adoptIcon" type={this.state.adopted ? 'check-circle' : 'check-circle-o'} onClick={this.toggleAdopted} />;
+    const adoptIcon = <Icon type={this.state.adopted ? 'check-circle' : 'check-circle-o'} onClick={this.toggleAdopted} />;
     const favoriteIcon = <Icon type={this.state.favorite ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />;
     const inquiryIcon = <Icon type="message" onClick={this.props.toggleInquiryModal} />;
-    const editIcon = <Icon data-tip data-for="editIcon" type="edit" onClick={this.editFields} />;
+    const editIcon = <Icon type="edit" onClick={this.editFields} />;
 
     let cardActions = null;
 
@@ -193,12 +192,6 @@ class DogProfile extends React.Component {
               />}
               actions={cardActions}
             />
-            <ReactTooltip id="adoptIcon" place="bottom" type="light" effect="solid">
-              <span>{this.state.adopted ? 'Unmark as adopted' : 'Mark as adopted'}</span>
-            </ReactTooltip>
-            <ReactTooltip id="editIcon" place="bottom" type="light" effect="solid">
-              <span>Edit dog info</span>
-            </ReactTooltip>
           </Row>
         </Col>
         <InquiryModal id={this.props.match.params.id} />
