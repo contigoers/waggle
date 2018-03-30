@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { Card, Divider, Row, Col, Icon, message, Button } from 'antd';
+import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
 import { startCase } from 'lodash';
+import ReactTooltip from 'react-tooltip';
 
 import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
@@ -126,15 +127,15 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const adoptButton = <Button type="primary" onClick={this.toggleAdopted} > {this.state.adopted ? 'Mark as not adopted' : 'Mark as adopted'} </Button>;
+    const adoptIcon = <Icon data-tip data-for="adoptIcon" type={this.state.adopted ? 'check-circle' : 'check-circle-o'} onClick={this.toggleAdopted} />;
     const favoriteIcon = <Icon type={this.state.favorite ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />;
     const inquiryIcon = <Icon type="message" onClick={this.props.toggleInquiryModal} />;
+    const editIcon = <Icon data-tip data-for="editIcon" type="edit" onClick={this.editFields} />;
 
     let cardActions = null;
-    let cardButton = null;
 
     if (this.props.user && dog.org_id === this.props.user.org_id) {
-      cardButton = [adoptButton];
+      cardActions = [adoptIcon, editIcon];
     } else if (this.props.user && this.props.user.org_id === 1) {
       cardActions = [inquiryIcon, favoriteIcon];
     } else if (!this.props.user) {
@@ -191,9 +192,13 @@ class DogProfile extends React.Component {
                 src={dog.photo}
               />}
               actions={cardActions}
-            >
-              {cardButton}
-            </Card>
+            />
+            <ReactTooltip id="adoptIcon" place="bottom" type="light" effect="solid">
+              <span>{this.state.adopted ? 'Unmark as adopted' : 'Mark as adopted'}</span>
+            </ReactTooltip>
+            <ReactTooltip id="editIcon" place="bottom" type="light" effect="solid">
+              <span>Edit dog info</span>
+            </ReactTooltip>
           </Row>
         </Col>
         <InquiryModal id={this.props.match.params.id} />
