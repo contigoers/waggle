@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Divider, Row, Col, Icon, message } from 'antd';
+import { Card, Divider, Row, Col, Icon, message, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { startCase } from 'lodash';
 
@@ -33,7 +33,7 @@ class DogProfile extends React.Component {
       await this.props.addFavorite(newFavoriteParams);
     }
 
-    message.info(favorites[id] ? 'Added to favorites!' : 'Removed from favorites.');
+    message.info(!favorites[id] ? 'Added to favorites!' : 'Removed from favorites.');
   }
 
   async toggleAdopted() {
@@ -87,10 +87,17 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const adoptIcon = <Icon type={adopted ? 'check-circle' : 'check-circle-o'} onClick={this.toggleAdopted} />;
-    const favoriteIcon = favorites ? <Icon type={favorites[id] ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} /> : null;
-    const inquiryIcon = <Icon type="message" onClick={this.props.toggleInquiryModal} />;
-    const editIcon = <Icon type="edit" onClick={this.editFields} />;
+    const adoptIcon = adopted ?
+      <Tooltip title="Unmark adopted"><Icon type="check-circle" onClick={this.toggleAdopted} /></Tooltip> :
+      <Tooltip title="Mark adopted"><Icon type="check-circle-o" onClick={this.toggleAdopted} /></Tooltip>;
+    const favoriteIcon = !favorites ? // eslint-disable-line
+      null :
+      favorites[id] ?
+        <Tooltip title="Unfavorite"><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+        <Tooltip title="Favorite"><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>;
+    const inquiryIcon =
+      <Tooltip title="Send an inquiry"><Icon type="message" onClick={this.props.toggleInquiryModal} /></Tooltip>;
+    const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.editFields} /></Tooltip>;
 
     let cardActions = null;
 
