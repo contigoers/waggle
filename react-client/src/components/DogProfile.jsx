@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
-import { startCase } from 'lodash';
+import { startCase, isEmpty } from 'lodash';
 import ReactTooltip from 'react-tooltip';
 
 import OrgCard from './OrgCard';
