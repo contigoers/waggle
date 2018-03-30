@@ -20,14 +20,15 @@ const { TextArea } = Input;
 class EditForm extends React.Component {
   constructor(props) {
     super(props);
+    const dog = this.props.dogs[this.props.id];
 
     this.defaultState = {
       // mix, aggression, anxiety, diet, medical
-      isMix: false,
-      isAggressive: false,
-      hasAnxiety: false,
-      hasDiet: false,
-      hasMedical: false,
+      isMix: dog.mix,
+      isAggressive: dog.aggressive,
+      hasAnxiety: dog.anxious,
+      hasDiet: dog.diet,
+      hasMedical: dog.medical,
     };
     this.state = this.defaultState;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,36 +43,35 @@ class EditForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    const dogInfo = this.props.dogs[this.props.id];
     this.props.form.validateFieldsAndScroll((errors, values) => {
-      if (errors) {
-        return errors;
+      if (!errors) {
+        const dog = {
+          name: values.name,
+          breed: values.breed === 'null' ? null : values.breed,
+          isMix: Boolean(values.isMix),
+          isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
+          isAggressive: Boolean(values.isAggressive),
+          isAnxious: Boolean(values.hasAnxiety),
+          lifestage: values.lifestage === 'null' ? null : values.lifestage,
+          age: values.age || null,
+          size: values.size === 'null' ? null : values.size,
+          isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
+          hasDiet: Boolean(values.hasDiet),
+          hasMedical: Boolean(values.hasMedical),
+          energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
+          photo: values.photo || null,
+          description: values.description || null,
+          orgId: dogInfo.org_id,
+        };
       }
-      const dog = {
-        name: values.name,
-        breed: values.breed === 'null' ? null : values.breed,
-        isMix: Boolean(values.isMix),
-        isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
-        isAggressive: Boolean(values.isAggressive),
-        isAnxious: Boolean(values.hasAnxiety),
-        lifestage: values.lifestage === 'null' ? null : values.lifestage,
-        age: values.age || null,
-        size: values.size === 'null' ? null : values.size,
-        isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
-        hasDiet: Boolean(values.hasDiet),
-        hasMedical: Boolean(values.hasMedical),
-        energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
-        photo: values.photo || null,
-        description: values.description || null,
-        orgId: this.props.user.org_id,
-      };
-      console.log(dog);
-      return dog;
     });
   }
 
   render() {
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
+    const dog = this.props.dogs[this.props.id];
     return (
       <Modal
         id="login"
@@ -97,6 +97,7 @@ class EditForm extends React.Component {
                     message: 'Please provide name',
                   },
                 ],
+                initialValue: dog.name,
               })(<Input onBlur={this.handleBlur} style={{ width: 300 }} />)}
 
             </Form.Item>
@@ -106,11 +107,13 @@ class EditForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Breed">
               {getFieldDecorator('breed', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose a breed',
                   },
                 ],
+                initialValue: dog.breed,
               })(<Select
                 showSearch
                 style={{ width: 300 }}
@@ -138,11 +141,13 @@ class EditForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Gender">
               {getFieldDecorator('isMale', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.male,
               })(<Select style={{ width: 200 }} onChange={this.onChange} onBlur={this.onBlur} placeholder="Select">
                 <Option value="true"> Good boy </Option>
                 <Option value="false"> Good girl </Option>
@@ -153,11 +158,13 @@ class EditForm extends React.Component {
 
             <Form.Item label="Fixed?">
               {getFieldDecorator('isFixed', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.fixed,
               })(<Select style={{ width: 150 }} placeholder="Select" >
                 <Option value={1}> Yes </Option>
                 <Option value={0}> No </Option>
@@ -169,11 +176,13 @@ class EditForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Life stage">
               {getFieldDecorator('lifestage', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.lifestage,
               })(<Select style={{ width: 175 }} placeholder="Select">
                 <Option value="puppy"> Puppy </Option>
                 <Option value="adolescent"> Adolescent </Option>
@@ -185,18 +194,21 @@ class EditForm extends React.Component {
 
             <Form.Item label="Age (if known)">
               {getFieldDecorator('age', {
-                })(<InputNumber min={0} max={99} />)}
+                initialValue: dog.age,
+              })(<InputNumber min={0} max={99} />)}
             </Form.Item>
           </Row>
 
           <Row style={rowStyle}>
             <Form.Item label="Size">
               {getFieldDecorator('size', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.size,
               })(<Select style={{ width: 200 }} placeholder="Select">
                 <Option value="tiny"> Tiny </Option>
                 <Option value="small"> Small </Option>
@@ -215,6 +227,7 @@ class EditForm extends React.Component {
                   required: true,
                   message: 'Please choose an option',
                 }],
+                initialValue: dog.energy_level,
               })(<Select style={{ width: 300 }} placeholder="Select">
                 <Option value="low"> Low </Option>
                 <Option value="medium"> Medium </Option>
@@ -255,12 +268,15 @@ class EditForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Photo">
               {getFieldDecorator('photo', {
-                })(<Input style={{ width: 500 }} placeholder="Photo URL" />)}
+                initialValue: dog.photo,
+                })(<Input placeholder="Photo URL" />)}
             </Form.Item>
           </Row>
           <Row style={rowStyle}>
             <Form.Item style={{ marginTop: 10 }} label="Description">
-              {getFieldDecorator('description', {})(<TextArea rows={4} style={{ width: 600 }} />)}
+              {getFieldDecorator('description', {
+                initialValue: dog.description,
+              })(<TextArea rows={4} />)}
             </Form.Item>
           </Row>
         </Form>
