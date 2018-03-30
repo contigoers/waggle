@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Card, Divider, Row, Col, Icon, message } from 'antd';
 import { connect } from 'react-redux';
 import { startCase } from 'lodash';
@@ -7,32 +6,26 @@ import { startCase } from 'lodash';
 import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
 
-import { addFavorite, removeFavorite } from '../actions/searchActions';
+import { addFavorite, removeFavorite, markAdopted, unmarkAdopted } from '../actions/searchActions';
 import { toggleInquiryModal } from '../actions/messagingActions';
 
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
 
-    const { id } = this.props.match.params;
-    this.state = {
-      id,
-      dog: this.props.results.dogs[id],
-      adopted: this.props.results.dogs[id].adopted,
-    };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
   async toggleFavorite() {
-    const { favoriteParams } = this.props;
-    const newFavoriteParams = {
-      ...favoriteParams,
-      dogId: this.state.id,
-    };
-
     const { id } = this.props.match.params;
     const { favorites } = this.props;
+    const { favoriteParams } = this.props;
+
+    const newFavoriteParams = {
+      ...favoriteParams,
+      dogId: id,
+    };
 
     if (favorites[id]) {
       await this.props.removeFavorite(newFavoriteParams);
@@ -43,43 +36,24 @@ class DogProfile extends React.Component {
     message.info(favorites[id] ? 'Added to favorites!' : 'Removed from favorites.');
   }
 
-  toggleAdopted() {
-    if (this.state.adopted) {
-      this.unmarkAdopted();
+  async toggleAdopted() {
+    const { id } = this.props.match.params;
+    const { adopted } = this.props.results.dogs[id];
+
+    if (adopted) {
+      await this.props.unmarkAdopted(id);
     } else {
-      this.markAdopted();
+      await this.props.markAdopted(id);
     }
-    this.setState({ adopted: !this.state.adopted }, () => {
-      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted.');
-    });
-  }
 
-  markAdopted() {
-    console.log('adopted!', this.state.id);
-    axios.post('/adopted', { dogId: this.state.id })
-      .then((response) => {
-        console.log('yay', response);
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
-  }
-
-  unmarkAdopted() {
-    console.log('not adopted!', this.state.id);
-    axios.post('/adopted/remove', { dogId: this.state.id })
-      .then((response) => {
-        console.log('yay', response);
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
+    message.info(adopted ? 'Updated to adopted!' : 'Marked as not adopted.');
   }
 
   render() {
-    const { dog } = this.state;
     const { id } = this.props.match.params;
+    const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
+    const { adopted } = dog;
 
     let org;
     if (!this.props.user || this.props.user.org_id !== dog.org_id) {
@@ -113,8 +87,8 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const adoptIcon = <Icon type={this.state.adopted ? 'check-circle' : 'check-circle-o'} onClick={this.toggleAdopted} />;
-    const favoriteIcon = <Icon type={favorites[id] ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />;
+    const adoptIcon = <Icon type={adopted ? 'check-circle' : 'check-circle-o'} onClick={this.toggleAdopted} />;
+    const favoriteIcon = favorites ? <Icon type={favorites[id] ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} /> : null;
     const inquiryIcon = <Icon type="message" onClick={this.props.toggleInquiryModal} />;
     const editIcon = <Icon type="edit" onClick={this.editFields} />;
 
@@ -202,6 +176,8 @@ const mapDispatchToProps = {
   addFavorite,
   removeFavorite,
   toggleInquiryModal,
+  markAdopted,
+  unmarkAdopted,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DogProfile);

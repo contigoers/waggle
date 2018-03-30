@@ -68,7 +68,7 @@ const markAdopted = async (dogId) => {
   const { data } = await axios.patch('/adopted', { dogId });
   return {
     type: UPDATE_ADOPTED_STATUS,
-    data: data.dog,
+    dog: data.dog,
   };
 };
 
@@ -76,7 +76,7 @@ const unmarkAdopted = async (dogId) => {
   const { data } = await axios.patch('/adopted/remove', { dogId });
   return {
     type: UPDATE_ADOPTED_STATUS,
-    data: data.dog,
+    dog: data.dog,
   };
 };
 

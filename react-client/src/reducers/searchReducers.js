@@ -70,7 +70,10 @@ export default handleActions({
       ...state,
       results: {
         ...state.results,
-        [dog.id]: dog,
+        dogs: {
+          ...state.results.dogs,
+          [dog.id]: dog,
+        },
       },
     }
   ),
