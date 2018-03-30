@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import { isEmpty } from 'lodash';
 
 const initialState = {
   breed: [],
@@ -11,7 +12,7 @@ const initialState = {
   medical: [],
   energy: [],
   results: {},
-  favorites: [],
+  favorites: {},
 };
 
 export default handleActions({
@@ -38,5 +39,42 @@ export default handleActions({
     return state;
   },
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
-  GET_FAVORITES: (state, action) => ({ ...state, favorites: action.data }),
+  GET_FAVORITES: (state, action) => {
+    if (!isEmpty(state.results)) {
+      return {
+        ...state,
+        favorites: action.data,
+      };
+    }
+
+    return {
+      ...state,
+      favorites: action.data,
+      results: {
+        dogs: action.data.favoriteDogs,
+        orgs: action.orgs,
+      },
+    };
+  },
+  UPDATE_FAVORITES: (state, { data }) => (
+    {
+      ...state,
+      favorites: {
+        ...state.favorites,
+        favoriteDogs: data,
+      },
+    }
+  ),
+  UPDATE_ADOPTED_STATUS: (state, { dog }) => (
+    {
+      ...state,
+      results: {
+        ...state.results,
+        dogs: {
+          ...state.results.dogs,
+          [dog.id]: dog,
+        },
+      },
+    }
+  ),
 }, initialState);

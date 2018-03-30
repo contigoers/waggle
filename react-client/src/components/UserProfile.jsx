@@ -5,7 +5,7 @@ import { Row, Col, Menu, Icon } from 'antd';
 
 import SearchResult from './DogPreviewCard';
 import OrgCard from './OrgCard';
-import { getOrgDogs, getFavorites } from '../actions/searchActions';
+import { getOrgDogs, getFavorites, dogsSearch } from '../actions/searchActions';
 import { getContacts, getMessages } from '../actions/messagingActions';
 
 class UserProfile extends React.Component {
@@ -17,17 +17,13 @@ class UserProfile extends React.Component {
       menuSelection: 'messages',
     };
 
-    this.updateMenu = this.updateMenu.bind(this);
-  }
-
-  componentDidMount() {
-    console.log(this.props);
-    console.log(this.state.type);
     if (this.state.type === 'org') {
       this.getOrgDogs();
-    } else {
+    } else if (isEmpty(this.props.favorites)) {
       this.getFavorites();
     }
+
+    this.updateMenu = this.updateMenu.bind(this);
   }
 
   getOrgDogs() {
@@ -126,6 +122,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = {
   getOrgDogs,
   getFavorites,
+  dogsSearch,
   getContacts,
   getMessages,
 };
