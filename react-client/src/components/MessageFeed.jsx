@@ -14,7 +14,7 @@ const Message = (props) => {
   return (
     <div style={isMine ? userStyle : contactStyle}>
       <div>
-        <span style={{ float: 'left' }} > { isMine ? user.name : contact.name }: </span>
+        <span style={{ float: 'left' }} > { isMine ? user.name : contact.name } ( {message.timestamp} ): </span>
         { isMine && <a href="/delete" style={{ float: 'right' }} > Delete </a>}
       </div>
       <div> {message.message} </div>

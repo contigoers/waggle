@@ -330,6 +330,7 @@ router.post('/logout', isLoggedIn, async (ctx) => {
   };
 });
 
+// posts a message to the database and returns the complete database object (with timestamp)
 router.post('/messages/post', async (ctx) => {
   const { senderId } = ctx.request.body;
   const { recipientId } = ctx.request.body;
@@ -344,6 +345,7 @@ router.post('/messages/post', async (ctx) => {
   };
 });
 
+// marks a message as deleted in database
 router.patch('/messages/delete', async (ctx) => {
   console.log('deleting message', ctx.request.body);
   const msg = await db.deleteMessage(ctx.request.body.messageId);
@@ -354,9 +356,10 @@ router.patch('/messages/delete', async (ctx) => {
   };
 });
 
-router.post('/messages/fetch', async (ctx) => {
-  const { userId } = ctx.request.body;
-  const { contactId } = ctx.request.body;
+// gets messages between two users
+router.get('/messages/fetch', async (ctx) => {
+  const { userId } = ctx.request.query;
+  const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);
   ctx.status = 201;
   ctx.body = {
@@ -365,15 +368,16 @@ router.post('/messages/fetch', async (ctx) => {
   };
 });
 
-router.get('/messages', async (ctx) => {
-  const contacts = await db.getContacts(ctx.body.id);
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    contacts,
-  };
-});
+// router.get('/messages', async (ctx) => {
+//   const contacts = await db.getContacts(ctx.body.id);
+//   ctx.status = 201;
+//   ctx.body = {
+//     status: 'success',
+//     contacts,
+//   };
+// });
 
+// gets list of adopter contacts and associated dogs for an organization
 router.get('/contacts/org', async (ctx) => {
   const contacts = await db.getOrgContacts(ctx.request.query.id);
   ctx.status = 201;
@@ -383,6 +387,7 @@ router.get('/contacts/org', async (ctx) => {
   };
 });
 
+// gets list of organization contacts and associated dogs for an adopter
 router.get('/contacts/adopter', async (ctx) => {
   console.log('getting contacts');
   const contacts = await db.getAdopterContacts(ctx.request.query.id);

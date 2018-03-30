@@ -1,4 +1,5 @@
 const has = require('lodash/has');
+const forEach = require('lodash/forEach');
 
 const config = {
   client: 'mysql',
@@ -204,7 +205,6 @@ const getMessagesForChat = (userId, contactId) => knex.select()
   .from(knex.raw('messages'))
   .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
 
-/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 const getOrgContacts = async (userId) => {
   const messages = await knex('messages').select('sender_id', 'dogName')
@@ -223,7 +223,11 @@ const getOrgContacts = async (userId) => {
       namesAndDogs[obj.user_id].name = obj.name;
     }
   });
-  return namesAndDogs;
+  const contacts = [];
+  forEach(namesAndDogs, (innerObj, key) => {
+    contacts.push({ id: key, name: innerObj.name, dogs: innerObj.dogs });
+  });
+  return contacts;
 };
 
 const getAdopterContacts = async (userId) => {
@@ -243,8 +247,18 @@ const getAdopterContacts = async (userId) => {
       namesAndDogs[obj.id].name = obj.org_name;
     }
   });
-  return namesAndDogs;
+  const contacts = [];
+  forEach(namesAndDogs, (innerObj, key) => {
+    contacts.push({
+      id: key,
+      name: innerObj.name,
+      dogs: innerObj.dogs,
+    });
+  });
+  return contacts;
 };
+
+/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 module.exports = {
   getAdopterProfile,
