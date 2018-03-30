@@ -73,14 +73,13 @@ class DogCard extends React.Component {
       >
         <Card.Meta title={dog.name} onClick={this.onClick} />
         <div style={{ marginTop: 10 }} >
-          <span> {dog.breed} {dog.mix ? 'mix' : ''} </span>
-          <Divider type="vertical" />
+          <span> {dog.breed} {dog.mix ? 'Mix' : ''} </span>
+          <br />
           <span> {dog.male ? 'Male' : 'Female'} </span>
           <Divider type="vertical" />
           <span> {stage} </span>
         </div>
-        <div style={dog.adopted ? adoptedStyle : notAdoptedStyle}> {dog.adopted ? 'Adopted' : 'Not adopted' } </div>
-
+        <div style={dog.adopted ? adoptedStyle : notAdoptedStyle}> {dog.adopted ? 'Adopted' : 'Looking for a Home' } </div>
       </Card>
     );
   }

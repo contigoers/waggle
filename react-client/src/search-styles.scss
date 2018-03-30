@@ -6,8 +6,20 @@ $primary-dark: #972036;
   margin: 30px;
 }
 
+.title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 30px;
+  color: $primary-dark;
+}
+
 .default-filters {
   margin-bottom: 20px;
+}
+
+.default-filters > div {
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .default-filters, .more-filters {
@@ -20,12 +32,13 @@ $primary-dark: #972036;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 22px;
     }
   }
 }
 
 .select-bar {
-  width: 300px;
+  width: 100%;
   .ant-select-selection__placeholder {
     color: rgba(0, 0, 0, 0.65);
   }
