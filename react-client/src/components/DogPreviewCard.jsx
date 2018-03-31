@@ -21,8 +21,8 @@ class DogCard extends React.Component {
   }
 
   async toggleFavorite() {
-    const { id } = this.props.dog;
-    const dog = this.props.results.dogs[id];
+    const { dog } = this.props;
+    const { id } = dog;
     const { favorites } = this.props;
     const { favoriteParams } = this.props;
 
@@ -63,10 +63,10 @@ class DogCard extends React.Component {
         style={{ width: 300, margin: 30, float: 'left' }}
         cover={<img alt="pupper" onClick={this.onClick} src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
-          (this.props.user && this.props.user.org_id &&
-            [(favorites[id] ?
-              <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
-              <Tooltip title={`Add ${dog.name} to favorites`}><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>)]) ||
+          (this.props.user && this.props.user.org_id === 1 &&
+          [(favorites && favorites[id] ?
+            <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+            <Tooltip title={`Add ${dog.name} to favorites`}><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>)]) ||
           (!this.props.user &&
             [<Tooltip title={`Log in to add ${dog.name} to favorites`}><Icon type="heart-o" /></Tooltip>])
         }
