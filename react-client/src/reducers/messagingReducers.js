@@ -17,7 +17,7 @@ const fetchContacts = (state = { contacts: null }, action) => {
     case GET_CONTACTS:
       return {
         ...state,
-        contacts: action.users,
+        contacts: action.data.contacts,
       };
     default:
       return state;

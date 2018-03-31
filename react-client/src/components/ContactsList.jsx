@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { List, Icon } from 'antd';
 
-import { getContacts } from '../actions/messagingActions';
+import { getMessages } from '../actions/messagingActions';
 
 
 const sampleData = [
@@ -14,20 +14,10 @@ const sampleData = [
 class ContactsList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showMessages: false };
-    this.onClick = this.onClick.bind(this);
-    this.getContacts = this.props.getContacts.bind(this);
+    this.state={something: 'placeholder'}
   }
 
-  componentDidMount() {
-    // call getContacts which should update state.contacts to list of contacts and dogs
-    this.getContacts({ id: this.props.user.id });
-  }
 
-  onClick() {
-    // sets state to show message
-    this.setState({ showMessages: true });
-  }
 
   render() {
     console.log(this.props);
@@ -39,7 +29,7 @@ class ContactsList extends React.Component {
           <List.Item>
             <List.Item.Meta
               avatar={<Icon type="mail" />}
-              title={<span tabIndex={contact.id} role="link" style={{ color: 'blue' }} onClick={this.onClick}>{contact.name}</span>}
+              title={<span tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.onClick()}>{contact.name}</span>}
               description={contact.dogs.join(', ')}
             />
           </List.Item>
@@ -50,13 +40,13 @@ class ContactsList extends React.Component {
 }
 
 
-const mapStateToProps = ({ fetchContacts, storeUser }) => ({
+const mapStateToProps = ({ fetchContacts, fetchMessages }) => ({
   contacts: fetchContacts.contacts,
-  user: storeUser.user,
+  messages: fetchMessages.messages,
 });
 
 const mapDispatchToProps = {
-  getContacts,
+  getMessages,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
