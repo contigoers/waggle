@@ -17,7 +17,7 @@ const fetchContacts = (state = { contacts: null }, action) => {
     case GET_CONTACTS:
       return {
         ...state,
-        contacts: action.data.contacts,
+        contacts: action.someData.data.contacts,
       };
     default:
       return state;
@@ -29,7 +29,7 @@ const fetchMessages = (state = { messages: null }, action) => {
     case GET_MESSAGES:
       return {
         ...state,
-        messages: action.messages,
+        messages: action.data.messages,
       };
     default:
       return state;

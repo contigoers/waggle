@@ -1,89 +1,73 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { List, Icon } from 'antd';
-
-// import MessageFeed from './MessageFeed';
-// import ContactsList from './ContactsList';
+import { Row, Col, List, Icon, Card } from 'antd';
 
 import { getContacts, getMessages } from '../actions/messagingActions';
 
 
-// const userStyle = {
-//   border: '1px blue solid',
-// };
-// const contactStyle = {
-//   border: '1px green solid',
-// };
-
-// const Message = (msg) => {
-//   // const { user } = this.props;
-//   // const { message } = msg;
-//   // const { contact } = msg;
-//   // const isMine = user.id === message.sender_id;
-//   return (
-//     <div> this is a message </div>
-//   )
-//   // return (
-//   //   <div style={isMine ? userStyle : contactStyle}>
-//   //     <div>
-//   //       <span style={{ float: 'left' }} > { isMine ? user.name : contact.name } ( {message.timestamp} ): </span>
-//   //       { isMine && <a href="/delete" style={{ float: 'right' }} > Delete </a>}
-//   //     </div>
-//   //     <div> {message.message} </div>
-//   //   </div>
-//   // );
-// };
-
-const sampleData = [
-  { id: 1, name: 'krisha', dogs: ['fido', 'lucky', 'sammy'] },
-  { id: 2, name: 'shannon', dogs: ['tractor', 'robot', 'kitty'] },
-];
+const userStyle = {
+  marginTop: '15',
+  border: '1px #872320 solid',
+  backgroundColor: '#ffeded',
+};
+const contactStyle = {
+  marginTop: '15',
+  border: '1px #1a4672 solid',
+  backgroundColor: '#edf6ff',
+};
 
 class MessagesTab extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showMessages: false };
+    this.state = { currentContact: null };
     this.getContacts = this.props.getContacts.bind(this);
     this.getMessages = this.props.getMessages.bind(this);
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
     this.renderContactsList = this.renderContactsList.bind(this);
   }
 
-  async componentDidMount() {
-    // sets store contacts to this user's contacts (get request for contacts)
-    //await this.getContacts(this.props.user.id); // store should have page rerender
-    //console.log('abcdefg', this.props)
-
+  async renderMessageFeed(e) {
+    const { name } = e.target.dataset;
+    await this.getMessages(this.props.user.id, e.target.id);
+    this.setState({ currentContact: name });
   }
 
-  renderMessageFeed() {
-    // sets store messages to messages from ids?
-    // sets state to true
-    //this.setState({ showMessages: true });
-    console.log('click')
-  }
-  
   renderContactsList() {
-    // sets state to false
-    this.setState({ showMessages: false });
+    this.setState({ currentContact: null });
   }
 
   render() {
-    console.log('rendering', this.props)
-    // props has user, contacts, messages, getcontacts, getmessages (excellent)
-    if (this.state.showMessages) {
+    console.log('rendering', this.props, this.state);
+    if (this.state.currentContact) {
       if (this.props.messages) {
         return (
           <div>
-            <div role="link" tabIndex={0} onClick={this.renderContactsList}> Return to contacts list </div>
-            <div>
-              {
-                // props.messages.map(message => (
-                // <Message message={message} />
-                //   ))
-                }
-            </div>
-            <div role="link" tabIndex={0} onClick={this.renderContactsList}> Return to contacts list </div>
+            <Row>
+              <div role="link" tabIndex={0} onClick={this.renderContactsList}> Return to contacts list </div>
+            </Row>
+            <Row>
+              <Col span={12} offset={3}>
+                <div>
+                  {
+                    this.props.messages.map(message => (
+                      <Card
+                        key={message.id}
+                        style={message.sender_id === this.props.user.id ? userStyle : contactStyle}
+                        title={message.sender_id === this.props.user.id ?
+                          this.props.user.name : this.state.currentContact}
+                        extra={<span style={{ fontSize: 'smaller' }} role="button"> Delete </span>}
+                      >
+                        <div> {message.message} </div>
+                        <div style={{ fontSize: 'smaller' }} > {message.sent} </div>
+                      </Card>
+                      ))
+                  }
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <div role="link" tabIndex={0} onClick={this.renderContactsList}> Return to contacts list </div>
+            </Row>
           </div>
         );
       }
@@ -98,7 +82,7 @@ class MessagesTab extends React.Component {
             <List.Item>
               <List.Item.Meta
                 avatar={<Icon type="mail" />}
-                title={<span tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}>{contact.name}</span>}
+                title={<div id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}>{contact.name}</div>}
                 description={contact.dogs.join(', ')}
               />
             </List.Item>)

@@ -10,20 +10,24 @@ const toggleInquiryModal = () => (
   }
 );
 
-const getContacts = async (userId) => {
-  const { data } = await axios.get('/contacts/adopter', {params: { id: userId }});
-  console.log('zyxwvu', data);
+const getContacts = async (userId, type) => {
+  let someData;
+  if (type === 'adopter') {
+    someData = await axios.get('/contacts/adopter', { params: { id: userId } });
+  } else {
+    someData = await axios.get('/contacts/org', { params: { id: userId } });
+  }
   return {
     type: GET_CONTACTS,
-    data,
+    someData,
   };
 };
 
 const getMessages = async (userId, contactId) => {
-  const messages = await axios.get('/messages/fetch', { userId, contactId });
+  const { data } = await axios.get('/messages/fetch', { params: { userId, contactId } });
   return {
     type: GET_MESSAGES,
-    data: messages,
+    data,
   };
 };
 

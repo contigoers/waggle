@@ -28,7 +28,7 @@ class UserProfile extends React.Component {
     } else {
       this.getFavorites();
     }
-    this.props.getContacts(this.props.user.id)
+    this.props.getContacts(this.props.user.id, this.state.type);
   }
 
   getOrgDogs() {

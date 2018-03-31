@@ -309,11 +309,18 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
 // for now this does not use FB oauth/JWT
 router.post('/login', passport.authenticate('local-login'), async (ctx) => {
   let adopterId = null;
+  let userName = null;
   if (ctx.state.user.org_id === 1) {
     const adopter = await db.getAdopterId(ctx.state.user.id);
     adopterId = adopter[0].id;
+    userName = adopter[0].name;
+  } else {
+    const org = await db.getOrgName(ctx.state.user.org_id);
+    userName = org[0].org_name;
   }
-  const user = Object.assign(ctx.state.user, { adopterId });
+  console.log('userName', userName);
+  const user = Object.assign(ctx.state.user, { adopterId, name: userName });
+  console.log(user)
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -368,15 +375,6 @@ router.get('/messages/fetch', async (ctx) => {
   };
 });
 
-// router.get('/messages', async (ctx) => {
-//   const contacts = await db.getContacts(ctx.body.id);
-//   ctx.status = 201;
-//   ctx.body = {
-//     status: 'success',
-//     contacts,
-//   };
-// });
-
 // gets list of adopter contacts and associated dogs for an organization
 router.get('/contacts/org', async (ctx) => {
   const contacts = await db.getOrgContacts(ctx.request.query.id);
@@ -389,9 +387,7 @@ router.get('/contacts/org', async (ctx) => {
 
 // gets list of organization contacts and associated dogs for an adopter
 router.get('/contacts/adopter', async (ctx) => {
-  //console.log('getting contacts', ctx.request.query);
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
-  console.log('contacts', contacts);
   ctx.status = 201;
   ctx.body = {
     status: 'success',

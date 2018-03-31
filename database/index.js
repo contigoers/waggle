@@ -51,7 +51,9 @@ const createUser = async (user, username, password) => {
   return knex('users').select().where('id', userId[0].id);
 };
 
-const getAdopterId = userId => knex('adopters').select('id').where('user_id', userId);
+const getAdopterId = userId => knex('adopters').select('id', 'name').where('user_id', userId);
+
+const getOrgName = orgId => knex('orgs').select('org_name').where('id', orgId);
 
 // get user by username (login)
 // add select all from users and adopter id if adopter (version?)
@@ -201,9 +203,13 @@ const deleteMessage = messageId => knex('messages')
   .where('id', messageId)
   .update('deleted', true);
 
-const getMessagesForChat = (userId, contactId) => knex.select()
-  .from(knex.raw('messages'))
-  .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
+const getMessagesForChat = async (userId, contactId) => {
+  const messages = await knex.select()
+    .from(knex.raw('messages'))
+    .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`))
+    .orderBy('id', 'asc');
+  return messages;
+};
 
 
 const getOrgContacts = async (userId) => {
@@ -286,4 +292,5 @@ module.exports = {
   addMessage,
   getOrgContacts,
   getAdopterContacts,
+  getOrgName,
 };

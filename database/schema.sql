@@ -278,8 +278,6 @@ INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('3', '1', 'yabois back', false, 'Tyson');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('2', '1', 'we should have a balcony', false, 'Hank');
 
-
-
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '2', 'hi', true, 'Manik');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '3', 'take me to your leader', false, 'Lexi');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '3', 'how do you write a for loop?', false, 'Cooper');
@@ -293,3 +291,17 @@ INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('3', '4', 'dogs dogs dogs dogs dogs', false, 'Harley');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('3', '4', 'yabois back', false, 'Tyson');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('2', '4', 'we should have a balcony', false, 'Hank');
+
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '2', 'Lorem ipsum dolor sit amet, ad usu esse brute legendos.', true, 'Manik');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '3', 'Duo cu sapientem qualisque elaboraret, sit in case mundi affert, his movet impetus ut.', false, 'Lexi');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '1', 'Vim ex alii etiam persius, cum clita admodum vituperatoribus no.', false, 'Cooper');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '1', 'Pro in etiam audire, et nam veniam audiam discere, et mel evertitur liberavisse', false, 'Marley');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '1', 'Ea mel movet maiestatis', false, 'Rocco');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '1', 'Qui dicat expetendis ut', false, 'Ace');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '2', 'Vix et modo aperiri', false, 'Annie');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('1', '5', 'His esse zril scaevola ne.', true, 'Dexter');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('1', '5', 'Has expetenda intellegebat cu, ex mel nobis posidonium constituam', false, 'Bandit');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('1', '5', 'Vix ut prompta ceteros', false, 'Ella');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('1', '5', 'Pri postea qualisque et, quaeque nostrum evertitur duo at, qui no error audiam scripserit.', false, 'Harley');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('3', '5', 'No euismod definitiones mei, eam detracto reprimique eu. Oratio option sed te, no habeo mundi deserunt sea', false, 'Tyson');
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('2', '5', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Hank');
