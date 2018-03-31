@@ -34,6 +34,7 @@ class UserProfile extends React.Component {
   getFavorites() {
     const { adopterParams } = this.props;
     this.props.getFavorites({ params: adopterParams });
+    console.log('heyyyy');
   }
 
   updateMenu({ key }) {

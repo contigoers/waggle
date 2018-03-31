@@ -84,7 +84,7 @@ CREATE TABLE `dogs` (
   `diet` BOOLEAN DEFAULT FALSE, -- boolean for dietary needs
   `medical` BOOLEAN DEFAULT FALSE, -- boolean for medical needs
   `energy_level` ENUM('low', 'medium', 'high') NULL DEFAULT NULL, -- enum low/medium/high
-  `photo` VARCHAR(150) NOT NULL DEFAULT "http://i65.tinypic.com/5v26ns.jpg", -- string input
+  `photo` LONGBLOB,
   `description` VARCHAR(500) NULL DEFAULT NULL, -- text (string)
   `adopted` BOOLEAN DEFAULT FALSE,
   `org_id` INTEGER NOT NULL, -- foreign key integer
