@@ -418,6 +418,14 @@ router.post('/contacts/org', async (ctx) => {
   };
 });
 
+router.post('/imageUpload', (ctx) => {
+  console.log('heres body', ctx.request.body);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+  };
+});
+
 app
   .use(router.routes())
   .use(router.allowedMethods())

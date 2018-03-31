@@ -2,12 +2,29 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Form, Row, Input, Select, Checkbox, InputNumber, Button } from 'antd';
+import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload, Icon, message } from 'antd';
 import breeds from '../../../database/breeds';
-import Picture from './Picture';
 
 const { Option } = Select;
 const { TextArea } = Input;
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJPGorPNG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
+  if (!isJPGorPNG) {
+    message.error('You can only upload JPG or PNG files!');
+  }
+  const isLt2M = (file.size / 1024 / 1024).toFixed(2) < 0.75;
+  if (!isLt2M) {
+    message.error('Image must smaller than 750 KB!');
+  }
+  return isJPGorPNG && isLt2M;
+}
 
 class DogForm extends React.Component {
   constructor(props) {
@@ -20,6 +37,8 @@ class DogForm extends React.Component {
       hasAnxiety: false,
       hasDiet: false,
       hasMedical: false,
+      loading: false,
+      imageUrl: null,
     };
     this.state = this.defaultState;
     this.onSubmit = this.onSubmit.bind(this);
@@ -52,11 +71,10 @@ class DogForm extends React.Component {
         hasDiet: Boolean(values.hasDiet),
         hasMedical: Boolean(values.hasMedical),
         energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
-        photo: values.photo || null,
+        photo: this.state.imageUrl || null,
         description: values.description || null,
         orgId: this.props.user.org_id,
       };
-      console.log(dog);
       axios.post('/createOrgDog', dog)
         .then((response) => {
           this.props.form.resetFields();
@@ -66,12 +84,33 @@ class DogForm extends React.Component {
         })
         .catch((error) => {
           console.log('error adding dog', error);
+          alert('Error!', error);
         });
       return dog;
     });
   }
 
+  onChangeImage(info) {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+      getBase64(info.file.originFileObj, imageUrl => this.setState({
+        imageUrl,
+        loading: false,
+      }));
+    }
+  }
+
   render() {
+    const uploadButton = (
+      <div>
+        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
+    // const { imageUrl } = this.state;
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
     return (
@@ -244,14 +283,19 @@ class DogForm extends React.Component {
           </Row>
 
           <Row style={rowStyle}>
-            <Form.Item label="Photo">
-              {getFieldDecorator('photo', {
-                })(<Input style={{ width: 500 }} placeholder="Photo URL" />)}
+            <Form.Item style={{ marginTop: 10, fontWeight: 500 }} label="Upload Photo">
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                action="http://localhost:3000/imageUpload"
+                beforeUpload={beforeUpload}
+                onChange={val => this.onChangeImage(val)}
+              >
+                {this.state.imageUrl ? <img src={this.state.imageUrl} alt="" /> : uploadButton}
+              </Upload>
             </Form.Item>
-          </Row>
-          <Row>
-              OR upload a photo below:
-            <Picture />
           </Row>
 
           <Row style={rowStyle}>
