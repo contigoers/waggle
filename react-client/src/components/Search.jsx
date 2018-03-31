@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, BackTop, Divider } from 'antd';
+import { Button, BackTop, Divider, Collapse } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { Redirect } from 'react-router-dom';
 import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
@@ -19,12 +19,10 @@ class Search extends React.Component {
   constructor() {
     super();
     this.state = {
-      moreFilters: false,
       redirect: false,
     };
     this.fetchAndRedirect = this.fetchAndRedirect.bind(this);
     this.submitData = this.submitData.bind(this);
-    this.toggleFilter = this.toggleFilter.bind(this);
   }
 
   componentDidMount() {
@@ -39,12 +37,6 @@ class Search extends React.Component {
   getFavorites() {
     const { adopterParams } = this.props;
     this.props.getFavorites({ params: adopterParams });
-  }
-
-  toggleFilter() {
-    this.setState({
-      moreFilters: !this.state.moreFilters,
-    });
   }
 
   submitData() {
@@ -72,6 +64,7 @@ class Search extends React.Component {
   }
 
   render() {
+    const { Panel } = Collapse;
     return (
       <div className="search-div">
         <div className="title">
@@ -96,45 +89,45 @@ class Search extends React.Component {
             <LifestageSelect />
           </div>
         </div>
-        {this.state.moreFilters ?
-          <div className="more-filters">
-            <div className="mix">
-              <p>Mix Breed</p>
-              <MixSelect />
+        <Collapse>
+          <Panel header="More filters">
+            <div className="more-filters">
+              <div className="mix">
+                <p>Mix Breed</p>
+                <MixSelect />
+              </div>
+              <div className="neutered">
+                <p>Neutered</p>
+                <NeuteredSelect />
+              </div>
+              <div className="diet">
+                <p>Diet Needs</p>
+                <DietSelect />
+              </div>
+              <div className="medical">
+                <p>Medical Needs</p>
+                <MedicalSelect />
+              </div>
+              <div className="energy">
+                <p>Energy Level</p>
+                <EnergySelect />
+              </div>
             </div>
-            <div className="neutered">
-              <p>Neutered</p>
-              <NeuteredSelect />
-            </div>
-            <div className="diet">
-              <p>Diet Needs</p>
-              <DietSelect />
-            </div>
-            <div className="medical">
-              <p>Medical Needs</p>
-              <MedicalSelect />
-            </div>
-            <div className="energy">
-              <p>Energy Level</p>
-              <EnergySelect />
-            </div>
-          </div>
-          :
-          null
-        }
-        <Button className="submit-search" onClick={this.toggleFilter}>
-          {this.state.moreFilters ? 'Less' : 'More'} Filters
+          </Panel>
+        </Collapse>
+        <Button className="lucky-button search-button" onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
+          I&apos;m Feeling Lucky
         </Button>
-        <Button onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
-          I&apos;m feeling lucky
-        </Button>
-        <Button className="submit-search" onClick={this.submitData}>
+        <Button className="submit-search search-button" onClick={this.submitData}>
           Submit
         </Button>
+        <Divider />
         <div className="search-results">
+          <div className="results-number">
+            {keys(this.props.results).length > 0 ? `${keys(this.props.results.dogs).length} Results Found` : ''}
+          </div>
           {keys(this.props.results).length > 0 && <SearchResults />}
         </div>
-        <Divider />
         <BackTop />
       </div>
     );

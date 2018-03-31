@@ -17,7 +17,7 @@ $primary-dark: #972036;
   margin-bottom: 20px;
 }
 
-.default-filters > div {
+.default-filters > div, .more-filters > div {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -33,6 +33,7 @@ $primary-dark: #972036;
       justify-content: center;
       align-items: center;
       font-size: 22px;
+      margin-bottom: 10px;
     }
   }
 }
@@ -50,6 +51,26 @@ $primary-dark: #972036;
   }
 }
 
+.search-button {
+  &:hover {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+  }
+  margin-top: 30px;
+}
+
 .submit-search {
-  margin-top: 20px;
+  margin-left: 20px;
+  
+}
+
+.results-number {
+  margin-left: 20px;
+}
+
+.search-results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
 }
