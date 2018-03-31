@@ -41,6 +41,11 @@ class DogCard extends React.Component {
 
   render() {
     const { dog } = this.props;
+    if (dog.photo !== null) {
+      dog.photo = Buffer.from(dog.photo);
+    } else {
+      dog.photo = 'https://i.redd.it/uwptaiy07xn01.jpg';
+    }
     const { favorites } = this.props;
     const { id } = this.props.dog;
 
