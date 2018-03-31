@@ -110,7 +110,7 @@ class DogForm extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-    // const { imageUrl } = this.state;
+
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
     return (
@@ -295,6 +295,7 @@ class DogForm extends React.Component {
               >
                 {this.state.imageUrl ? <img src={this.state.imageUrl} alt="" /> : uploadButton}
               </Upload>
+
             </Form.Item>
           </Row>
 
