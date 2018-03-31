@@ -52,7 +52,7 @@ class DogProfile extends React.Component {
       await this.props.markAdopted(id);
     }
 
-    message.info(adopted ? `${dog.name} adopted!` : `${dog.name} not adopted.`);
+    message.info(adopted ? `${dog.name} not adopted.` : `${dog.name} adopted!`);
   }
 
   render() {
@@ -60,6 +60,7 @@ class DogProfile extends React.Component {
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
     const { adopted } = dog;
+    dog.photo = Buffer.from(dog.photo);
 
     let org;
     if (!this.props.user || this.props.user.org_id !== dog.org_id) {
