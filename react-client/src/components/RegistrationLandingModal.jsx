@@ -43,6 +43,7 @@ class LandingModal extends Component {
     return (
       <Modal
         id="adopter"
+        width="40%"
         title={`Register${(adopter && ' as an Adopter') || (org && ' as an Organization') || ''}`}
         visible={landing}
         onCancel={this.props.toggleRegistrationModal}
@@ -55,7 +56,7 @@ class LandingModal extends Component {
       >
 
         {!org && !adopter && (
-          <div>
+          <div className="type-button">
             <div>I would like to register as:</div>
             <Button onClick={() => this.props.updateModalView('adopter')}>an adopter</Button>
             <Button onClick={() => this.props.updateModalView('org')}>an organization</Button>
