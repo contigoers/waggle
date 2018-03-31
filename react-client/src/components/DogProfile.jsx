@@ -21,6 +21,7 @@ class DogProfile extends React.Component {
 
   async toggleFavorite() {
     const { id } = this.props.match.params;
+    const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
     const { favoriteParams } = this.props;
 
@@ -35,11 +36,14 @@ class DogProfile extends React.Component {
       await this.props.addFavorite(newFavoriteParams);
     }
 
-    message.info(!favorites[id] ? 'Added to favorites!' : 'Removed from favorites.');
+    message.info(!favorites[id] ?
+      `${dog.name} added to favorites` :
+      `${dog.name} removed from favorites`);
   }
 
   async toggleAdopted() {
     const { id } = this.props.match.params;
+    const dog = this.props.results.dogs[id];
     const { adopted } = this.props.results.dogs[id];
 
     if (adopted) {
@@ -48,7 +52,7 @@ class DogProfile extends React.Component {
       await this.props.markAdopted(id);
     }
 
-    message.info(adopted ? 'Updated to adopted!' : 'Marked as not adopted.');
+    message.info(adopted ? `${dog.name} adopted!` : `${dog.name} not adopted.`);
   }
 
   render() {
@@ -90,15 +94,15 @@ class DogProfile extends React.Component {
     }
 
     const adoptIcon = adopted ?
-      <Tooltip title="Unmark adopted"><Icon type="check-circle" onClick={this.toggleAdopted} /></Tooltip> :
-      <Tooltip title="Mark adopted"><Icon type="check-circle-o" onClick={this.toggleAdopted} /></Tooltip>;
+      <Tooltip title={`Mark ${dog.name} not adopted`}><Icon type="check-circle" onClick={this.toggleAdopted} /></Tooltip> :
+      <Tooltip title={`Mark ${dog.name} adopted`}><Icon type="check-circle-o" onClick={this.toggleAdopted} /></Tooltip>;
     const favoriteIcon = !favorites ? // eslint-disable-line
       null :
       favorites[id] ?
-        <Tooltip title="Unfavorite"><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
-        <Tooltip title="Favorite"><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>;
+        <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+        <Tooltip title={`Add ${dog.name} to favorites`}><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>;
     const inquiryIcon =
-      <Tooltip title="Send an inquiry"><Icon type="message" onClick={this.props.toggleInquiryModal} /></Tooltip>;
+      <Tooltip title={`Ask about ${dog.name}`}><Icon type="message" onClick={this.props.toggleInquiryModal} /></Tooltip>;
     const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.props.toggleEditModal} /></Tooltip>;
 
     let cardActions = null;
