@@ -8,6 +8,8 @@ import InquiryModal from './InquiryModal';
 
 import { addFavorite, removeFavorite, markAdopted, unmarkAdopted } from '../actions/searchActions';
 import { toggleInquiryModal } from '../actions/messagingActions';
+import { toggleEditModal } from '../actions/editActions';
+import EditModal from './EditModal';
 
 class DogProfile extends React.Component {
   constructor(props) {
@@ -97,7 +99,7 @@ class DogProfile extends React.Component {
         <Tooltip title="Favorite"><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>;
     const inquiryIcon =
       <Tooltip title="Send an inquiry"><Icon type="message" onClick={this.props.toggleInquiryModal} /></Tooltip>;
-    const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.editFields} /></Tooltip>;
+    const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.props.toggleEditModal} /></Tooltip>;
 
     let cardActions = null;
 
@@ -162,7 +164,8 @@ class DogProfile extends React.Component {
             />
           </Row>
         </Col>
-        <InquiryModal id={this.props.match.params.id} />
+        <InquiryModal id={id} />
+        <EditModal id={id} />
       </Row>
     );
   }
@@ -185,6 +188,7 @@ const mapDispatchToProps = {
   toggleInquiryModal,
   markAdopted,
   unmarkAdopted,
+  toggleEditModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DogProfile);

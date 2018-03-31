@@ -65,7 +65,7 @@ export default handleActions({
       },
     }
   ),
-  UPDATE_ADOPTED_STATUS: (state, { dog }) => (
+  UPDATE_DOG_INFO: (state, { dog }) => (
     {
       ...state,
       results: {
