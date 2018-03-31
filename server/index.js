@@ -419,11 +419,18 @@ router.post('/contacts/org', async (ctx) => {
 });
 
 router.post('/imageUpload', (ctx) => {
-  console.log('heres body', ctx.request.body);
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-  };
+  if (ctx.request.url === '/imageUpload') {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: 'Sorry, an error has occurred.',
+    };
+  }
 });
 
 app
