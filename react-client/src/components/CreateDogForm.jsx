@@ -289,7 +289,7 @@ class DogForm extends React.Component {
                 listType="picture-card"
                 className="avatar-uploader"
                 showUploadList={false}
-                action="http://localhost:3000/imageUpload"
+                action="/imageUpload"
                 beforeUpload={beforeUpload}
                 onChange={val => this.onChangeImage(val)}
               >
