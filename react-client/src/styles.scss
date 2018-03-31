@@ -109,7 +109,7 @@ $z-index: (
 .nav-bar {
   height: 85px;
   display: grid;
-  grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10%;
+  grid-template-columns: repeat(10, 10%);;
   background: $primary;
   color: white;
   border-bottom: 4px solid $primary-dark;
@@ -146,6 +146,14 @@ $z-index: (
     background-color: $primary-dark;
     border: 1px solid white;
   }
+}
+
+.login {
+  grid-column: 9 / 10;
+}
+
+.signup, .logout {
+  grid-column: 10 / 11;
 }
 
 .body {
@@ -216,9 +224,10 @@ $z-index: (
   min-height: 500px;
   font-size: 80px;
 }
-
-img {
-  width: 454px;
+.image {
+  img {
+    width: 454px;
+  }
 }
 
 .footer {
@@ -228,4 +237,20 @@ img {
   justify-content: center;
   align-items: center;
   height: 85px;
+}
+
+.type-button {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+  div {
+    grid-column: 1 / 3;
+    text-align: center;
+    font-size: 22px;
+  }
+  button {
+    height: 70px;
+    font-size: 18px;
+  }
 }
