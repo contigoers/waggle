@@ -4,7 +4,7 @@ const UPDATE_SEARCH_QUERY = 'UPDATE_SEARCH_QUERY';
 const SEARCH_DOGS = 'SEARCH_DOGS';
 const GET_FAVORITES = 'GET_FAVORITES';
 const UPDATE_FAVORITES = 'UPDATE_FAVORITES';
-const UPDATE_ADOPTED_STATUS = 'UPDATE_ADOPTED_STATUS';
+const UPDATE_DOG_INFO = 'UPDATE_DOG_INFO';
 
 const updateSearchQuery = (values, filterType) =>
   (
@@ -67,7 +67,7 @@ const removeFavorite = async (favoritesObject) => {
 const markAdopted = async (dogId) => {
   const { data } = await axios.patch('/adopted', { dogId });
   return {
-    type: UPDATE_ADOPTED_STATUS,
+    type: UPDATE_DOG_INFO,
     dog: data.dog,
   };
 };
@@ -75,7 +75,7 @@ const markAdopted = async (dogId) => {
 const unmarkAdopted = async (dogId) => {
   const { data } = await axios.patch('/adopted/remove', { dogId });
   return {
-    type: UPDATE_ADOPTED_STATUS,
+    type: UPDATE_DOG_INFO,
     dog: data.dog,
   };
 };
@@ -92,7 +92,7 @@ export {
   removeFavorite,
   getOrgDogs,
   getRandomDog,
-  UPDATE_ADOPTED_STATUS,
+  UPDATE_DOG_INFO,
   markAdopted,
   unmarkAdopted,
 };

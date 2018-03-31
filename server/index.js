@@ -99,6 +99,24 @@ router.post('/createOrgDog', async (ctx) => {
   }
 });
 
+router.patch('/updateDog', async (ctx) => {
+  try {
+    await db.updateDogInfo(ctx.request.body);
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+  const [dog] = await db.getDogById(ctx.request.body.id);
+
+  ctx.body = {
+    status: 200,
+    dog,
+  };
+});
+
 // add new org dog to favorites - for adopters
 router.post('/favoriteDog', async (ctx) => {
   try {

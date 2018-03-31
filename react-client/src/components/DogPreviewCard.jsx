@@ -62,7 +62,7 @@ class DogCard extends React.Component {
     return (
       <Card
         hoverable
-        style={{ width: 300, margin: 30, float: 'left' }}
+        style={{ width: 300, margin: 30 }}
         cover={<img alt="pupper" onClick={this.onClick} src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
           this.props.user && this.props.user.org_id === 1 ?
@@ -73,14 +73,13 @@ class DogCard extends React.Component {
       >
         <Card.Meta title={dog.name} onClick={this.onClick} />
         <div style={{ marginTop: 10 }} >
-          <span> {dog.breed} {dog.mix ? 'mix' : ''} </span>
-          <Divider type="vertical" />
+          <span> {dog.breed} {dog.mix ? 'Mix' : ''} </span>
+          <br />
           <span> {dog.male ? 'Male' : 'Female'} </span>
           <Divider type="vertical" />
           <span> {stage} </span>
         </div>
-        <div style={dog.adopted ? adoptedStyle : notAdoptedStyle}> {dog.adopted ? 'Adopted' : 'Not adopted' } </div>
-
+        <div style={dog.adopted ? adoptedStyle : notAdoptedStyle}> {dog.adopted ? 'Adopted' : 'Looking for a Home' } </div>
       </Card>
     );
   }
