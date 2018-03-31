@@ -66,9 +66,6 @@ class EditForm extends React.Component {
           org_id: dogInfo.org_id,
           org_name: undefined,
         };
-        console.log(dogInfo);
-        console.log(values);
-        console.log(dog);
         this.props.editDogInfo(dog);
         this.props.toggleEditModal();
       }
