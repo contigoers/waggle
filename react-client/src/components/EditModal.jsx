@@ -51,7 +51,7 @@ class EditForm extends React.Component {
           name: values.name,
           breed: values.breed === 'null' ? null : values.breed,
           mix: +Boolean(this.state.isMix),
-          male: +(values.isMale === 'Good boy'),
+          male: +(values.isMale === 'true' || values.isMale === 'Good boy'),
           aggressive: +Boolean(this.state.isAggressive),
           anxious: +Boolean(this.state.hasAnxiety),
           lifestage: values.lifestage === 'null' ? null : values.lifestage,
@@ -66,7 +66,11 @@ class EditForm extends React.Component {
           org_id: dogInfo.org_id,
           org_name: undefined,
         };
+        console.log(dogInfo);
+        console.log(values);
+        console.log(dog);
         this.props.editDogInfo(dog);
+        this.props.toggleEditModal();
       }
     });
   }

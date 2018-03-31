@@ -12,7 +12,7 @@ const toggleEditModal = () => (
 const editDogInfo = async (values) => {
   const { data } = await axios.patch('/updateDog', values);
   return {
-    // type: UPDATE_DOG_INFO,
+    type: UPDATE_DOG_INFO,
     dog: data.dog,
   };
 };
