@@ -165,7 +165,7 @@ const searchOrgDogs = (dogFilters) => {
   query = query.split(',').join(' ').split(' ');
   query.splice(query.length - 2, 2);
   query = query.join(' ');
-  return knex('dogs').where(knex.raw(query));
+  return knex('dogs').where(knex.raw(query)).andWhere('adopted', false);
 };
 
 const getOrgsAfterDogs = (orgs) => {
@@ -211,6 +211,9 @@ const getMessagesForChat = async (userId, contactId) => {
   return messages;
 };
 
+const updateDogInfo = values => knex('dogs')
+  .where('id', values.id)
+  .update(values);
 
 const getOrgContacts = async (userId) => {
   const messages = await knex('messages').select('sender_id', 'dogName')
@@ -293,4 +296,6 @@ module.exports = {
   getOrgContacts,
   getAdopterContacts,
   getOrgName,
+  // getAdopterContacts,
+  updateDogInfo,
 };

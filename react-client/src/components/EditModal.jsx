@@ -1,9 +1,21 @@
-/* eslint react/jsx-closing-tag-location: 1 */
+/* eslint react/jsx-closing-tag-location: 0 */
 import React from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload, Icon, message } from 'antd';
+import {
+  Form,
+  Row,
+  Input,
+  Select,
+  Checkbox,
+  InputNumber,
+  Button,
+  Modal,
+  Upload,
+  Icon,
+  message,
+} from 'antd';
 import breeds from '../../../database/breeds';
+import { toggleEditModal, editDogInfo } from '../actions/editActions';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -26,67 +38,29 @@ function beforeUpload(file) {
   return isJPGorPNG && isLt2M;
 }
 
-class DogForm extends React.Component {
+class EditForm extends React.Component {
   constructor(props) {
     super(props);
+    const dog = this.props.dogs[this.props.id];
 
     this.defaultState = {
       // mix, aggression, anxiety, diet, medical
-      isMix: false,
-      isAggressive: false,
-      hasAnxiety: false,
-      hasDiet: false,
-      hasMedical: false,
+      isMix: !!dog.mix,
+      isAggressive: !!dog.aggressive,
+      hasAnxiety: !!dog.anxious,
+      hasDiet: !!dog.diet,
+      hasMedical: !!dog.medical,
       loading: false,
-      imageUrl: null,
+      imageUrl: dog.photo,
     };
     this.state = this.defaultState;
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.onCheckChange = this.onCheckChange.bind(this);
   }
 
   onCheckChange({ target: { id } }) {
     this.setState({
       [id]: !this.state[id],
-    });
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll({}, (errors, values) => {
-      if (errors) {
-        return errors;
-      }
-      const dog = {
-        name: values.name,
-        breed: values.breed === 'null' ? null : values.breed,
-        isMix: Boolean(values.isMix),
-        isMale: values.isMale === 'null' ? null : Boolean(values.isMale),
-        isAggressive: Boolean(values.isAggressive),
-        isAnxious: Boolean(values.hasAnxiety),
-        lifestage: values.lifestage === 'null' ? null : values.lifestage,
-        age: values.age || null,
-        size: values.size === 'null' ? null : values.size,
-        isFixed: values.isFixed === 'null' ? null : Boolean(values.isFixed),
-        hasDiet: Boolean(values.hasDiet),
-        hasMedical: Boolean(values.hasMedical),
-        energyLevel: values.energyLevel === 'null' ? null : values.energyLevel,
-        photo: this.state.imageUrl || null,
-        description: values.description || null,
-        orgId: this.props.user.org_id,
-      };
-      axios.post('/createOrgDog', dog)
-        .then((response) => {
-          this.props.form.resetFields();
-          this.setState(this.defaultState);
-          alert('Successful addition of dog!');
-          return response;
-        })
-        .catch((error) => {
-          console.log('error adding dog', error);
-          alert('Error!', error);
-        });
-      return dog;
     });
   }
 
@@ -103,7 +77,43 @@ class DogForm extends React.Component {
     }
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    const dogInfo = this.props.dogs[this.props.id];
+    this.props.form.validateFieldsAndScroll((errors, values) => {
+      if (!errors) {
+        const dog = {
+          ...dogInfo,
+          name: values.name,
+          breed: values.breed === 'null' ? null : values.breed,
+          mix: +Boolean(this.state.isMix),
+          male: +(values.isMale === 'true' || values.isMale === 'Good boy'),
+          aggressive: +Boolean(this.state.isAggressive),
+          anxious: +Boolean(this.state.hasAnxiety),
+          lifestage: values.lifestage === 'null' ? null : values.lifestage,
+          age: values.age || null,
+          size: values.size === 'null' ? null : values.size,
+          fixed: values.isFixed === 'null' ? null : +Boolean(values.isFixed),
+          diet: +Boolean(this.state.hasDiet),
+          medical: +Boolean(this.state.hasMedical),
+          energy_level: values.energyLevel === 'null' ? null : values.energyLevel,
+          photo: this.state.imageUrl || null,
+          description: values.description || null,
+          org_id: dogInfo.org_id,
+          org_name: undefined,
+        };
+        this.props.editDogInfo(dog);
+        this.props.toggleEditModal();
+      }
+    });
+  }
+
   render() {
+    const rowStyle = { marginBottom: 10 };
+    const { getFieldDecorator } = this.props.form;
+    const dog = this.props.dogs[this.props.id];
+
+    dog.photo = Buffer.from(dog.photo);
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
@@ -111,11 +121,20 @@ class DogForm extends React.Component {
       </div>
     );
 
-    const rowStyle = { marginBottom: 10 };
-    const { getFieldDecorator } = this.props.form;
     return (
-      <div style={{ margin: 50 }}>
-        <Form layout="inline" onSubmit={this.onSubmit}>
+      <Modal
+        id="login"
+        title="Please Log In"
+        visible={this.props.visible}
+        onCancel={this.props.toggleEditModal}
+        footer={[
+          <Button key="back" onClick={this.props.toggleEditModal}>Cancel</Button>,
+          <Button id="login" key="login" type="primary" onClick={this.handleSubmit}>
+            Save Changes
+          </Button>,
+        ]}
+      >
+        <Form layout="inline" onSubmit={this.handleSubmit}>
 
           <Row style={rowStyle}>
 
@@ -127,6 +146,7 @@ class DogForm extends React.Component {
                     message: 'Please provide name',
                   },
                 ],
+                initialValue: dog.name,
               })(<Input onBlur={this.handleBlur} style={{ width: 300 }} />)}
 
             </Form.Item>
@@ -136,11 +156,13 @@ class DogForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Breed">
               {getFieldDecorator('breed', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose a breed',
                   },
                 ],
+                initialValue: dog.breed,
               })(<Select
                 showSearch
                 style={{ width: 300 }}
@@ -160,6 +182,7 @@ class DogForm extends React.Component {
             <Form.Item label="Mixed breed?">
               {getFieldDecorator('isMix', {
                 valuePropName: 'mixChecked',
+                initialValue: this.state.mixChecked,
               })(<Checkbox checked={this.state.isMix} onChange={this.onCheckChange} />)}
 
             </Form.Item>
@@ -168,11 +191,13 @@ class DogForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Gender">
               {getFieldDecorator('isMale', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.male ? 'Good boy' : 'Good girl',
               })(<Select style={{ width: 200 }} onChange={this.onChange} onBlur={this.onBlur} placeholder="Select">
                 <Option value="true"> Good boy </Option>
                 <Option value="false"> Good girl </Option>
@@ -183,11 +208,13 @@ class DogForm extends React.Component {
 
             <Form.Item label="Fixed?">
               {getFieldDecorator('isFixed', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.fixed,
               })(<Select style={{ width: 150 }} placeholder="Select" >
                 <Option value={1}> Yes </Option>
                 <Option value={0}> No </Option>
@@ -199,11 +226,13 @@ class DogForm extends React.Component {
           <Row style={rowStyle}>
             <Form.Item label="Life stage">
               {getFieldDecorator('lifestage', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.lifestage,
               })(<Select style={{ width: 175 }} placeholder="Select">
                 <Option value="puppy"> Puppy </Option>
                 <Option value="adolescent"> Adolescent </Option>
@@ -215,18 +244,21 @@ class DogForm extends React.Component {
 
             <Form.Item label="Age (if known)">
               {getFieldDecorator('age', {
-                })(<InputNumber min={0} max={99} />)}
+                initialValue: dog.age,
+              })(<InputNumber min={0} max={99} />)}
             </Form.Item>
           </Row>
 
           <Row style={rowStyle}>
             <Form.Item label="Size">
               {getFieldDecorator('size', {
-                  rules: [{
+                rules: [
+                  {
                     required: true,
                     message: 'Please choose an option',
                   },
                 ],
+                initialValue: dog.size,
               })(<Select style={{ width: 200 }} placeholder="Select">
                 <Option value="tiny"> Tiny </Option>
                 <Option value="small"> Small </Option>
@@ -245,6 +277,7 @@ class DogForm extends React.Component {
                   required: true,
                   message: 'Please choose an option',
                 }],
+                initialValue: dog.energy_level,
               })(<Select style={{ width: 300 }} placeholder="Select">
                 <Option value="low"> Low </Option>
                 <Option value="medium"> Medium </Option>
@@ -258,12 +291,14 @@ class DogForm extends React.Component {
             <Form.Item label="Aggression">
               {getFieldDecorator('isAggressive', {
                 valuePropName: 'aggressiveChecked',
+                initialValue: this.state.aggressiveChecked,
               })(<Checkbox checked={this.state.isAggressive} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Anxiety">
               {getFieldDecorator('hasAnxiety', {
                 valuePropName: 'medicalChecked',
+                initialValue: this.state.medicalChecked,
               })(<Checkbox checked={this.state.hasAnxiety} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
@@ -272,22 +307,24 @@ class DogForm extends React.Component {
             <Form.Item label="Dietary">
               {getFieldDecorator('hasDiet', {
                   valuePropName: 'dietChecked',
+                initialValue: this.state.dietChecked,
                 })(<Checkbox checked={this.state.hasDiet} onChange={this.onCheckChange} />)}
             </Form.Item>
 
             <Form.Item label="Medical">
               {getFieldDecorator('hasMedical', {
                 valuePropName: 'medicalChecked',
+                initialValue: this.state.medicalChecked,
               })(<Checkbox checked={this.state.hasMedical} onChange={this.onCheckChange} />)}
             </Form.Item>
           </Row>
 
           <Row style={rowStyle}>
-            <Form.Item style={{ marginTop: 10, fontWeight: 500 }} label="Upload Photo">
+            <Form.Item label="Photo">
               <Upload
                 name="avatar"
                 listType="picture-card"
-                className="avatar-uploader"
+                className="avatar-edit"
                 showUploadList={false}
                 action="/imageUpload"
                 beforeUpload={beforeUpload}
@@ -295,38 +332,29 @@ class DogForm extends React.Component {
               >
                 {this.state.imageUrl ? <img src={this.state.imageUrl} alt="" /> : uploadButton}
               </Upload>
-
             </Form.Item>
           </Row>
 
           <Row style={rowStyle}>
             <Form.Item style={{ marginTop: 10 }} label="Description">
-              {getFieldDecorator('description', {})(<TextArea rows={4} style={{ width: 600 }} />)}
+              {getFieldDecorator('description', {
+                initialValue: dog.description,
+              })(<TextArea rows={4} />)}
             </Form.Item>
           </Row>
-          <Row>
-            <Button type="primary" htmlType="submit" style={{ marginTop: 20 }}> Submit </Button>
-          </Row>
         </Form>
-      </div>
+      </Modal>
     );
   }
 }
 
-const CreateDogForm = Form.create()(DogForm);
+const EditModal = Form.create()(EditForm);
 
-const mapStateToProps = ({ storeUser }) => (
+const mapStateToProps = ({ search, editModal }) => (
   {
-    user: storeUser.user,
+    dogs: search.results.dogs,
+    visible: editModal.visible,
   }
 );
 
-export default connect(mapStateToProps, null)(CreateDogForm);
-
-// TODO: format fields with columns (ughhh)
-// TODO: unfuck falsy validation/checkbox stuff in object
-// TODO: validate on blur
-// TODO: photo upload
-// TODO: custom validation styling
-// TODO: get id of current organization and set to orgId in dog obj
-// TODO: unfuck clear fields and uncheck boxes after successful submit
+export default connect(mapStateToProps, { toggleEditModal, editDogInfo })(EditModal);

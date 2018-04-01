@@ -1,98 +1,66 @@
 import React from 'react';
-import axios from 'axios';
-import { Card, Divider, Row, Col, Icon, message, Button } from 'antd';
+import { Card, Divider, Row, Col, Icon, message, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { startCase } from 'lodash';
 
 import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
 
-import { addFavorite, removeFavorite } from '../actions/searchActions';
+import { addFavorite, removeFavorite, markAdopted, unmarkAdopted } from '../actions/searchActions';
 import { toggleInquiryModal } from '../actions/messagingActions';
+import { toggleEditModal } from '../actions/editActions';
+import EditModal from './EditModal';
 
 class DogProfile extends React.Component {
   constructor(props) {
     super(props);
 
-    const { id } = this.props.match.params;
-
-    this.state = {
-      id,
-      favorite: false,
-      dog: this.props.results.dogs[id],
-      adopted: this.props.results.dogs[id].adopted,
-    };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
   }
 
-  componentWillMount() {
-    const { user } = this.props;
-    if (user !== null) {
-      if (user.org_id === 1) {
-        const { favorites } = this.props;
-        const { id } = this.props.match.params;
-        if (favorites.length) {
-          this.setState({
-            favorite: favorites.some(fav => fav.id === +id),
-          });
-        }
-      }
-    }
-  }
-
-  toggleFavorite() {
+  async toggleFavorite() {
+    const { id } = this.props.match.params;
+    const dog = this.props.results.dogs[id];
+    const { favorites } = this.props;
     const { favoriteParams } = this.props;
+
     const newFavoriteParams = {
       ...favoriteParams,
-      dogId: this.state.id,
+      dogId: id,
     };
 
-    if (this.state.favorite) {
-      this.props.removeFavorite(newFavoriteParams);
+    if (favorites[id]) {
+      await this.props.removeFavorite(newFavoriteParams);
     } else {
-      this.props.addFavorite(newFavoriteParams);
+      await this.props.addFavorite(newFavoriteParams);
     }
-    this.setState({ favorite: !this.state.favorite }, () => {
-      message.info(this.state.favorite ? 'Added to favorites!' : 'Removed from favorites.');
-    });
+
+    message.info(!favorites[id] ?
+      `${dog.name} added to favorites` :
+      `${dog.name} removed from favorites`);
   }
 
-  toggleAdopted() {
-    if (this.state.adopted) {
-      this.unmarkAdopted();
+  async toggleAdopted() {
+    const { id } = this.props.match.params;
+    const dog = this.props.results.dogs[id];
+    const { adopted } = this.props.results.dogs[id];
+
+    if (adopted) {
+      await this.props.unmarkAdopted(id);
     } else {
-      this.markAdopted();
+      await this.props.markAdopted(id);
     }
-    this.setState({ adopted: !this.state.adopted }, () => {
-      message.info(this.state.adopted ? 'Updated to adopted!' : 'Marked as not adopted.');
-    });
-  }
 
-  markAdopted() {
-    console.log('adopted!', this.state.id);
-    axios.post('/adopted', { dogId: this.state.id })
-      .then((response) => {
-        console.log('yay', response);
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
-  }
-
-  unmarkAdopted() {
-    console.log('not adopted!', this.state.id);
-    axios.post('/adopted/remove', { dogId: this.state.id })
-      .then((response) => {
-        console.log('yay', response);
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
+    message.info(adopted ? `${dog.name} not adopted.` : `${dog.name} adopted!`);
   }
 
   render() {
-    const { dog } = this.state;
+    const { id } = this.props.match.params;
+    const dog = this.props.results.dogs[id];
+    const { favorites } = this.props;
+    const { adopted } = dog;
+    dog.photo = Buffer.from(dog.photo);
 
     let org;
     if (!this.props.user || this.props.user.org_id !== dog.org_id) {
@@ -126,15 +94,22 @@ class DogProfile extends React.Component {
       specialNeeds = 'none';
     }
 
-    const adoptButton = <Button type="primary" onClick={this.toggleAdopted} > {this.state.adopted ? 'Mark as not adopted' : 'Mark as adopted'} </Button>;
-    const favoriteIcon = <Icon type={this.state.favorite ? 'heart' : 'heart-o'} onClick={this.toggleFavorite} />;
-    const inquiryIcon = <Icon type="message" onClick={this.props.toggleInquiryModal} />;
+    const adoptIcon = adopted ?
+      <Tooltip title={`Mark ${dog.name} not adopted`}><Icon type="check-circle" onClick={this.toggleAdopted} /></Tooltip> :
+      <Tooltip title={`Mark ${dog.name} adopted`}><Icon type="check-circle-o" onClick={this.toggleAdopted} /></Tooltip>;
+    const favoriteIcon = !favorites ? // eslint-disable-line
+      null :
+      favorites[id] ?
+        <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+        <Tooltip title={`Add ${dog.name} to favorites`}><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>;
+    const inquiryIcon =
+      <Tooltip title={`Ask about ${dog.name}`}><Icon type="message" onClick={this.props.toggleInquiryModal} /></Tooltip>;
+    const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.props.toggleEditModal} /></Tooltip>;
 
     let cardActions = null;
-    let cardButton = null;
 
     if (this.props.user && dog.org_id === this.props.user.org_id) {
-      cardButton = [adoptButton];
+      cardActions = [adoptIcon, editIcon];
     } else if (this.props.user && this.props.user.org_id === 1) {
       cardActions = [inquiryIcon, favoriteIcon];
     } else if (!this.props.user) {
@@ -191,12 +166,11 @@ class DogProfile extends React.Component {
                 src={dog.photo}
               />}
               actions={cardActions}
-            >
-              {cardButton}
-            </Card>
+            />
           </Row>
         </Col>
-        <InquiryModal id={this.props.match.params.id} />
+        <InquiryModal id={id} />
+        <EditModal id={id} />
       </Row>
     );
   }
@@ -217,6 +191,9 @@ const mapDispatchToProps = {
   addFavorite,
   removeFavorite,
   toggleInquiryModal,
+  markAdopted,
+  unmarkAdopted,
+  toggleEditModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DogProfile);

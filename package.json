@@ -9,8 +9,7 @@
   "scripts": {
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon -r dotenv/config server/index.js",
-    "start": "node server/index.js",
-    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress"
+    "webpack-build": "webpack -p --config ./webpack.config.js --progress"
   },
   "author": "Jean-Paul Angelle, Andrew Dibble, Krisha Mehta, Shannon Pearson",
   "license": "ISC",
@@ -30,7 +29,6 @@
     "file-loader": "^1.1.11",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
-    "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^2.2.1"
   },
   "dependencies": {
@@ -53,10 +51,10 @@
     "mysql": "^2.13.0",
     "node-sass": "^4.7.2",
     "passport-local": "^1.0.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
     "react-redux": "^5.0.7",
-    "react-router-dom": "^4.0.0",
+    "react-router-dom": "^4.3.0-rc.2",
     "react-scroll": "^1.7.7",
     "redux": "^3.7.2",
     "redux-actions": "^2.3.0",

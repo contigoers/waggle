@@ -57,20 +57,26 @@ router.get('/dogInfo', async (ctx) => {
 });
 
 // mark dog status as 'adopted' - for organization access only
-router.post('/adopted', async (ctx) => {
+router.patch('/adopted', async (ctx) => {
   await db.markAsAdopted(ctx.request.body.dogId);
+  const [dog] = await db.getDogById(ctx.request.body.dogId);
+
   ctx.status = 201;
   ctx.body = {
     status: 'success',
+    dog,
   };
 });
 
 // unmark dog status as 'adopted' - for organization access only
-router.post('/adopted/remove', async (ctx) => {
+router.patch('/adopted/remove', async (ctx) => {
   await db.unmarkAsAdopted(ctx.request.body.dogId);
+  const [dog] = await db.getDogById(ctx.request.body.dogId);
+
   ctx.status = 201;
   ctx.body = {
     status: 'success',
+    dog,
   };
 });
 
@@ -93,6 +99,24 @@ router.post('/createOrgDog', async (ctx) => {
   }
 });
 
+router.patch('/updateDog', async (ctx) => {
+  try {
+    await db.updateDogInfo(ctx.request.body);
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.',
+    };
+  }
+  const [dog] = await db.getDogById(ctx.request.body.id);
+
+  ctx.body = {
+    status: 200,
+    dog,
+  };
+});
+
 // add new org dog to favorites - for adopters
 router.post('/favoriteDog', async (ctx) => {
   try {
@@ -105,13 +129,12 @@ router.post('/favoriteDog', async (ctx) => {
         message: 'dog already exists under favorites!',
       };
     } else {
-      const newFaveDog = await db.getDogById(ctx.request.body.dogId);
-      const adopterFavoriteDogs = { favoriteDogs };
+      const adopterFavoriteDogs = mapKeys(favoriteDogs, 'id');
+
       ctx.status = 201;
       ctx.body = {
         status: 'success',
         adopterFavoriteDogs,
-        newFaveDog: newFaveDog[0],
       };
     }
   } catch (err) {
@@ -135,7 +158,8 @@ router.post('/favoriteDog/remove', async (ctx) => {
         message: 'dog not does exist under favorites!',
       };
     } else {
-      const adopterFavoriteDogs = { favoriteDogs };
+      const adopterFavoriteDogs = mapKeys(favoriteDogs, 'id');
+
       ctx.status = 201;
       ctx.body = {
         status: 'success',
@@ -238,22 +262,33 @@ router.get('/orgInfo', async (ctx) => {
 
 router.get('/adopterInfo', async (ctx) => {
   try {
-    const adopterProfile = await db.getAdopterProfile(ctx.request.query.adopterId);
-    const favoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
+    const [adopterProfile] = await db.getAdopterProfile(ctx.request.query.adopterId);
+    let favoriteDogs = await db.getFavoriteDogs(ctx.request.query.adopterId);
     if (favoriteDogs.length) {
+      let orgs = {};
+
+      favoriteDogs = mapKeys(favoriteDogs, ({ id, org_id }) => {
+        orgs[org_id] = 1;
+        return id;
+      });
+
+      orgs = await db.getOrgsAfterDogs(Object.keys(orgs));
+      orgs = mapKeys(orgs, 'id');
+
       const adopterFavoriteDogs = {
         favoriteDogs,
-        adopter: adopterProfile[0],
+        adopter: adopterProfile,
       };
       ctx.body = {
         status: 'success',
         adopterFavoriteDogs,
+        orgs,
       };
     } else {
       ctx.body = {
         adopterFavoriteDogs: {
           favoriteDogs: {},
-          adopter: adopterProfile[0],
+          adopter: adopterProfile,
         },
       };
     }
@@ -393,6 +428,21 @@ router.get('/contacts/adopter', async (ctx) => {
     status: 'success',
     contacts,
   };
+});
+
+router.post('/imageUpload', (ctx) => {
+  if (ctx.request.url === '/imageUpload') {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: 'Sorry, an error has occurred.',
+    };
+  }
 });
 
 app
