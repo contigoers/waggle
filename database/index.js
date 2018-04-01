@@ -1,3 +1,6 @@
+const has = require('lodash/has');
+const forEach = require('lodash/forEach');
+
 const config = {
   client: 'mysql',
   connection: process.env.DATABASE_URL,
@@ -48,7 +51,9 @@ const createUser = async (user, username, password) => {
   return knex('users').select().where('id', userId[0].id);
 };
 
-const getAdopterId = userId => knex('adopters').select('id').where('user_id', userId);
+const getAdopterId = userId => knex('adopters').select('id', 'name').where('user_id', userId);
+
+const getOrgName = orgId => knex('orgs').select('org_name').where('id', orgId);
 
 // get user by username (login)
 // add select all from users and adopter id if adopter (version?)
@@ -198,46 +203,71 @@ const deleteMessage = messageId => knex('messages')
   .where('id', messageId)
   .update('deleted', true);
 
-const getMessagesForChat = (userId, contactId) => knex.select()
-  .from(knex.raw('messages'))
-  .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`));
+const getMessagesForChat = async (userId, contactId) => {
+  const messages = await knex.select()
+    .from(knex.raw('messages'))
+    .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`))
+    .orderBy('id', 'asc');
+  return messages;
+};
 
 const updateDogInfo = values => knex('dogs')
   .where('id', values.id)
   .update(values);
 
-/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
-
 const getOrgContacts = async (userId) => {
   const messages = await knex('messages').select('sender_id', 'dogName')
     .where('recipient_id', userId);
-    // messages is a list of objects with {sender_id: 1, dogName: 'name'}
-  console.log('messages', messages);
-  // const namesAndDogs = {};
-  // messages.forEach((message) => {
-  //   if (!namesAndDogs.hasOwnProperty(message.sender_id)) {
-  //     namesAndDogs[message.sender_id] = { name: null, dogs: [] };
-  //   }
-  //   namesAndDogs[message.sender_id].dogs.push(message.dogName);
-  // });
-  // // namesAndDogs is a list of objects with {id: {name: null, dogs: [dog1, dog2]}}
-  // console.log('namesAndDogs', namesAndDogs);
-  // const ids = Object.keys(namesAndDogs);
-  // // ids is a list of USER IDS
-  // const names = await knex.raw('select user_id, name from adopters where user_id in (?)', [ids]);
-  // console.log('names', names);
-  // names.forEach((obj) => {
-  //   if (namesAndDogs.hasOwnProperty(obj.user_id)) {
-  //     namesAndDogs[obj.user_id].name = obj.name;
-  //   }
-  // })
-  // console.log('namesAndDogs2', namesAndDogs);
-  // return namesAndDogs;
+  const namesAndDogs = {};
+  messages.forEach((message) => {
+    if (!has(namesAndDogs, message.sender_id)) {
+      namesAndDogs[message.sender_id] = { name: null, dogs: [] };
+    }
+    namesAndDogs[message.sender_id].dogs.push(message.dogName);
+  });
+  const ids = Object.keys(namesAndDogs);
+  const names = await knex.raw('select user_id, name from adopters where user_id in (?)', [ids]);
+  names[0].forEach((obj) => {
+    if (has(namesAndDogs, obj.user_id)) {
+      namesAndDogs[obj.user_id].name = obj.name;
+    }
+  });
+  const contacts = [];
+  forEach(namesAndDogs, (innerObj, key) => {
+    contacts.push({ id: key, name: innerObj.name, dogs: innerObj.dogs });
+  });
+  return contacts;
 };
 
-// const getAdopterContacts = async () {
+const getAdopterContacts = async (userId) => {
+  const messages = await knex('messages').select('recipient_id', 'dogName')
+    .where('sender_id', userId);
+  const namesAndDogs = {};
+  messages.forEach((message) => {
+    if (!has(namesAndDogs, message.recipient_id)) {
+      namesAndDogs[message.recipient_id] = { name: null, dogs: [] };
+    }
+    namesAndDogs[message.recipient_id].dogs.push(message.dogName);
+  });
+  const ids = Object.keys(namesAndDogs);
+  const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
+  names[0].forEach((obj) => {
+    if (has(namesAndDogs, obj.id)) {
+      namesAndDogs[obj.id].name = obj.org_name;
+    }
+  });
+  const contacts = [];
+  forEach(namesAndDogs, (innerObj, key) => {
+    contacts.push({
+      id: key,
+      name: innerObj.name,
+      dogs: innerObj.dogs,
+    });
+  });
+  return contacts;
+};
 
-// };
+/* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 module.exports = {
   getAdopterProfile,
@@ -264,6 +294,8 @@ module.exports = {
   deleteMessage,
   addMessage,
   getOrgContacts,
+  getAdopterContacts,
+  getOrgName,
   // getAdopterContacts,
   updateDogInfo,
 };

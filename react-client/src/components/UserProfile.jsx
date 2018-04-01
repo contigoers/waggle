@@ -4,6 +4,7 @@ import { map, isEmpty, mapKeys } from 'lodash';
 import { Row, Col, Menu, Icon } from 'antd';
 
 import SearchResult from './DogPreviewCard';
+import MessagesTab from './MessagesTab';
 import OrgCard from './OrgCard';
 import { getOrgDogs, getFavorites, dogsSearch } from '../actions/searchActions';
 import { getContacts, getMessages } from '../actions/messagingActions';
@@ -16,14 +17,16 @@ class UserProfile extends React.Component {
       type: this.props.user.org_id === 1 ? 'adopter' : 'org',
       menuSelection: 'messages',
     };
-
     if (this.state.type === 'org') {
       this.getOrgDogs();
     } else if (isEmpty(this.props.favorites)) {
       this.getFavorites();
     }
-
     this.updateMenu = this.updateMenu.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getContacts(this.props.user.id, this.state.type);
   }
 
   getOrgDogs() {
@@ -34,7 +37,6 @@ class UserProfile extends React.Component {
   getFavorites() {
     const { adopterParams } = this.props;
     this.props.getFavorites({ params: adopterParams });
-    console.log('heyyyy');
   }
 
   updateMenu({ key }) {
@@ -89,6 +91,9 @@ class UserProfile extends React.Component {
             </div>
             }
           </div>}
+          {(menuSelection === 'messages' &&
+          <MessagesTab />
+          )}
         </Row>
       </div>
     );
@@ -100,7 +105,7 @@ class UserProfile extends React.Component {
 
 // }
 const mapStateToProps = ({
-  search, storeUser, fetchContacts, fetchMessages,
+  search, storeUser, // fetchContacts, fetchMessages,
 }) => (
   {
     results: search.results,
@@ -113,10 +118,10 @@ const mapStateToProps = ({
       type: 'orgId',
       value: !storeUser.user ? 1 : storeUser.user.org_id,
     },
-    messaging: {
-      contacts: fetchContacts.contacts,
-      messages: fetchMessages.messages,
-    },
+    // messaging: {
+    //   contacts: fetchContacts.contacts,
+    //   messages: fetchMessages.messages,
+    // },
   }
 );
 
