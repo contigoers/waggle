@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button, BackTop, Divider, Collapse } from 'antd';
 import { forOwn, keys } from 'lodash';
 import { Redirect } from 'react-router-dom';
+import { CSSTransitionGroup } from 'react-transition-group';
 import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
 import SearchResults from './SearchResults';
 import GenderSelect from './SearchComponents/Gender';
@@ -66,70 +67,85 @@ class Search extends React.Component {
   render() {
     const { Panel } = Collapse;
     return (
-      <div className="search-div">
-        <div className="title">
-          Find The Dog That Fits Your Lifestyle!
-        </div>
-        {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
-        <div className="default-filters">
-          <div className="breed">
-            <p>Breed</p>
-            <BreedSelect />
+      <CSSTransitionGroup
+        transitionName="search-page-fade"
+        transitionAppear
+        transitionAppearTimeout={500}
+        transitionEnter={false}
+        transitionLeave={false}
+      >
+        <div className="search-div">
+          <div className="title">
+            Find The Dog That Fits Your Lifestyle!
           </div>
-          <div className="gender">
-            <p>Gender</p>
-            <GenderSelect />
-          </div>
-          <div className="size">
-            <p>Size</p>
-            <SizeSelect />
-          </div>
-          <div className="lifestage">
-            <p>Lifestage</p>
-            <LifestageSelect />
-          </div>
-        </div>
-        <Collapse>
-          <Panel header="More filters">
-            <div className="more-filters">
-              <div className="mix">
-                <p>Mix Breed</p>
-                <MixSelect />
-              </div>
-              <div className="neutered">
-                <p>Neutered</p>
-                <NeuteredSelect />
-              </div>
-              <div className="diet">
-                <p>Diet Needs</p>
-                <DietSelect />
-              </div>
-              <div className="medical">
-                <p>Medical Needs</p>
-                <MedicalSelect />
-              </div>
-              <div className="energy">
-                <p>Energy Level</p>
-                <EnergySelect />
-              </div>
+          {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
+          <div className="default-filters">
+            <div className="breed">
+              <p>Breed</p>
+              <BreedSelect />
             </div>
-          </Panel>
-        </Collapse>
-        <Button className="lucky-button search-button" onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
-          I&apos;m Feeling Lucky
-        </Button>
-        <Button className="submit-search search-button" onClick={this.submitData}>
-          Submit
-        </Button>
-        <Divider />
-        <div className="search-results">
-          <div className="results-number">
-            {keys(this.props.results).length > 0 ? `${keys(this.props.results.dogs).length} Results Found` : ''}
+            <div className="gender">
+              <p>Gender</p>
+              <GenderSelect />
+            </div>
+            <div className="size">
+              <p>Size</p>
+              <SizeSelect />
+            </div>
+            <div className="lifestage">
+              <p>Lifestage</p>
+              <LifestageSelect />
+            </div>
           </div>
-          {keys(this.props.results).length > 0 && <SearchResults />}
+          <Collapse>
+            <Panel header="More filters">
+              <div className="more-filters">
+                <div className="mix">
+                  <p>Mix Breed</p>
+                  <MixSelect />
+                </div>
+                <div className="neutered">
+                  <p>Neutered</p>
+                  <NeuteredSelect />
+                </div>
+                <div className="diet">
+                  <p>Diet Needs</p>
+                  <DietSelect />
+                </div>
+                <div className="medical">
+                  <p>Medical Needs</p>
+                  <MedicalSelect />
+                </div>
+                <div className="energy">
+                  <p>Energy Level</p>
+                  <EnergySelect />
+                </div>
+              </div>
+            </Panel>
+          </Collapse>
+          <Button className="lucky-button search-button" onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
+            I&apos;m Feeling Lucky
+          </Button>
+
+          <Button className="submit-search search-button" onClick={this.submitData}>
+          Submit
+          </Button>
+          <Divider />
+          <div className="search-results">
+            <div className="results-number">
+              {keys(this.props.results).length > 0 ? `${keys(this.props.results.dogs).length} Results Found` : ''}
+            </div>
+            <CSSTransitionGroup
+              transitionName="search-results-fade"
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={500}
+            >
+              {keys(this.props.results).length > 0 && <SearchResults />}
+            </CSSTransitionGroup>
+          </div>
+          <BackTop />
         </div>
-        <BackTop />
-      </div>
+      </CSSTransitionGroup>
     );
   }
 }

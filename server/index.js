@@ -344,11 +344,18 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
 // for now this does not use FB oauth/JWT
 router.post('/login', passport.authenticate('local-login'), async (ctx) => {
   let adopterId = null;
+  let userName = null;
   if (ctx.state.user.org_id === 1) {
     const adopter = await db.getAdopterId(ctx.state.user.id);
     adopterId = adopter[0].id;
+    userName = adopter[0].name;
+  } else {
+    const org = await db.getOrgName(ctx.state.user.org_id);
+    userName = org[0].org_name;
   }
-  const user = Object.assign(ctx.state.user, { adopterId });
+  console.log('userName', userName);
+  const user = Object.assign(ctx.state.user, { adopterId, name: userName });
+  console.log(user)
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -365,6 +372,7 @@ router.post('/logout', isLoggedIn, async (ctx) => {
   };
 });
 
+// posts a message to the database and returns the complete database object (with timestamp)
 router.post('/messages/post', async (ctx) => {
   const { senderId } = ctx.request.body;
   const { recipientId } = ctx.request.body;
@@ -379,6 +387,7 @@ router.post('/messages/post', async (ctx) => {
   };
 });
 
+// marks a message as deleted in database
 router.patch('/messages/delete', async (ctx) => {
   console.log('deleting message', ctx.request.body);
   const msg = await db.deleteMessage(ctx.request.body.messageId);
@@ -389,9 +398,10 @@ router.patch('/messages/delete', async (ctx) => {
   };
 });
 
-router.post('/messages/fetch', async (ctx) => {
-  const { userId } = ctx.request.body;
-  const { contactId } = ctx.request.body;
+// gets messages between two users
+router.get('/messages/fetch', async (ctx) => {
+  const { userId } = ctx.request.query;
+  const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);
   ctx.status = 201;
   ctx.body = {
@@ -400,8 +410,9 @@ router.post('/messages/fetch', async (ctx) => {
   };
 });
 
-router.get('/messages', async (ctx) => {
-  const contacts = await db.getContacts(ctx.body.id);
+// gets list of adopter contacts and associated dogs for an organization
+router.get('/contacts/org', async (ctx) => {
+  const contacts = await db.getOrgContacts(ctx.request.query.id);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -409,8 +420,9 @@ router.get('/messages', async (ctx) => {
   };
 });
 
-router.post('/contacts/org', async (ctx) => {
-  const contacts = await db.getOrgContacts(1);
+// gets list of organization contacts and associated dogs for an adopter
+router.get('/contacts/adopter', async (ctx) => {
+  const contacts = await db.getAdopterContacts(ctx.request.query.id);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -419,11 +431,18 @@ router.post('/contacts/org', async (ctx) => {
 });
 
 router.post('/imageUpload', (ctx) => {
-  console.log('heres body', ctx.request.body);
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-  };
+  if (ctx.request.url === '/imageUpload') {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: 'Sorry, an error has occurred.',
+    };
+  }
 });
 
 app

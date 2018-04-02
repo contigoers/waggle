@@ -14,7 +14,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.state = { loggedIn: false };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleLoginModal.bind(this);
-    this.storeUser = this.props.storeUserId.bind(this);
+    this.storeUser = this.props.storeUserId.bind(this); 
   }
 
   handleSubmit(e) {

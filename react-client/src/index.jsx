@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import promise from 'redux-promise';
+import { CSSTransitionGroup } from 'react-transition-group';
 
 import './styles.scss';
 import './search-styles.scss';
@@ -31,7 +32,15 @@ ReactDOM.render(
       <ScrollToTop>
         <div>
           <Route exact path="/" component={Splash} />
-          <NavBar />
+          <CSSTransitionGroup
+            transitionName="search-page-fade"
+            transitionAppear
+            transitionAppearTimeout={500}
+            transitionEnter={false}
+            transitionLeave={false}
+          >
+            <NavBar />
+          </CSSTransitionGroup>
           <Switch>
             <Route path="/search" component={Search} />
             <Route path="/create" component={CreateDogForm} />
