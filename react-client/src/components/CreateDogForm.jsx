@@ -110,7 +110,7 @@ class DogForm extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-    // const { imageUrl } = this.state;
+
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
     return (
@@ -289,12 +289,13 @@ class DogForm extends React.Component {
                 listType="picture-card"
                 className="avatar-uploader"
                 showUploadList={false}
-                action="http://localhost:3000/imageUpload"
+                action="/imageUpload"
                 beforeUpload={beforeUpload}
                 onChange={val => this.onChangeImage(val)}
               >
                 {this.state.imageUrl ? <img src={this.state.imageUrl} alt="" /> : uploadButton}
               </Upload>
+
             </Form.Item>
           </Row>
 

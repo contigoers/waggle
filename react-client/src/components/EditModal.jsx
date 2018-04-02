@@ -10,12 +10,33 @@ import {
   InputNumber,
   Button,
   Modal,
+  Upload,
+  Icon,
+  message,
 } from 'antd';
 import breeds from '../../../database/breeds';
 import { toggleEditModal, editDogInfo } from '../actions/editActions';
 
 const { Option } = Select;
 const { TextArea } = Input;
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJPGorPNG = (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png');
+  if (!isJPGorPNG) {
+    message.error('You can only upload JPG or PNG files!');
+  }
+  const isLt2M = (file.size / 1024 / 1024).toFixed(2) < 0.75;
+  if (!isLt2M) {
+    message.error('Image must smaller than 750 KB!');
+  }
+  return isJPGorPNG && isLt2M;
+}
 
 class EditForm extends React.Component {
   constructor(props) {
@@ -29,6 +50,8 @@ class EditForm extends React.Component {
       hasAnxiety: !!dog.anxious,
       hasDiet: !!dog.diet,
       hasMedical: !!dog.medical,
+      loading: false,
+      imageUrl: dog.photo,
     };
     this.state = this.defaultState;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,6 +62,19 @@ class EditForm extends React.Component {
     this.setState({
       [id]: !this.state[id],
     });
+  }
+
+  onChangeImage(info) {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+      getBase64(info.file.originFileObj, imageUrl => this.setState({
+        imageUrl,
+        loading: false,
+      }));
+    }
   }
 
   handleSubmit(e) {
@@ -61,7 +97,7 @@ class EditForm extends React.Component {
           diet: +Boolean(this.state.hasDiet),
           medical: +Boolean(this.state.hasMedical),
           energy_level: values.energyLevel === 'null' ? null : values.energyLevel,
-          photo: values.photo || null,
+          photo: this.state.imageUrl || null,
           description: values.description || null,
           org_id: dogInfo.org_id,
           org_name: undefined,
@@ -76,6 +112,15 @@ class EditForm extends React.Component {
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
     const dog = this.props.dogs[this.props.id];
+
+    dog.photo = Buffer.from(dog.photo);
+    const uploadButton = (
+      <div>
+        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
+
     return (
       <Modal
         id="login"
@@ -276,11 +321,20 @@ class EditForm extends React.Component {
 
           <Row style={rowStyle}>
             <Form.Item label="Photo">
-              {getFieldDecorator('photo', {
-                initialValue: dog.photo,
-                })(<Input placeholder="Photo URL" />)}
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className="avatar-edit"
+                showUploadList={false}
+                action="/imageUpload"
+                beforeUpload={beforeUpload}
+                onChange={val => this.onChangeImage(val)}
+              >
+                {this.state.imageUrl ? <img src={this.state.imageUrl} alt="" /> : uploadButton}
+              </Upload>
             </Form.Item>
           </Row>
+
           <Row style={rowStyle}>
             <Form.Item style={{ marginTop: 10 }} label="Description">
               {getFieldDecorator('description', {
