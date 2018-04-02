@@ -159,6 +159,7 @@ $z-index: (
 .body {
   z-index: map-get($z-index, body);  
   position: relative;  
+  min-height: 100vh;
 }
 
 .content-divs {
@@ -168,18 +169,6 @@ $z-index: (
   min-height: 300px;
   color: $primary; 
   // box-shadow: 0 8px 6px -6px hsla(0, 0%, 0%, 0.2);
-}
-
-.stats {
-  i {
-    font-size: 30px;
-    color: #52c41a;
-  }
-  p {
-    display: inline-block;
-    font-size: 26px;
-    margin-left: 10px;
-  }
 }
 
 .image {
@@ -261,4 +250,53 @@ $z-index: (
 
 .avatar-uploader img {
   width: 500px;
+}
+
+.about-divs {
+  padding: 5% 5%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  font-size: 28px;
+  grid-column-gap: 10%;
+}
+
+.story {
+  grid-column: 1 / 3;
+  span {
+    font-size: 35px;
+    color: $primary-dark;
+  }
+  margin-bottom: 40px;
+}
+
+.about-text {
+  text-align: center;
+}
+
+.stats {
+  div {
+    padding-bottom: 75px;
+  }
+  i {
+    font-size: 30px;
+    color: #52c41a;
+  }
+  p {
+    display: inline-block;
+    font-size: 28px;
+    margin-left: 10px;
+  }
+}
+
+.users {
+  grid-template-columns: 1fr;
+  text-align: center;
+  min-height: 0;
+  padding: 25px 0;
+  span {
+    font-size: 35px;
+    color: $primary-dark;
+  }
 }

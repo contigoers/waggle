@@ -15,7 +15,7 @@ class UserProfile extends React.Component {
 
     this.state = {
       type: this.props.user.org_id === 1 ? 'adopter' : 'org',
-      menuSelection: 'messages',
+      menuSelection: null,
     };
     if (this.state.type === 'org') {
       this.getOrgDogs();
@@ -25,8 +25,9 @@ class UserProfile extends React.Component {
     this.updateMenu = this.updateMenu.bind(this);
   }
 
-  componentDidMount() {
-    this.props.getContacts(this.props.user.id, this.state.type);
+  async componentWillMount() {
+    await this.props.getContacts(this.props.user.id, this.state.type);
+    this.setState({ menuSelection: 'messages' });
   }
 
   getOrgDogs() {
@@ -93,6 +94,9 @@ class UserProfile extends React.Component {
           </div>}
           {(menuSelection === 'messages' &&
             <MessagesTab />
+          )}
+          {(!menuSelection === 'null' &&
+            <div> Loading... </div>
           )}
         </Row>
       </div>
