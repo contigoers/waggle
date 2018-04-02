@@ -305,3 +305,77 @@ INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('1', '5', 'Pri postea qualisque et, quaeque nostrum evertitur duo at, qui no error audiam scripserit.', false, 'Harley');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('3', '5', 'No euismod definitiones mei, eam detracto reprimique eu. Oratio option sed te, no habeo mundi deserunt sea', false, 'Tyson');
 INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('2', '5', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Hank');
+
+INSERT INTO `users` (`id`,`username`,`password`,`email`,`org_id`,`address`,`city`, `state`,`zipcode`,`phone`) VALUES
+(6,'orgUser4','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','awerfs@smallchancerescue.com',5,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(7,'jacob','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krihsfddsfgsha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(8,'orgUser5','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','xcvxzv@austinpetsalive.org',6,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(9,'orgUser6','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@zxvsmallchancerescue.com',7,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(10,'sean','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krishaxzdfd@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(11,'orgUser7','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adopfawert@austinpetsalive.org',8,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(12,'orgUser10','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','insdfsdffo@smallchancerescue.com',9,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(13,'stephanie','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krishawerewta@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(14,'orgUser8','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adopt@austinhgkjghpetsalive.org',10,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(15,'orgUser9','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@smallchancejghjrescue.com',11,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(16,'mickey','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krisiuyiha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(17,'orgUser11','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adoptyuytt@austinpetsalive.org',12,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(18,'orgUser12','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@smghjghjallchancerescue.com',13,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(19,'shahzeb','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krishcbvba@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(20,'orgUser13','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adoperygcvxt@austinpetsalive.org',14,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(21,'orgUser14','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','infafascxo@smallchancerescue.com',15,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(22,'steven','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krisykhjgha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(23,'orgUser15','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adopyrfhbvcfst@austinpetsalive.org',16,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(24,'orgUser16','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','info@smallch64565ancerescue.com',17,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(25,'hailey','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','k34terwtrisha@adopter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(26,'orgUser17','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adwerweopt@austinpetsalive.org',18,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(27,'orgUser18','$2a$10$3X/MZGAsXR1pfIkINcR0Oetim9bDgH8vffVpGmUnhp/SMv4mF3176','infsdgo@sddsmallchancerescue.com',19,'P.O. Box 10033','Austin','TX',78766,'5126997244'),
+(28,'amy','$2a$10$d/sLZ881Y6r.Rl9LsGaINeG4oQKTY2k0dRtdHBid0Ftg4jxuGkiS2','krisha@adopsdgdsgter.com',1,'123 Drury Lane','Austin','TX',78750,'1234567890'),
+(29,'orgUser19','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adqr34wopt@austinpetsalive.org',20,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519'),
+(30,'orgUser20','$2a$10$FoEW9qqOBwe4l3sOQbG1Re3AzT0Hnqlp6FPIQgx13CZtzU07/FSzS','adqr34wopt@austiwernpetsalive.org',21,'1156 West Cesar Chavez','Austin','TX',78704,'5129616519');
+
+INSERT INTO `orgs` (`id`,`org_name`) VALUES
+(21,'Austin Animal Center'),
+(5,'Austin Humane Society'),
+(6,'Dan Cosgrove Animal Shelter'),
+(7,'Gold Ribbon Rescue'),
+(8,'Pflugerville Animal Welfare Services'),
+(9,'House Rabbit Resource Network'),
+(10,'PAWS Shelter of Central Texas'),
+(12,'Taurus Academy'),
+(13,'Lifelong Friends Pet Adoptions'),
+(11,'Williamson County Regional Animal Shelter'),
+(14,'Texas Humane Heroes'),
+(15,'Thundering Paws'),
+(16,'Central Texas SPCA'),
+(17,'City of Georgetown Animal Shelter'),
+(18,'Animal Defense League of Texas'),
+(19,'Canyon Lake Animal Shelter Society'),
+(20,'City of San Marcos Animal Shelter');
+
+
+INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES 
+('4', '6', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Kona'),
+('4', '8', 'Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. ', false, 'Annie'),
+('4', '9', 'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos', false, 'Sam'),
+('4', '11', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Brody'),
+('4', '12', 'Aenean lectus elit, fermentum non, convallis id, sagittis at, neque', false, 'Willow'),
+('4', '14', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Rex'),
+('4', '15', 'Vestibulum tincidunt malesuada tellus', false, 'King'),
+('4', '17', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Walter'),
+('4', '18', 'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos', false, 'Abby'),
+('4', '20', 'Sed aliquet risus a tortor', false, 'Bruno'),
+('4', '21', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Marley'),
+('4', '23', 'Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula', false, 'Layla'),
+('4', '24', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Hank'),
+('4', '26', 'Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. ', false, 'Rudy'),
+('4', '27', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Dexter'),
+('4', '29', 'Aenean lectus elit, fermentum non, convallis id, sagittis at, neque', false, 'Chase'),
+('4', '30', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Lulu'),
+('12', '4', 'Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula', false, 'Zoe'),
+('12', '4', 'Vestibulum tincidunt malesuada tellus', false, 'Bo'),
+('4', '12', 'Te probo mazim sanctus est. Alii timeam prompta ut vis. Id mei adhuc everti volutpat, has ut illum dicat electram, an eam option prompta suavitate. Natum corpora te vim.', false, 'Jasper'),
+('18', '4', 'Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. ', false, 'Koda'),
+('23', '4', 'Nullam mauris orci, aliquet et, iaculis et, viverra vitae, ligula', false, 'Buddy'),
+('21', '4', 'Sed aliquet risus a tortor', false, 'Boomer'),
+('11', '4', 'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos', false, 'Ruby');
+('6', '4', 'Aenean lectus elit, fermentum non, convallis id, sagittis at, neque,' false, 'Cash');

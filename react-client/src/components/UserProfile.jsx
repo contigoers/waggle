@@ -92,7 +92,7 @@ class UserProfile extends React.Component {
             }
           </div>}
           {(menuSelection === 'messages' &&
-          <MessagesTab />
+            <MessagesTab />
           )}
         </Row>
       </div>
@@ -100,10 +100,6 @@ class UserProfile extends React.Component {
   }
 }
 
-// {(menuSelection === 'messages') &&
-
-
-// }
 const mapStateToProps = ({
   search, storeUser, // fetchContacts, fetchMessages,
 }) => (
