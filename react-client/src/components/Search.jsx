@@ -68,7 +68,7 @@ class Search extends React.Component {
     const { Panel } = Collapse;
     return (
       <CSSTransitionGroup
-        transitionName="search-page-fade"
+        transitionName="fade-appear"
         transitionAppear
         transitionAppearTimeout={500}
         transitionEnter={false}
@@ -76,7 +76,7 @@ class Search extends React.Component {
       >
         <div className="search-div">
           <div className="title">
-            Find The Dog That Fits Your Lifestyle!
+            <Divider>Find The Dog That Fits Your Lifestyle!</Divider>
           </div>
           {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
           <div className="default-filters">
@@ -136,7 +136,7 @@ class Search extends React.Component {
               {keys(this.props.results).length > 0 ? `${keys(this.props.results.dogs).length} Results Found` : ''}
             </div>
             <CSSTransitionGroup
-              transitionName="search-results-fade"
+              transitionName="fade-enter"
               transitionEnterTimeout={500}
               transitionLeaveTimeout={500}
             >
