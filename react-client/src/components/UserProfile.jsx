@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty, mapKeys } from 'lodash';
-import { Row, Col, Menu, Icon } from 'antd';
+import { Row, Col, Menu, Icon, BackTop } from 'antd';
 import { CSSTransitionGroup } from 'react-transition-group';
 
 import SearchResult from './DogPreviewCard';
@@ -88,16 +88,17 @@ class UserProfile extends React.Component {
                   }
                 </Col>
               </Row>
-              {this.state.type === 'org' &&
-              <div>
-                {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-              </div>
+                {this.state.type === 'org' &&
+                <div className="search-results-grid" style={{ marginTop: 30 }}>
+                  {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+                </div>
               }
-              {this.state.type === 'adopter' &&
-              <div>
-                {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
-              </div>
+                {this.state.type === 'adopter' &&
+                <div className="search-results-grid" style={{ marginTop: 30 }}>
+                  {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+                </div>
               }
+              <BackTop />
             </div>}
             {(menuSelection === 'messages' &&
             <MessagesTab />
