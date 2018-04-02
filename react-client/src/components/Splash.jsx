@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from 'antd';
 import { scroller } from 'react-scroll';
+import { CSSTransitionGroup } from 'react-transition-group';
 import splashImage from '../assets/dog-video.mp4';
 
 class Splash extends React.Component {
@@ -19,6 +20,7 @@ class Splash extends React.Component {
       isHovered: false,
       dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend'],
       currentName: 'best friend',
+      video: splashImage,
     };
     this.handleHover = this.handleHover.bind(this);
   }
@@ -63,29 +65,37 @@ class Splash extends React.Component {
       ? 'dog-names animated infinite'
       : 'dog-names';
     return (
-      <div className="splash">
-        <div className="splash-items">
-          <div className="company-name splash-item">waggl</div>
-          <button
-            onMouseEnter={this.handleHover}
-            onMouseLeave={this.handleHover}
-            className="adopt-button splash-item"
-            onClick={() => {
-              Splash.scrollToNav();
-            }}
-          >
-            Find your new <div className={dogNameClass}>{this.state.currentName}</div>
-            <Icon className={iconClass} type="down" />
-          </button>
+      <CSSTransitionGroup
+        transitionName="fade-appear"
+        transitionAppear
+        transitionAppearTimeout={500}
+        transitionEnter={false}
+        transitionLeave={false}
+      >
+        <div className="splash">
+          <div className="splash-items">
+            <div className="company-name splash-item">waggl</div>
+            <button
+              onMouseEnter={this.handleHover}
+              onMouseLeave={this.handleHover}
+              className="adopt-button splash-item"
+              onClick={() => {
+                Splash.scrollToNav();
+              }}
+            >
+              Find your new <div className={dogNameClass}>{this.state.currentName}</div>
+              <Icon className={iconClass} type="down" />
+            </button>
+          </div>
+          <div className="splash-media">
+            <video autoPlay loop>
+              <source src={this.state.video} type="video/mp4" />
+            </video>
+            <div className="pixel-overlay" />
+            <div className="background-overlay" />
+          </div>
         </div>
-        <div className="splash-media">
-          <video autoPlay loop>
-            <source src={splashImage} type="video/mp4" />
-          </video>
-          <div className="pixel-overlay" />
-          <div className="background-overlay" />
-        </div>
-      </div>
+      </CSSTransitionGroup>
     );
   }
 }
