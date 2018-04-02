@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty, mapKeys } from 'lodash';
 import { Row, Col, Menu, Icon } from 'antd';
+import { CSSTransitionGroup } from 'react-transition-group';
 
 import SearchResult from './DogPreviewCard';
 import MessagesTab from './MessagesTab';
@@ -53,49 +54,57 @@ class UserProfile extends React.Component {
     const faves = mapKeys(favorites.favoriteDogs, 'id');
 
     return (
-      <div>
-        <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu}>
-          <Menu.Item key="messages">
-            <Icon type="mail" />Messages
-          </Menu.Item>
-          {this.state.type === 'adopter' &&
-          <Menu.Item key="favorites">
-            <Icon type="heart" />Favorites
-          </Menu.Item>}
-          {this.state.type === 'org' &&
-          <Menu.Item key="dogs">
-            <Icon type="bars" />Dogs
-          </Menu.Item>}
-        </Menu>
-        <Row>
-          {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
-          <div>
-            <Row style={{ marginTop: 30 }} >
-              <Col span={15} offset={3}>
-                {this.state.type === 'org' &&
-                <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
-                }
-                {this.state.type === 'adopter' &&
-                <div>{!isEmpty(favorites.adopter) ? <OrgCard org={favorites.adopter} adopterUser={user} /> : 'Loading...'} </div>
-                }
-              </Col>
-            </Row>
-            {this.state.type === 'org' &&
-            <div>
-              {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-            </div>
-            }
+      <CSSTransitionGroup
+        transitionName="fade-appear"
+        transitionAppear
+        transitionAppearTimeout={500}
+        transitionEnter={false}
+        transitionLeave={false}
+      >
+        <div className="user-profile-body">
+          <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu}>
+            <Menu.Item key="messages">
+              <Icon type="mail" />Messages
+            </Menu.Item>
             {this.state.type === 'adopter' &&
+            <Menu.Item key="favorites">
+              <Icon type="heart" />Favorites
+            </Menu.Item>}
+            {this.state.type === 'org' &&
+            <Menu.Item key="dogs">
+              <Icon type="bars" />Dogs
+            </Menu.Item>}
+          </Menu>
+          <Row>
+            {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
             <div>
-              {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
-            </div>
-            }
-          </div>}
-          {(menuSelection === 'messages' &&
-          <MessagesTab />
-          )}
-        </Row>
-      </div>
+              <Row style={{ marginTop: 30 }} >
+                <Col span={15} offset={3}>
+                  {this.state.type === 'org' &&
+                  <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
+                  }
+                  {this.state.type === 'adopter' &&
+                  <div>{!isEmpty(favorites.adopter) ? <OrgCard org={favorites.adopter} adopterUser={user} /> : 'Loading...'} </div>
+                  }
+                </Col>
+              </Row>
+              {this.state.type === 'org' &&
+              <div>
+                {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+              </div>
+              }
+              {this.state.type === 'adopter' &&
+              <div>
+                {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+              </div>
+              }
+            </div>}
+            {(menuSelection === 'messages' &&
+            <MessagesTab />
+            )}
+          </Row>
+        </div>
+      </CSSTransitionGroup>
     );
   }
 }
