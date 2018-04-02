@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Divider, Row, Col, Icon, message, Tooltip } from 'antd';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { startCase } from 'lodash';
 
 import OrgCard from './OrgCard';
@@ -57,12 +58,16 @@ class DogProfile extends React.Component {
 
   render() {
     const { id } = this.props.match.params;
+    if (!Object.keys(this.props.results).length) {
+      return <Redirect to="/" />;
+    }
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
     const { adopted } = dog;
     dog.photo = Buffer.from(dog.photo);
 
     let org;
+
     if (!this.props.user || this.props.user.org_id !== dog.org_id) {
       org = this.props.results.orgs[dog.org_id];
     }
