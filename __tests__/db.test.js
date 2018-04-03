@@ -20,6 +20,7 @@ const {
   getOrgProfile,
   searchOrgDogs,
   getOrgsAfterDogs,
+  getOrgDogs,
 } = require('../database/index');
 
 describe('getRandomDog()', () => {
@@ -74,6 +75,19 @@ describe('getUserById()', () => {
       state: 'TX',
       zipcode: 78766,
       phone: '5126997244',
+    });
+  });
+});
+
+describe('getOrgDogs()', () => {
+  it('should fetch an organization\'s dogs', async () => {
+    const dogs = await getOrgDogs(2);
+    expect(dogs).toBeDefined();
+    expect(Array.isArray(dogs)).toBeTruthy();
+    expect(dogs).not.toHaveLength(0);
+    dogs.forEach((dog) => {
+      expect(typeof dog).toBe('object');
+      expect(dog).toHaveProperty('org_id', 2);
     });
   });
 });
