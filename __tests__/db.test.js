@@ -14,6 +14,12 @@ const {
   addFavoriteDog,
   getFavoriteDogs,
   removeFavoriteDog,
+  getOrgName,
+  searchOrgsByName,
+  checkCredentials,
+  getOrgProfile,
+  searchOrgDogs,
+  getOrgsAfterDogs,
 } = require('../database/index');
 
 describe('getRandomDog()', () => {
@@ -72,10 +78,10 @@ describe('getUserById()', () => {
   });
 });
 
-xdescribe('dog creation, adoption, and favoriting', () => {
+describe('dogs', () => {
   let id;
 
-  xit('should create a new dog', async () => {
+  it('should create a new dog', async () => {
     [id] = await createDog({
       name: 'Test',
       breed: 'Corgi',
@@ -97,7 +103,7 @@ xdescribe('dog creation, adoption, and favoriting', () => {
     expect(typeof id).toBe('number');
   });
 
-  xit('should retrieve that dog', async () => {
+  it('should retrieve that dog', async () => {
     const [dog] = await getDogById(id);
     expect(typeof dog).toBe('object');
     expect(dog).toHaveProperty('id', id);
@@ -120,23 +126,52 @@ xdescribe('dog creation, adoption, and favoriting', () => {
     expect(dog).toHaveProperty('photo', 'null');
   });
 
-  xit('should mark that dog adopted', async () => {
+  it('should mark that dog adopted', async () => {
     await markAsAdopted(id);
     const [dog] = await getDogById(id);
     expect(dog.adopted).toBe(1);
   });
 
-  xit('should mark that dog unadopted', async () => {
+  it('should mark that dog unadopted', async () => {
     await unmarkAsAdopted(id);
     const [dog] = await getDogById(id);
     expect(dog.adopted).toBe(0);
   });
 
-  xit('should change the dog\'s name', async () => {
+  it('should change the dog\'s name', async () => {
     await updateDogInfo({ id, name: 'Not Test' });
     const [dog] = await getDogById(id);
     expect(dog.name).not.toBe('Test');
     expect(dog.name).toBe('Not Test');
+  });
+
+  let dogs;
+  it('should search based on given parameters', async () => {
+    dogs = await searchOrgDogs({ breed: ['Corgi'], male: ['0'], size: ['small'] });
+    expect(dogs).toBeDefined();
+    expect(dogs).not.toHaveLength(0);
+    expect(dogs[0]).toHaveProperty('breed', 'Corgi');
+    expect(dogs[0]).toHaveProperty('male', 0);
+    expect(dogs[0]).toHaveProperty('size', 'small');
+  });
+
+  it('should retrieve the organizations for dogs in the search', async () => {
+    const ids = dogs.map(dog => dog.org_id).filter((orgId, i, arr) => arr.indexOf(orgId) === i);
+    const orgs = await getOrgsAfterDogs(ids);
+    expect(orgs).toHaveLength(ids.length);
+    orgs.forEach((org) => {
+      expect(org).toBeDefined();
+      expect(typeof org).toBe('object');
+      expect(org).toHaveProperty('id');
+      expect(org).toHaveProperty('org_name');
+      expect(org).toHaveProperty('address');
+      expect(org).toHaveProperty('city');
+      expect(org).toHaveProperty('state');
+      expect(org).toHaveProperty('zipcode');
+      expect(org).toHaveProperty('phone');
+      expect(org).toHaveProperty('email');
+      expect(ids).toContain(org.id);
+    });
   });
 });
 
@@ -177,6 +212,11 @@ describe('users', () => {
 
     expect(typeof user).toBe('object');
     expect(user).toHaveProperty('id');
+  });
+
+  it('should find that the new username is taken', async () => {
+    const info = await checkCredentials('definitelyNotYaBoi');
+    expect(info).toHaveLength(1);
   });
 
   let adopterId;
@@ -248,5 +288,28 @@ describe('users', () => {
     }, 'notYaBoisOrg', 'testuser');
 
     expect(typeof org).toBe('object');
+    expect(org).toHaveProperty('org_id');
+  });
+
+  it('should retrieve the org name', async () => {
+    const [info] = await getOrgName(org.org_id);
+    expect(info).toEqual({ org_name: 'definitelyNotYaBoisOrg' });
+  });
+
+  it('should find the org by name', async () => {
+    const [info] = await searchOrgsByName('definitelyNotYaBoisOrg');
+    expect(info).toHaveProperty('id', org.org_id);
+  });
+
+  it('should retrieve the org\'s profile', async () => {
+    const [profile] = await getOrgProfile(org.org_id);
+    expect(profile).toHaveProperty('address', 'yaboi');
+    expect(profile).toHaveProperty('city', 'yaboi');
+    expect(profile).toHaveProperty('state', 'AK');
+    expect(profile).toHaveProperty('zipcode', 11111);
+    expect(profile).toHaveProperty('phone', '7166969693');
+    expect(profile).toHaveProperty('email', 'yaboi@yaboi.com');
+    expect(profile).toHaveProperty('id');
+    expect(profile).toHaveProperty('org_name');
   });
 });
