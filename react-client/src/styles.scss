@@ -300,3 +300,8 @@ $z-index: (
     color: $primary-dark;
   }
 }
+
+.hoverable:hover {
+  cursor: pointer;
+  color: lightgreen;
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, List, Icon, Card, Button, message } from 'antd';
+import { Row, List, Icon, Card, Button, Spin, Avatar, message } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { getContacts, getMessages, deleteMessage } from '../actions/messagingActions';
@@ -51,7 +51,6 @@ class MessagesTab extends React.Component {
   }
 
   handleInfiniteMessagesOnLoad() {
-    console.log('onload messages')
     this.setState({ loading: true });
     if (this.state.visibleMessages.length >= this.props.messages.length) {
       message.warning('Infinite List loaded all');
@@ -67,25 +66,31 @@ class MessagesTab extends React.Component {
     });
   }
 
-  handleInfiniteContactsOnLoad() {
-    console.log('onload contacts')
-    this.setState({ loading: true });
-    if (this.state.visibleContacts.length >= this.props.contacts.length) {
+  async handleInfiniteContactsOnLoad() {
+    console.log('infinite contacts');
+    await this.setState({ loading: true });
+    if (this.state.visibleContacts.length > this.props.contacts.length) {
+      console.log('no more', this.props.contacts.length, this.state.visibleContacts.length);
       message.warning('Infinite List loaded all');
-      this.setState({
+      await this.setState({
         hasMore: false,
         loading: false,
       });
-      return;
+    } else {
+      console.log('dis a thing', this.state)
+      await this.setState({
+        visibleContacts: this.props.contacts.slice(0, this.state.visibleContacts.length + 5),
+        loading: false,
+      });
+      console.log(this.state.visibleContacts)
     }
-    this.setState({
-      visibleContacts: this.props.contacts.slice(0, this.state.visibleContacts.length + 5),
-      loading: false,
-    });
   }
 
   async deleteMessage(e) {
     await deleteMessage(e.target.id, this.props.user.id, e.target.dataset.contact);
+    this.setState({
+      visibleMessages: this.props.messages.slice(0, this.state.visibleMessages.length),
+    }, console.log('statete', this.state));
   }
 
   renderContactsList() {
@@ -116,7 +121,7 @@ class MessagesTab extends React.Component {
         return (
           <div>
             <Row>
-              <Button onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
+              <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
             <Row>
               <div style={infiniteStyle}>
@@ -125,6 +130,7 @@ class MessagesTab extends React.Component {
                   pageStart={0}
                   loadMore={this.handleInfiniteMessagesOnLoad}
                   hasMore={!this.state.loading && this.state.hasMore}
+                  useWindow={false}
                 >
                   {
                     this.state.visibleMessages.map(msg => (
@@ -133,8 +139,9 @@ class MessagesTab extends React.Component {
                         style={msg.sender_id === this.props.user.id ? userStyle : contactStyle}
                         title={msg.sender_id === this.props.user.id ?
                           this.props.user.name : this.state.currentContact}
-                        extra={
+                        extra={msg.deleted ? null : (
                           <span
+                            className="hoverable"
                             id={msg.id}
                             data-contact={msg.sender_id === this.props.user.id ?
                               msg.recipient_id : msg.sender_id}
@@ -145,6 +152,7 @@ class MessagesTab extends React.Component {
                           >
                             delete message
                           </span>
+                        )
                       }
                       >
                         <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
@@ -156,7 +164,7 @@ class MessagesTab extends React.Component {
               </div>
             </Row>
             <Row>
-              <Button onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
+              <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
           </div>
         );
@@ -171,6 +179,7 @@ class MessagesTab extends React.Component {
             pageStart={0}
             loadMore={this.handleInfiniteContactsOnLoad}
             hasMore={!this.state.loading && this.state.hasMore}
+            useWindow={false}
           >
             <List
               itemLayout="horizontal"
@@ -178,13 +187,15 @@ class MessagesTab extends React.Component {
               renderItem={contact => (
                 <List.Item>
                   <List.Item.Meta
-                    avatar={<Icon type="mail" />}
-                    title={<div id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}>{contact.name}</div>}
+                    avatar={<Avatar icon="mail" />}
+                    title={<div className="hoverable" id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}>{contact.name}</div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)
               }
-            />
+            >
+              {this.state.loading && this.statehasMore && <Spin />}
+            </List>
           </InfiniteScroll>
         </div>
       );
