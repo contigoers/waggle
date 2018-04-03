@@ -342,7 +342,7 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
 });
 
 router.post('/login', async ctx =>
-  passport.authenticate('local-login', async (error, user, info) => { // eslint-disable-line
+  passport.authenticate('local-login', async (error, user, info) => {
     if (error) ctx.body = { error };
     if (user === false) {
       ctx.body = { success: false, info };
@@ -370,31 +370,6 @@ router.post('/login', async ctx =>
       return ctx.login(user);
     }
   })(ctx));
-
-// for now this does not use FB oauth/JWT
-// router.post('/login', passport.authenticate('local-login'), async (ctx) => {
-//   let adopterId = null;
-//   let userName = null;
-//   if (ctx.state.user.org_id === 1) {
-//     const [adopter] = await db.getAdopterId(ctx.state.user.id);
-//     adopterId = adopter.id;
-//     userName = adopter.name;
-//   } else {
-//     const [org] = await db.getOrgName(ctx.state.user.org_id);
-//     userName = org.org_name;
-//   }
-//   const user = {
-//     ...ctx.state.user,
-//     adopterId,
-//     name: userName,
-//   };
-//   console.log(ctx)
-//   ctx.status = 201;
-//   ctx.body = {
-//     status: 'success',
-//     user,
-//   };
-// });
 
 router.post('/logout', isLoggedIn, async (ctx) => {
   await ctx.logout();
