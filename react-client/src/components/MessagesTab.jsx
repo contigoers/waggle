@@ -203,6 +203,9 @@ class MessagesTab extends React.Component {
       return (<div style={{ margin: '15px' }}> Loading... </div>);
     }
     if (this.props.contacts) {
+      if (this.props.contacts.length === 0) {
+        return (<div> you have no messages </div>);
+      }
       return (
         <div style={infiniteStyle}>
           <InfiniteScroll

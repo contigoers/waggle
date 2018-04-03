@@ -350,16 +350,16 @@ router.post('/login', async ctx =>
     } else {
       let adopterId;
       let username;
-      if (ctx.state.user.org_id === 1) {
-        const [adopter] = await db.getAdopterId(ctx.state.user.id);
+      if (user.org_id === 1) {
+        const [adopter] = await db.getAdopterId(user.id);
         adopterId = adopter.id;
         username = adopter.name;
       } else {
-        const [org] = await db.getOrgName(ctx.state.user.org_id);
+        const [org] = await db.getOrgName(user.org_id);
         username = org.org_name;
       }
       const userInfo = {
-        ...ctx.state.user,
+        ...user,
         adopterId,
         name: username,
       };
