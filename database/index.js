@@ -142,6 +142,8 @@ const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
 
 const getUserById = userId => knex('users').where('id', userId);
 
+const getUserByEmail = email => knex('users').where('email', email);
+
 const markAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted', true);
 
 const unmarkAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted', false);
@@ -267,6 +269,14 @@ const getAdopterContacts = async (userId) => {
   return contacts;
 };
 
+const updateForgotPassword = async (email, token) => {
+  await knex('users').where('email', email).update('forgot_pw_link', token);
+};
+
+const updatePassword = async (token, hash) => {
+  await knex('users').where('forgot_pw_link', token).update('password', hash);
+};
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 module.exports = {
@@ -298,4 +308,7 @@ module.exports = {
   getOrgName,
   // getAdopterContacts,
   updateDogInfo,
+  updateForgotPassword,
+  getUserByEmail,
+  updatePassword,
 };
