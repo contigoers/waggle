@@ -1,16 +1,28 @@
 const Koa = require('koa');
+const path = require('path');
+const fs = require('fs');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
 const passport = require('koa-passport');
 const session = require('koa-session');
+const bcrypt = require('bcrypt');
 const serve = require('koa-static');
 const db = require('../database/index');
+const { sendEmail } = require('./emailer');
 const { mapKeys } = require('lodash');
 
 const app = new Koa();
 
 app.keys = ['supersecret'];
 app.use(session(app));
+
+const readFileThunk = src =>
+  new Promise((resolve, reject) => {
+    fs.readFile(src, 'utf8', (err, data) => {
+      if (err) return reject(err);
+      return resolve(data);
+    });
+  });
 
 app
   .use(serve(`${__dirname}/../react-client/dist`))
@@ -28,6 +40,71 @@ const isLoggedIn = (ctx, next) => {
   return ctx.throw(401, 'You must be logged in!');
   // ctx.redirect('/');  <---redirect to home page??
 };
+
+const randomString = (length) => {
+  let text = '';
+  const possible = 'abcdefghijklmnopqrstuvqxyz0123456789';
+  for (let i = 0; i < length; i += 1) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+
+router.put('/forgotpass', async (ctx) => {
+  const { email } = ctx.request.body;
+  if (!ctx.request.body) {
+    ctx.body = {
+      status: 204,
+      message: 'No Request Body',
+    };
+  }
+  if (!email) {
+    ctx.body = {
+      status: 204,
+      message: 'No Email Address in Request Body',
+    };
+  }
+  const emailDoesExist = await db.getUserByEmail(email);
+  if (!emailDoesExist.length) {
+    ctx.body = {
+      status: 204,
+      message: 'This Email Does Not Exists',
+    };
+  } else {
+    const token = randomString(40);
+    const emailData = {
+      to: email,
+      subject: 'Waggl Password Reset',
+      text: `Please follow the link for instructions to reset your password: http://www.waggl.dog/resetpass/${token}`,
+      html: `<p>Please use the link below for instructions to reset your password.</p><p>http://www.waggl.dog/resetpass/${token}</p>`,
+    };
+    try {
+      await db.updateForgotPassword(email, token);
+      sendEmail(emailData);
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: err.message || 'Sorry, an error has occurred.',
+      };
+    }
+    ctx.body = {
+      status: 200,
+      message: `Email has been sent to ${ctx.request.body.email}`,
+    };
+  }
+});
+
+router.put('/resetpass', async (ctx) => {
+  const { password, token } = ctx.request.body;
+  bcrypt.hash(password, 10, async (err, hash) => {
+    if (err) {
+      console.log(err);
+    } else {
+      await db.updatePassword(token, hash);
+    }
+  });
+});
 
 // get all organizations and contact info
 // router.get('/allOrgInfo', async (ctx) => {
@@ -342,7 +419,7 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
 });
 
 router.post('/login', async ctx =>
-  passport.authenticate('local-login', async (error, user, info) => { // eslint-disable-line
+  passport.authenticate('local-login', async (error, user, info) => {
     if (error) ctx.body = { error };
     if (user === false) {
       ctx.body = { success: false, info };
@@ -370,31 +447,6 @@ router.post('/login', async ctx =>
       return ctx.login(user);
     }
   })(ctx));
-
-// for now this does not use FB oauth/JWT
-// router.post('/login', passport.authenticate('local-login'), async (ctx) => {
-//   let adopterId = null;
-//   let userName = null;
-//   if (ctx.state.user.org_id === 1) {
-//     const [adopter] = await db.getAdopterId(ctx.state.user.id);
-//     adopterId = adopter.id;
-//     userName = adopter.name;
-//   } else {
-//     const [org] = await db.getOrgName(ctx.state.user.org_id);
-//     userName = org.org_name;
-//   }
-//   const user = {
-//     ...ctx.state.user,
-//     adopterId,
-//     name: userName,
-//   };
-//   console.log(ctx)
-//   ctx.status = 201;
-//   ctx.body = {
-//     status: 'success',
-//     user,
-//   };
-// });
 
 router.post('/logout', isLoggedIn, async (ctx) => {
   await ctx.logout();
@@ -476,12 +528,13 @@ router.post('/imageUpload', (ctx) => {
   }
 });
 
+router.get('/*', async (ctx) => {
+  ctx.body = await readFileThunk(path.join(__dirname, '../react-client/dist/index.html'));
+});
+
 app
   .use(router.routes())
-  .use(router.allowedMethods())
-  .use(function* () { // eslint-disable-line
-    this.redirect('/');
-  });
+  .use(router.allowedMethods());
 
 
 app.listen(process.env.PORT, () => {

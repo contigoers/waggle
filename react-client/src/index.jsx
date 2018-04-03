@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import promise from 'redux-promise';
 
 import './styles.scss';
@@ -20,6 +20,7 @@ import SearchResults from './components/SearchResults';
 import UserProfile from './components/UserProfile';
 import ScrollToTop from './components/ScrollToTop';
 import About from './components/About';
+import ResetPass from './components/ResetPass';
 
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -27,10 +28,10 @@ const store = createStore(reducers, composeEnhancers(applyMiddleware(promise)));
 /* eslint-enable */
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <ScrollToTop>
-        <div>
+  <BrowserRouter>
+    <Provider store={store}>
+      <React.Fragment>
+        <ScrollToTop>
           <Route exact path="/" component={Splash} />
           <NavBar />
           <Switch>
@@ -40,13 +41,13 @@ ReactDOM.render(
             <Route path="/searchResults" component={SearchResults} />
             <Route path="/dog/:id" component={DogProfile} />
             <Route path="/about" component={About} />
+            <Route path="/resetpass/:token" component={ResetPass} />
             <Route path="/" component={Landing} />
           </Switch>
           <Footer />
-        </div>
-      </ScrollToTop>
-    </Router>
-
-  </Provider>
+        </ScrollToTop>
+      </React.Fragment>
+    </Provider>
+  </BrowserRouter>
   , document.getElementById('app'),
 );
