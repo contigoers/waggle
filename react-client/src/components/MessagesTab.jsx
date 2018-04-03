@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, List, Icon, Card, Button, Spin, Avatar, message, Input } from 'antd';
+import { Row, List, Icon, Card, Button, Spin, Avatar, message, Form, Input } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { getMessages, deleteMessage, sendMessage } from '../actions/messagingActions';
@@ -39,14 +39,20 @@ class MessagesTab extends React.Component {
       visibleMessages: [],
       loading: false,
       hasMore: true,
+      messageInput: '',
     };
     this.handleInfiniteContactsOnLoad = this.handleInfiniteContactsOnLoad.bind(this);
     this.handleInfiniteMessagesOnLoad = this.handleInfiniteMessagesOnLoad.bind(this);
+    this.onInput = this.onInput.bind(this);
     this.sendMessageAndRender = this.sendMessageAndRender.bind(this);
     this.deleteMessage = this.deleteMessage.bind(this);
     this.renderContactsList = this.renderContactsList.bind(this);
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
     this.getMessages = this.props.getMessages.bind(this);
+  }
+
+  onInput(e) {
+    this.setState({ messageInput: e.target.value });
   }
 
   handleInfiniteContactsOnLoad() {
@@ -82,8 +88,15 @@ class MessagesTab extends React.Component {
   }
 
   async sendMessageAndRender(e) {
-    await this.props.sendMessage(this.props.user.id, this.state.currentContact.id, e.target.value);
-    this.setState({ visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1) });
+    e.preventDefault();
+    if (this.state.messageInput.length > 0) {
+      await this.props.sendMessage(this.props.user.id, this.state.currentContact.id, this.state.messageInput);
+      this.setState({
+        visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1),
+      });
+    } else {
+      message.warning('Cant send an empty message');
+    }
   }
 
   async deleteMessage(e) {
@@ -124,7 +137,20 @@ class MessagesTab extends React.Component {
               <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
             <Row>
-              <Input.TextArea rows={2} placeholder="Send a message..." onPressEnter={this.sendMessageAndRender} style={{ width: '75%', margin: 'auto' }} />
+              <Form onSubmit={this.sendMessageAndRender}>
+                <Form.Item>
+                  <Input.TextArea
+                    rows={2}
+                    value={this.state.messageInput}
+                    onChange={this.onInput}
+                    placeholder="write message..."
+                    style={{ width: '75%', margin: 'auto' }}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit"> Send </Button>
+                </Form.Item>
+              </Form>
             </Row>
             <Row>
               <div style={infiniteStyle}>
