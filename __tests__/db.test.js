@@ -1,16 +1,30 @@
 /* eslint-env jest */
 
-const db = require('../database/index');
+const {
+  getRandomDog,
+  getUserById,
+  createDog,
+  getDogById,
+  markAsAdopted,
+  unmarkAsAdopted,
+  updateDogInfo,
+  createUser,
+  getAdopterId,
+  getAdopterProfile,
+  addFavoriteDog,
+  getFavoriteDogs,
+  removeFavoriteDog,
+} = require('../database/index');
 
 describe('getRandomDog()', () => {
   it('should return an object', async () => {
-    const [dog] = await db.getRandomDog();
+    const [dog] = await getRandomDog();
     expect(dog).toBeDefined();
     expect(typeof dog).toBe('object');
   });
 
   it('should have all necessary properties', async () => {
-    const [dog] = await db.getRandomDog();
+    const [dog] = await getRandomDog();
     expect(dog).toBeDefined();
     expect(dog).toHaveProperty('id');
     expect(dog).toHaveProperty('name');
@@ -35,13 +49,13 @@ describe('getRandomDog()', () => {
 
 describe('getUserById()', () => {
   it('should return an object', async () => {
-    const [user] = await db.getUserById(1);
+    const [user] = await getUserById(1);
     expect(user).toBeDefined();
     expect(typeof user).toBe('object');
   });
 
   it('should return the correct user', async () => {
-    const [user] = await db.getUserById(1);
+    const [user] = await getUserById(1);
     expect(user).toBeDefined();
     expect(user).toEqual({
       id: 1,
@@ -62,7 +76,7 @@ xdescribe('dog creation, adoption, and favoriting', () => {
   let id;
 
   xit('should create a new dog', async () => {
-    [id] = await db.createDog({
+    [id] = await createDog({
       name: 'Test',
       breed: 'Corgi',
       isMix: 0,
@@ -84,7 +98,7 @@ xdescribe('dog creation, adoption, and favoriting', () => {
   });
 
   xit('should retrieve that dog', async () => {
-    const [dog] = await db.getDogById(id);
+    const [dog] = await getDogById(id);
     expect(typeof dog).toBe('object');
     expect(dog).toHaveProperty('id', id);
     expect(dog).toHaveProperty('name', 'Test');
@@ -107,20 +121,20 @@ xdescribe('dog creation, adoption, and favoriting', () => {
   });
 
   xit('should mark that dog adopted', async () => {
-    await db.markAsAdopted(id);
-    const [dog] = await db.getDogById(id);
+    await markAsAdopted(id);
+    const [dog] = await getDogById(id);
     expect(dog.adopted).toBe(1);
   });
 
   xit('should mark that dog unadopted', async () => {
-    await db.unmarkAsAdopted(id);
-    const [dog] = await db.getDogById(id);
+    await unmarkAsAdopted(id);
+    const [dog] = await getDogById(id);
     expect(dog.adopted).toBe(0);
   });
 
   xit('should change the dog\'s name', async () => {
-    await db.updateDogInfo({ id, name: 'Not Test' });
-    const [dog] = await db.getDogById(id);
+    await updateDogInfo({ id, name: 'Not Test' });
+    const [dog] = await getDogById(id);
     expect(dog.name).not.toBe('Test');
     expect(dog.name).toBe('Not Test');
   });
@@ -128,7 +142,7 @@ xdescribe('dog creation, adoption, and favoriting', () => {
 
 describe('users', () => {
   it('should not add an adopter that already exists', async () => {
-    const message = await db.createUser({
+    const message = await createUser({
       email: 'yaboi@yaboi.com',
       org_id: 1,
       address: 'yaboi',
@@ -145,8 +159,9 @@ describe('users', () => {
     expect(message).toBe('already exists!');
   });
 
+  let user;
   it('should create a new adopter with valid credentials', async () => {
-    const [user] = await db.createUser({
+    [user] = await createUser({
       email: 'yaboi@yaboi.com',
       org_id: 1,
       address: 'yaboi',
@@ -161,10 +176,49 @@ describe('users', () => {
     }, 'definitelyNotYaBoi', 'testuser');
 
     expect(typeof user).toBe('object');
+    expect(user).toHaveProperty('id');
+  });
+
+  let adopterId;
+  it('should retrieve a user\'s adopter info', async () => {
+    const [adopter] = await getAdopterId(user.id);
+    expect(adopter).toHaveProperty('name');
+    expect(adopter).toHaveProperty('id');
+    adopterId = adopter.id;
+    expect(typeof adopterId).toBe('number');
+  });
+
+  it('should retrieve a user\'s adopter profile', async () => {
+    const [profile] = await getAdopterProfile(adopterId);
+    expect(profile).toHaveProperty('address');
+    expect(profile).toHaveProperty('city');
+    expect(profile).toHaveProperty('state');
+    expect(profile).toHaveProperty('zipcode');
+    expect(profile).toHaveProperty('phone');
+    expect(profile).toHaveProperty('email');
+    expect(profile).toHaveProperty('id');
+    expect(profile).toHaveProperty('user_id');
+    expect(profile).toHaveProperty('name');
+    expect(profile).toHaveProperty('pets');
+    expect(profile).toHaveProperty('house_type');
+  });
+
+  it('should let users add new favorites', async () => {
+    await addFavoriteDog(adopterId, 1);
+    const faves = await getFavoriteDogs(adopterId);
+    expect(faves).toHaveLength(1);
+    expect(faves[0]).toHaveProperty('id', 1);
+  });
+
+  it('should let users remove favorite dogs', async () => {
+    await removeFavoriteDog(adopterId, 1);
+    const faves = await getFavoriteDogs(adopterId);
+    expect(faves).not.toHaveLength(1);
+    expect(faves).toHaveLength(0);
   });
 
   it('should not add an org that already exists', async () => {
-    const message = await db.createUser({
+    const message = await createUser({
       email: 'yaboi@yaboi.com',
       org_id: 1,
       address: 'yaboi',
@@ -179,8 +233,9 @@ describe('users', () => {
     expect(message).toBe('already exists!');
   });
 
+  let org;
   it('should create a new org with valid credentials', async () => {
-    const [org] = await db.createUser({
+    [org] = await createUser({
       email: 'yaboi@yaboi.com',
       org_id: 1,
       address: 'yaboi',
