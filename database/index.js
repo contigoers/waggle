@@ -89,10 +89,10 @@ const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, 
   .where(knex.raw(`users.org_id = ${orgId} and orgs.id = ${orgId}`));
 
 // get all dogs associated with organization by org id
-const getOrgDogs = orgId => knex.raw(`
-  SELECT dogs.*, orgs.org_name
-  FROM dogs, orgs
-  WHERE dogs.org_id = ${orgId} and orgs.id = ${orgId}`);
+const getOrgDogs = orgId => knex.column(knex.raw('dogs.*, orgs.org_name'))
+  .select()
+  .from(knex.raw('dogs, orgs'))
+  .where(knex.raw(`dogs.org_id = ${orgId} and orgs.id = ${orgId}`));
 
 const getAdopterProfile = adopterId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, adopters.*')).select()
   .from(knex.raw('users, adopters'))
@@ -272,7 +272,6 @@ module.exports = {
   getOrgProfile,
   addFavoriteDog,
   getOrgDogs,
-  // getAllOrganizations,
   getFavoriteDogs,
   createDog,
   createUser,
@@ -280,7 +279,6 @@ module.exports = {
   searchOrgsByName,
   getDogById,
   searchOrgDogs,
-  // getAllDogs,
   getUserById,
   markAsAdopted,
   unmarkAsAdopted,
@@ -294,6 +292,8 @@ module.exports = {
   getOrgContacts,
   getAdopterContacts,
   getOrgName,
-  // getAdopterContacts,
   updateDogInfo,
+  // getAllOrganizations,
+  // getAdopterContacts,
+  // getAllDogs,
 };
