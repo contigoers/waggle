@@ -58,10 +58,10 @@ describe('getUserById()', () => {
   });
 });
 
-describe('dog creation, adoption, and favoriting', () => {
+xdescribe('dog creation, adoption, and favoriting', () => {
   let id;
 
-  it('should create a new dog', async () => {
+  xit('should create a new dog', async () => {
     [id] = await db.createDog({
       name: 'Test',
       breed: 'Corgi',
@@ -83,7 +83,7 @@ describe('dog creation, adoption, and favoriting', () => {
     expect(typeof id).toBe('number');
   });
 
-  it('should retrieve that dog', async () => {
+  xit('should retrieve that dog', async () => {
     const [dog] = await db.getDogById(id);
     expect(typeof dog).toBe('object');
     expect(dog).toHaveProperty('id', id);
@@ -106,22 +106,92 @@ describe('dog creation, adoption, and favoriting', () => {
     expect(dog).toHaveProperty('photo', 'null');
   });
 
-  it('should mark that dog adopted', async () => {
+  xit('should mark that dog adopted', async () => {
     await db.markAsAdopted(id);
     const [dog] = await db.getDogById(id);
     expect(dog.adopted).toBe(1);
   });
 
-  it('should mark that dog unadopted', async () => {
+  xit('should mark that dog unadopted', async () => {
     await db.unmarkAsAdopted(id);
     const [dog] = await db.getDogById(id);
     expect(dog.adopted).toBe(0);
   });
 
-  it('should change the dog\'s name', async () => {
+  xit('should change the dog\'s name', async () => {
     await db.updateDogInfo({ id, name: 'Not Test' });
     const [dog] = await db.getDogById(id);
     expect(dog.name).not.toBe('Test');
     expect(dog.name).toBe('Not Test');
+  });
+});
+
+describe('users', () => {
+  it('should not add an adopter that already exists', async () => {
+    const message = await db.createUser({
+      email: 'yaboi@yaboi.com',
+      org_id: 1,
+      address: 'yaboi',
+      city: 'yaboi',
+      state: 'AK',
+      zipcode: 11111,
+      phone: '7166969693',
+      type: 'adopter',
+      pets: 'yes',
+      name: 'yaboi',
+      house: 'house',
+    }, 'yaboi', 'testuser');
+
+    expect(message).toBe('already exists!');
+  });
+
+  it('should create a new adopter with valid credentials', async () => {
+    const [user] = await db.createUser({
+      email: 'yaboi@yaboi.com',
+      org_id: 1,
+      address: 'yaboi',
+      city: 'yaboi',
+      state: 'AK',
+      zipcode: 11111,
+      phone: '7166969693',
+      type: 'adopter',
+      pets: 'yes',
+      name: 'definitelyNotYaBoisOrg',
+      house: 'house',
+    }, 'definitelyNotYaBoi', 'testuser');
+
+    expect(typeof user).toBe('object');
+  });
+
+  it('should not add an org that already exists', async () => {
+    const message = await db.createUser({
+      email: 'yaboi@yaboi.com',
+      org_id: 1,
+      address: 'yaboi',
+      city: 'yaboi',
+      state: 'AK',
+      zipcode: 11111,
+      phone: '7166969693',
+      type: 'organization',
+      name: 'yaboi',
+    }, 'yaboi', 'testuser');
+
+    expect(message).toBe('already exists!');
+  });
+
+  it('should create a new org with valid credentials', async () => {
+    const [org] = await db.createUser({
+      email: 'yaboi@yaboi.com',
+      org_id: 1,
+      address: 'yaboi',
+      city: 'yaboi',
+      state: 'AK',
+      zipcode: 11111,
+      phone: '7166969693',
+      type: 'organization',
+      name: 'definitelyNotYaBoisOrg',
+    }, 'notYaBoisOrg', 'testuser');
+
+    expect(typeof org).toBe('object');
   });
 });
