@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, List, Icon, Card, Button, Spin, Avatar, message } from 'antd';
+import { Row, List, Icon, Card, Button, Spin, Avatar, message, Form, Input } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { getMessages, deleteMessage } from '../actions/messagingActions';
-
+import { getMessages, deleteMessage, sendMessage } from '../actions/messagingActions';
 
 const userStyle = {
   margin: '10px',
@@ -40,13 +39,20 @@ class MessagesTab extends React.Component {
       visibleMessages: [],
       loading: false,
       hasMore: true,
+      messageInput: '',
     };
     this.handleInfiniteContactsOnLoad = this.handleInfiniteContactsOnLoad.bind(this);
     this.handleInfiniteMessagesOnLoad = this.handleInfiniteMessagesOnLoad.bind(this);
+    this.onInput = this.onInput.bind(this);
+    this.sendMessageAndRender = this.sendMessageAndRender.bind(this);
     this.deleteMessage = this.deleteMessage.bind(this);
     this.renderContactsList = this.renderContactsList.bind(this);
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
     this.getMessages = this.props.getMessages.bind(this);
+  }
+
+  onInput(e) {
+    this.setState({ messageInput: e.target.value });
   }
 
   handleInfiniteContactsOnLoad() {
@@ -81,8 +87,22 @@ class MessagesTab extends React.Component {
     }
   }
 
+  async sendMessageAndRender(e) {
+    e.preventDefault();
+    if (this.state.messageInput.length > 0) {
+      const { id } = this.props.user;
+      await this.props.sendMessage(id, this.state.currentContact.id, this.state.messageInput);
+      this.setState({
+        visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1),
+        messageInput: '',
+      });
+    } else {
+      message.warning('Cant send an empty message');
+    }
+  }
+
   async deleteMessage(e) {
-    await deleteMessage(e.target.id, this.props.user.id, this.state.currentContact.id);
+    await this.props.deleteMessage(e.target.id, this.props.user.id, this.state.currentContact.id);
     this.setState({
       visibleMessages: this.props.messages.slice(0, 10),
     });
@@ -109,6 +129,7 @@ class MessagesTab extends React.Component {
     });
   }
 
+
   render() {
     if (this.state.currentContact) {
       if (this.props.messages) {
@@ -116,6 +137,22 @@ class MessagesTab extends React.Component {
           <div>
             <Row>
               <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
+            </Row>
+            <Row>
+              <Form onSubmit={this.sendMessageAndRender}>
+                <Form.Item>
+                  <Input.TextArea
+                    rows={2}
+                    value={this.state.messageInput}
+                    onChange={this.onInput}
+                    placeholder="write message..."
+                    style={{ width: '50%', marginLeft: 'auto' }}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit"> Send </Button>
+                </Form.Item>
+              </Form>
             </Row>
             <Row>
               <div style={infiniteStyle}>
@@ -166,6 +203,9 @@ class MessagesTab extends React.Component {
       return (<div style={{ margin: '15px' }}> Loading... </div>);
     }
     if (this.props.contacts) {
+      if (this.props.contacts.length === 0) {
+        return (<div> you have no messages </div>);
+      }
       return (
         <div style={infiniteStyle}>
           <InfiniteScroll
@@ -204,5 +244,5 @@ const mapStateToProps = ({ fetchContacts, fetchMessages, storeUser }) => ({
   messages: fetchMessages.messages,
 });
 
-export default connect(mapStateToProps, { getMessages })(MessagesTab);
+export default connect(mapStateToProps, { getMessages, sendMessage, deleteMessage })(MessagesTab);
 
