@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Divider, Row, Col, Icon, message, Tooltip } from 'antd';
+import { Card, Divider, Row, Col, Icon, Button, message, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { startCase } from 'lodash';
@@ -18,6 +18,7 @@ class DogProfile extends React.Component {
 
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
+    this.renderDogsList = this.renderDogsList.bind(this);
   }
 
   async toggleFavorite() {
@@ -54,6 +55,14 @@ class DogProfile extends React.Component {
     }
 
     message.info(adopted ? `${dog.name} not adopted.` : `${dog.name} adopted!`);
+  }
+
+  renderDogsList() {
+    if (this.props.user && this.props.user.org_id > 1) {
+      this.props.history.push('/profile', { menuSelection: 'dogs' });
+    } else if (this.props.user && this.props.user.org_id === 1) {
+      this.props.history.push('/profile', { menuSelection: 'favorites' });
+    }
   }
 
   render() {
@@ -112,71 +121,81 @@ class DogProfile extends React.Component {
     const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.props.toggleEditModal} /></Tooltip>;
 
     let cardActions = null;
-
+    let button = '';
+    if (this.props.user && this.props.user.org_id > 1) {
+      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}> <Icon type="left" />Return to dogs list</Button>;
+    }
     if (this.props.user && dog.org_id === this.props.user.org_id) {
       cardActions = [adoptIcon, editIcon];
     } else if (this.props.user && this.props.user.org_id === 1) {
       cardActions = [inquiryIcon, favoriteIcon];
+      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}> <Icon type="left" />Return to favorite dogs</Button>;
     } else if (!this.props.user) {
       cardActions = [inquiryIcon];
     }
 
     return (
-      <Row>
-        <Col span={10} offset={3} >
-          <Row style={{ marginTop: 30, marginBottom: 30 }} >
-            <Card>
-              <h1> {dog.name} </h1>
-              <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
-              <Divider type="vertical" />
-              <span style={{ fontWeight: 600, fontSize: 16 }} > {dog.male ? 'Male' : 'Female'} </span>
-              <Divider type="vertical" />
-              <span style={{ fontWeight: 600, fontSize: 16 }} > {stage} </span>
+      <div>
+        <Row>
+          {button}
+        </Row>
+        <Row>
+          <Col span={10} offset={3} >
+            <Row style={{ marginTop: 30, marginBottom: 30 }} >
+              <Card>
+                <h1> {dog.name} </h1>
+                <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
+                <Divider type="vertical" />
+                <span style={{ fontWeight: 600, fontSize: 16 }} > {dog.male ? 'Male' : 'Female'} </span>
+                <Divider type="vertical" />
+                <span style={{ fontWeight: 600, fontSize: 16 }} > {stage} </span>
 
-              <Divider />
+                <Divider />
 
-              <h2> About </h2>
+                <h2> About </h2>
 
-              <h3 style={{ marginLeft: 20 }}> Health </h3>
-              <div style={{ marginLeft: 40 }}>
-                <span style={{ fontWeight: 700 }}> Size: </span> {dog.size}
-              </div>
-              <div style={{ marginLeft: 40 }}> <span style={{ fontWeight: 700 }}> Neutered/spayed: </span> {dog.fixed ? 'yes' : 'no'} </div>
-              <div style={{ marginLeft: 40 }}>
-                <span style={{ fontWeight: 700 }}> Special needs: </span> {specialNeeds}
-              </div>
+                <h3 style={{ marginLeft: 20 }}> Health </h3>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Size: </span> {dog.size}
+                </div>
+                <div style={{ marginLeft: 40 }}> <span style={{ fontWeight: 700 }}> Neutered/spayed: </span> {dog.fixed ? 'yes' : 'no'} </div>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Special needs: </span> {specialNeeds}
+                </div>
 
-              <h3 style={{ marginLeft: 20, marginTop: 20 }}> Behavior </h3>
-              <div style={{ marginLeft: 40 }}>
-                <span style={{ fontWeight: 700 }}> Energy level: </span> {dog.energy_level}
-              </div>
-              <div style={{ marginLeft: 40 }}>
-                <span style={{ fontWeight: 700 }}> Temperament concerns: </span> {temperament}
-              </div>
+                <h3 style={{ marginLeft: 20, marginTop: 20 }}> Behavior </h3>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Energy level: </span> {dog.energy_level}
+                </div>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Temperament concerns: </span> {temperament}
+                </div>
 
-              <h2 style={{ marginTop: 20 }} > Bio </h2>
-              <div style={{ marginLeft: 20 }} > {dog.description} </div>
-            </Card>
-          </Row>
-          <Row style={{ marginBottom: 50 }} >
-            {(!this.props.user || (this.props.user.org_id !== dog.org_id)) && <OrgCard org={org} />}
-          </Row>
-        </Col>
-        <Col span={8} offset={1}>
-          <Row style={{ marginTop: 30 }}>
-            <Card
-              style={{ width: 350 }}
-              cover={<img
-                alt="pupper"
-                src={dog.photo}
-              />}
-              actions={cardActions}
-            />
-          </Row>
-        </Col>
-        <InquiryModal id={id} />
-        <EditModal id={id} />
-      </Row>
+                <h2 style={{ marginTop: 20 }} > Bio </h2>
+                <div style={{ marginLeft: 20 }} > {dog.description} </div>
+              </Card>
+            </Row>
+            <Row style={{ marginBottom: 50 }} >
+              {(!this.props.user || (this.props.user.org_id !== dog.org_id)) &&
+              <OrgCard org={org} />}
+            </Row>
+          </Col>
+          <Col span={8} offset={1}>
+            <Row style={{ marginTop: 30 }}>
+              <Card
+                style={{ width: 350 }}
+                cover={<img
+                  alt="pupper"
+                  src={dog.photo}
+                />}
+                actions={cardActions}
+              />
+            </Row>
+          </Col>
+          <InquiryModal id={id} />
+          <EditModal id={id} />
+        </Row>
+      </div>
     );
   }
 }
