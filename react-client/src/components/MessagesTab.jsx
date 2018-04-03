@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Row, List, Icon, Card, Button, Spin, Avatar, message } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { getContacts, getMessages, deleteMessage } from '../actions/messagingActions';
+import { getMessages, deleteMessage } from '../actions/messagingActions';
 
 
 const userStyle = {
@@ -41,56 +41,51 @@ class MessagesTab extends React.Component {
       loading: false,
       hasMore: true,
     };
-    this.getContacts = this.props.getContacts.bind(this);
-    this.getMessages = this.props.getMessages.bind(this);
-    this.renderMessageFeed = this.renderMessageFeed.bind(this);
-    this.renderContactsList = this.renderContactsList.bind(this);
-    this.handleInfiniteMessagesOnLoad = this.handleInfiniteMessagesOnLoad.bind(this);
     this.handleInfiniteContactsOnLoad = this.handleInfiniteContactsOnLoad.bind(this);
+    this.handleInfiniteMessagesOnLoad = this.handleInfiniteMessagesOnLoad.bind(this);
     this.deleteMessage = this.deleteMessage.bind(this);
+    this.renderContactsList = this.renderContactsList.bind(this);
+    this.renderMessageFeed = this.renderMessageFeed.bind(this);
+    this.getMessages = this.props.getMessages.bind(this);
+  }
+
+  handleInfiniteContactsOnLoad() {
+    this.setState({ loading: true });
+    if (this.state.visibleContacts.length >= this.props.contacts.length) {
+      message.warning('Loaded all contacts');
+      this.setState({
+        hasMore: false,
+        loading: false,
+      });
+    } else {
+      this.setState({
+        visibleContacts: this.props.contacts.slice(0, this.state.visibleContacts.length + 5),
+        loading: false,
+      });
+    }
   }
 
   handleInfiniteMessagesOnLoad() {
     this.setState({ loading: true });
     if (this.state.visibleMessages.length >= this.props.messages.length) {
-      message.warning('Infinite List loaded all');
+      message.warning('Loaded all messages');
       this.setState({
         hasMore: false,
         loading: false,
       });
-      return;
-    }
-    this.setState({
-      visibleMessages: this.props.messages.slice(0, this.state.visibleMessages.length + 5),
-      loading: false,
-    });
-  }
-
-  async handleInfiniteContactsOnLoad() {
-    console.log('infinite contacts');
-    await this.setState({ loading: true });
-    if (this.state.visibleContacts.length > this.props.contacts.length) {
-      console.log('no more', this.props.contacts.length, this.state.visibleContacts.length);
-      message.warning('Infinite List loaded all');
-      await this.setState({
-        hasMore: false,
-        loading: false,
-      });
     } else {
-      console.log('dis a thing', this.state)
-      await this.setState({
-        visibleContacts: this.props.contacts.slice(0, this.state.visibleContacts.length + 5),
+      this.setState({
+        visibleMessages: this.props.messages.slice(0, this.state.visibleMessages.length + 5),
         loading: false,
       });
-      console.log(this.state.visibleContacts)
     }
   }
 
   async deleteMessage(e) {
-    await deleteMessage(e.target.id, this.props.user.id, e.target.dataset.contact);
+    await deleteMessage(e.target.id, this.props.user.id, this.state.currentContact.id);
     this.setState({
-      visibleMessages: this.props.messages.slice(0, this.state.visibleMessages.length),
-    }, console.log('statete', this.state));
+      visibleMessages: this.props.messages.slice(0, 10),
+    });
   }
 
   renderContactsList() {
@@ -103,19 +98,18 @@ class MessagesTab extends React.Component {
   }
 
   async renderMessageFeed(e) {
+    const { id } = e.target;
     const { name } = e.target.dataset;
-    await this.getMessages(this.props.user.id, e.target.id);
+    await this.getMessages(this.props.user.id, id);
     this.setState({
-      currentContact: name,
+      currentContact: { id, name },
       visibleMessages: this.props.messages.slice(0, 5),
       loading: false,
       hasMore: true,
     });
   }
 
-
   render() {
-    console.log('rendering', this.props, this.state);
     if (this.state.currentContact) {
       if (this.props.messages) {
         return (
@@ -133,32 +127,32 @@ class MessagesTab extends React.Component {
                   useWindow={false}
                 >
                   {
-                    this.state.visibleMessages.map(msg => (
-                      <Card
-                        key={msg.id}
-                        style={msg.sender_id === this.props.user.id ? userStyle : contactStyle}
-                        title={msg.sender_id === this.props.user.id ?
-                          this.props.user.name : this.state.currentContact}
-                        extra={msg.deleted ? null : (
-                          <span
-                            className="hoverable"
-                            id={msg.id}
-                            data-contact={msg.sender_id === this.props.user.id ?
-                              msg.recipient_id : msg.sender_id}
-                            style={{ fontSize: 'smaller' }}
-                            tabIndex={msg.id}
-                            role="button"
-                            onClick={this.deleteMessage}
-                          >
-                            delete message
-                          </span>
-                        )
-                      }
-                      >
-                        <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
-                        <div style={{ fontSize: 'smaller' }} > {message.sent} </div>
-                      </Card>
-                      ))
+                    this.state.visibleMessages.map((msg) => {
+                      const isMine = msg.sender_id === this.props.user.id;
+                      return (
+                        <Card
+                          key={msg.id}
+                          style={isMine ? userStyle : contactStyle}
+                          title={isMine ? this.props.user.name : this.state.currentContact.name}
+                          extra={msg.deleted ? null : (
+                            <span
+                              className="hoverable"
+                              id={msg.id}
+                              style={{ fontSize: 'smaller' }}
+                              tabIndex={msg.id}
+                              role="button"
+                              onClick={this.deleteMessage}
+                            >
+                              delete message
+                            </span>
+                          )
+                        }
+                        >
+                          <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
+                          <div style={{ fontSize: 'smaller' }} > {message.sent} </div>
+                        </Card>
+                      );
+                    })
                   }
                 </InfiniteScroll>
               </div>
@@ -169,7 +163,7 @@ class MessagesTab extends React.Component {
           </div>
         );
       }
-      return (<div> Loading... </div>);
+      return (<div style={{ margin: '15px' }}> Loading... </div>);
     }
     if (this.props.contacts) {
       return (
@@ -188,7 +182,7 @@ class MessagesTab extends React.Component {
                 <List.Item>
                   <List.Item.Meta
                     avatar={<Avatar icon="mail" />}
-                    title={<div className="hoverable" id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}>{contact.name}</div>}
+                    title={<div className="hoverable" id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)
@@ -200,7 +194,7 @@ class MessagesTab extends React.Component {
         </div>
       );
     }
-    return (<div> Loading... </div>);
+    return (<div style={{ margin: '15px' }}> Loading... </div>);
   }
 }
 
@@ -210,10 +204,5 @@ const mapStateToProps = ({ fetchContacts, fetchMessages, storeUser }) => ({
   messages: fetchMessages.messages,
 });
 
-const mapDispatchToProps = {
-  getContacts,
-  getMessages,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessagesTab);
+export default connect(mapStateToProps, { getMessages })(MessagesTab);
 
