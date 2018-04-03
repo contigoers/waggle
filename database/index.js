@@ -207,7 +207,7 @@ const getMessagesForChat = async (userId, contactId) => {
   const messages = await knex.select()
     .from(knex.raw('messages'))
     .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`))
-    .orderBy('id', 'asc');
+    .orderBy('id', 'desc');
   return messages;
 };
 
@@ -296,6 +296,5 @@ module.exports = {
   getOrgContacts,
   getAdopterContacts,
   getOrgName,
-  // getAdopterContacts,
   updateDogInfo,
 };

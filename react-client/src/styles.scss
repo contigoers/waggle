@@ -304,3 +304,8 @@ $z-index: (
 .user-profile-body  {
   min-height: 100vh;
 }
+
+.hoverable:hover {
+  cursor: pointer;
+  color: lightgreen;
+}
