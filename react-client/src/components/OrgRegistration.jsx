@@ -87,9 +87,9 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
         >
           {getFieldDecorator('email', {
               rules: [{
-                type: 'email', message: 'The input is not valid E-mail!',
+                type: 'email', message: 'The input is not valid a valid email address.',
               }, {
-                required: true, message: 'Please enter your E-mail!',
+                required: true, message: 'Please enter your email!',
               }],
             })(<Input />)}
         </FormItem>
