@@ -258,7 +258,7 @@ $z-index: (
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
-  font-size: 28px;
+  font-size: 26px;
   grid-column-gap: 10%;
 }
 
@@ -299,6 +299,10 @@ $z-index: (
     font-size: 35px;
     color: $primary-dark;
   }
+}
+
+.user-profile-body  {
+  min-height: 100vh;
 }
 
 .hoverable:hover {
