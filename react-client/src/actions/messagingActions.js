@@ -31,6 +31,15 @@ const getMessages = async (userId, contactId) => {
   };
 };
 
+const deleteMessage = async (messageId, userId, contactId) => {
+  await axios.patch('/messages/delete', { messageId });
+  const { data } = await axios.get('/messages/fetch', { params: { userId, contactId } });
+  return {
+    type: GET_MESSAGES,
+    data,
+  };
+};
+
 export {
   TOGGLE_INQUIRY_MODAL,
   toggleInquiryModal,
@@ -38,4 +47,5 @@ export {
   getContacts,
   GET_MESSAGES,
   getMessages,
+  deleteMessage,
 };

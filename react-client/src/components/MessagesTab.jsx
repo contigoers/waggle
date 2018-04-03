@@ -1,26 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, List, Icon, Card, message } from 'antd';
+import { Row, List, Icon, Card, Button, message } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { getContacts, getMessages } from '../actions/messagingActions';
+import { getContacts, getMessages, deleteMessage } from '../actions/messagingActions';
 
 
 const userStyle = {
-  marginTop: '15px',
+  margin: '10px',
   border: '1px #872320 solid',
   backgroundColor: '#ffeded',
+  width: '500px',
+  float: 'right',
 };
 const contactStyle = {
-  marginTop: '15px',
+  margin: '10px',
   border: '1px #1a4672 solid',
   backgroundColor: '#edf6ff',
+  width: '500px',
+  float: 'left',
 };
 const infiniteStyle = {
   border: '1px solid black',
   overflow: 'auto',
   padding: '8px 24px',
-  height: '300px',
+  height: '400px',
+  width: '80%',
+  margin: 'auto',
 };
 
 class MessagesTab extends React.Component {
@@ -39,11 +45,10 @@ class MessagesTab extends React.Component {
     this.renderContactsList = this.renderContactsList.bind(this);
     this.handleInfiniteMessagesOnLoad = this.handleInfiniteMessagesOnLoad.bind(this);
     this.handleInfiniteContactsOnLoad = this.handleInfiniteContactsOnLoad.bind(this);
+    this.deleteMessage = this.deleteMessage.bind(this);
   }
 
   handleInfiniteMessagesOnLoad() {
-    console.log('handle infinite messages on load');
-    this.setState({ loading: true });
     if (this.state.visibleMessages.length >= this.props.messages.length) {
       message.warning('Infinite List loaded all');
       this.setState({
@@ -52,7 +57,6 @@ class MessagesTab extends React.Component {
       });
       return;
     }
-    console.log('setting state');
     this.setState({
       visibleMessages: this.props.messages.slice(0, this.state.visibleMessages.length + 5),
       loading: false,
@@ -60,7 +64,6 @@ class MessagesTab extends React.Component {
   }
 
   handleInfiniteContactsOnLoad() {
-    console.log('handle infinite contacts on load');
     this.setState({ loading: true });
     if (this.state.visibleContacts.length >= this.props.contacts.length) {
       message.warning('Infinite List loaded all');
@@ -70,11 +73,14 @@ class MessagesTab extends React.Component {
       });
       return;
     }
-    console.log('setting state');
     this.setState({
-      visibleContacts: this.props.contacts.slice(0, Math.min(this.props.contacts.length, this.state.visibleContacts.length + 5)),
+      visibleContacts: this.props.contacts.slice(0, this.state.visibleContacts.length + 5),
       loading: false,
     });
+  }
+
+  async deleteMessage(e) {
+    await deleteMessage(e.target.id, this.props.user.id, e.target.dataset.contact);
   }
 
   renderContactsList() {
@@ -93,6 +99,7 @@ class MessagesTab extends React.Component {
     });
   }
 
+
   render() {
     console.log('rendering', this.props, this.state);
     if (this.state.currentContact) {
@@ -100,11 +107,16 @@ class MessagesTab extends React.Component {
         return (
           <div>
             <Row>
-              <div role="link" tabIndex={0} onClick={this.renderContactsList}> Return to contacts list </div>
+              <Button onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
             <Row>
-              <Col span={12} offset={3}>
-                <div>
+              <div style={infiniteStyle}>
+                <InfiniteScroll
+                  initialLoad={false}
+                  pageStart={0}
+                  loadMore={this.handleInfiniteMessagesOnLoad}
+                  hasMore={!this.state.loading && this.state.hasMore}
+                >
                   {
                     this.state.visibleMessages.map(msg => (
                       <Card
@@ -112,18 +124,30 @@ class MessagesTab extends React.Component {
                         style={msg.sender_id === this.props.user.id ? userStyle : contactStyle}
                         title={msg.sender_id === this.props.user.id ?
                           this.props.user.name : this.state.currentContact}
-                        extra={<span style={{ fontSize: 'smaller' }} role="button"> Delete </span>}
+                        extra={
+                          <span
+                            id={msg.id}
+                            data-contact={msg.sender_id === this.props.user.id ?
+                              msg.recipient_id : msg.sender_id}
+                            style={{ fontSize: 'smaller' }}
+                            tabIndex={msg.id}
+                            role="button"
+                            onClick={this.deleteMessage}
+                          >
+                            delete message
+                          </span>
+                      }
                       >
-                        <div> {msg.message} </div>
+                        <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
                         <div style={{ fontSize: 'smaller' }} > {message.sent} </div>
                       </Card>
                       ))
                   }
-                </div>
-              </Col>
+                </InfiniteScroll>
+              </div>
             </Row>
             <Row>
-              <div role="link" tabIndex={0} onClick={this.renderContactsList}> Return to contacts list </div>
+              <Button onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
           </div>
         );
@@ -134,7 +158,7 @@ class MessagesTab extends React.Component {
       return (
         <div style={infiniteStyle}>
           <InfiniteScroll
-            //initialLoad={false}
+            initialLoad={false}
             pageStart={0}
             loadMore={this.handleInfiniteContactsOnLoad}
             hasMore={!this.state.loading && this.state.hasMore}
