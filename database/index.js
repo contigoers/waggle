@@ -27,7 +27,7 @@ const createUser = async (user, username, password) => {
     zipcode: user.zipcode,
     phone: user.phone,
     org_id: 1, // default organization ID for adopters
-  }).orderBy('id', 'asc');
+  });
   const userId = await knex.select('id').from('users').where('username', username);
   if (user.type === 'adopter') {
     await knex('adopters').insert({
@@ -35,16 +35,14 @@ const createUser = async (user, username, password) => {
       pets: user.pets === 'yes',
       house_type: user.house,
       user_id: userId[0].id,
-    }).orderBy('id', 'asc');
+    });
   } else if (user.type === 'organization') {
     const orgQuery = await knex.select().from('orgs')
       .where(knex.raw(`LOWER(org_name) = LOWER('${user.name}')`));
     if (orgQuery.length) {
       return 'already exists!';
     }
-    await knex('orgs').insert({
-      org_name: user.name,
-    }).orderBy('id', 'asc');
+    await knex('orgs').insert({ org_name: user.name });
     const orgId = await knex.select('id').from('orgs').where('org_name', user.name);
     await knex('users').where('id', userId[0].id).update('org_id', orgId[0].id);
   }
@@ -78,7 +76,7 @@ const createDog = dog => knex('dogs').insert({
   photo: dog.photo,
   description: dog.description,
   org_id: dog.orgId,
-}).orderBy('id', 'asc');
+});
 
 // get dog by id
 const getDogById = dogId => knex('dogs').where('id', dogId);
@@ -129,7 +127,7 @@ const removeFavoriteDog = async (adopterId, dogId) => {
   await knex('favoritedogs').where('adopter_id', adopterId).andWhere('dog_id', dogId).del();
   return getFavoriteDogs(adopterId);
 };
-
+/*
 // get all organizations in orgs
 const getAllOrganizations = () => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
@@ -139,7 +137,7 @@ const getAllOrganizations = () => knex.column(knex.raw('users.address, users.cit
 const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
   .from(knex.raw('dogs, orgs'))
   .where(knex.raw('orgs.id = dogs.org_id'));
-
+*/
 const getUserById = userId => knex('users').where('id', userId);
 
 const markAsAdopted = dogId => knex('dogs').where('id', dogId).update('adopted', true);
@@ -274,7 +272,7 @@ module.exports = {
   getOrgProfile,
   addFavoriteDog,
   getOrgDogs,
-  getAllOrganizations,
+  // getAllOrganizations,
   getFavoriteDogs,
   createDog,
   createUser,
@@ -282,7 +280,7 @@ module.exports = {
   searchOrgsByName,
   getDogById,
   searchOrgDogs,
-  getAllDogs,
+  // getAllDogs,
   getUserById,
   markAsAdopted,
   unmarkAsAdopted,
