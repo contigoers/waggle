@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, List, Icon, Card, Button, Spin, Avatar, message } from 'antd';
+import { Row, List, Icon, Card, Button, Spin, Avatar, message, Input } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { getMessages, deleteMessage } from '../actions/messagingActions';
-
+import { getMessages, deleteMessage, sendMessage } from '../actions/messagingActions';
 
 const userStyle = {
   margin: '10px',
@@ -43,6 +42,7 @@ class MessagesTab extends React.Component {
     };
     this.handleInfiniteContactsOnLoad = this.handleInfiniteContactsOnLoad.bind(this);
     this.handleInfiniteMessagesOnLoad = this.handleInfiniteMessagesOnLoad.bind(this);
+    this.sendMessageAndRender = this.sendMessageAndRender.bind(this);
     this.deleteMessage = this.deleteMessage.bind(this);
     this.renderContactsList = this.renderContactsList.bind(this);
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
@@ -81,8 +81,13 @@ class MessagesTab extends React.Component {
     }
   }
 
+  async sendMessageAndRender(e) {
+    await this.props.sendMessage(this.props.user.id, this.state.currentContact.id, e.target.value);
+    this.setState({ visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1) });
+  }
+
   async deleteMessage(e) {
-    await deleteMessage(e.target.id, this.props.user.id, this.state.currentContact.id);
+    await this.props.deleteMessage(e.target.id, this.props.user.id, this.state.currentContact.id);
     this.setState({
       visibleMessages: this.props.messages.slice(0, 10),
     });
@@ -109,6 +114,7 @@ class MessagesTab extends React.Component {
     });
   }
 
+
   render() {
     if (this.state.currentContact) {
       if (this.props.messages) {
@@ -116,6 +122,9 @@ class MessagesTab extends React.Component {
           <div>
             <Row>
               <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
+            </Row>
+            <Row>
+              <Input.TextArea rows={2} placeholder="Send a message..." onPressEnter={this.sendMessageAndRender} style={{ width: '75%', margin: 'auto' }} />
             </Row>
             <Row>
               <div style={infiniteStyle}>
@@ -204,5 +213,5 @@ const mapStateToProps = ({ fetchContacts, fetchMessages, storeUser }) => ({
   messages: fetchMessages.messages,
 });
 
-export default connect(mapStateToProps, { getMessages })(MessagesTab);
+export default connect(mapStateToProps, { getMessages, sendMessage, deleteMessage })(MessagesTab);
 

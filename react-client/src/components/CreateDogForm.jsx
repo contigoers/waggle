@@ -80,12 +80,11 @@ class DogForm extends React.Component {
         .then((response) => {
           this.props.form.resetFields();
           this.setState(this.defaultState);
-          alert('Successful addition of dog!');
+          alert('Successfully added dog!');
           return response;
         })
         .catch((error) => {
-          console.log('error adding dog', error);
-          alert('Error!', error);
+          alert('Error adding dog', error);
         });
       return dog;
     });
