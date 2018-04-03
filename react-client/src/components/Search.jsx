@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, BackTop, Divider, Collapse } from 'antd';
-import { forOwn, keys } from 'lodash';
+import { forOwn, keys, some } from 'lodash';
 import { Redirect } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
 import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
@@ -24,6 +24,7 @@ class Search extends React.Component {
     };
     this.fetchAndRedirect = this.fetchAndRedirect.bind(this);
     this.submitData = this.submitData.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +39,13 @@ class Search extends React.Component {
   getFavorites() {
     const { adopterParams } = this.props;
     this.props.getFavorites({ params: adopterParams });
+  }
+
+  clearSearch() {
+    const { params } = this.props;
+    forOwn(params, (value, key) => {
+      console.log(value, key);
+    });
   }
 
   submitData() {
@@ -130,6 +138,12 @@ class Search extends React.Component {
           <Button className="submit-search search-button" onClick={this.submitData}>
           Submit
           </Button>
+
+          {some(this.props.params, value => value.length) &&
+          <Button className="reset-search search-button" onClick={this.clearSearch} style={{ marginLeft: 20 }} >
+          Reset Search
+          </Button>}
+
           <Divider />
           <div className="search-results">
             <div className="results-number">
