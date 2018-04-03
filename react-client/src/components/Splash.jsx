@@ -18,7 +18,7 @@ class Splash extends React.Component {
     this.state = {
       count: 1,
       isHovered: false,
-      dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend'],
+      dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend', 'soul mate'],
       currentName: 'best friend',
       video: splashImage,
     };
