@@ -127,9 +127,13 @@ const removeFavoriteDog = async (adopterId, dogId) => {
   await knex('favoritedogs').where('adopter_id', adopterId).andWhere('dog_id', dogId).del();
   return getFavoriteDogs(adopterId);
 };
+
 /*
 // get all organizations in orgs
-const getAllOrganizations = () => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
+const getAllOrganizations = () =>
+  knex.column(knex.raw
+    ('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*'))
+    .select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id'));
 

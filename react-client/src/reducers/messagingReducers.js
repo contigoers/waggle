@@ -25,10 +25,8 @@ const fetchContacts = (state = { contacts: null }, action) => {
 };
 
 const fetchMessages = (state = { messages: null }, action) => {
-  console.log('fetching')
   switch (action.type) {
     case GET_MESSAGES:
-    console.log('action messages', action.data.messages)
       return {
         ...state,
         messages: action.data.messages,

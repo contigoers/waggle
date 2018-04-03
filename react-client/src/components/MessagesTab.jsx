@@ -90,9 +90,11 @@ class MessagesTab extends React.Component {
   async sendMessageAndRender(e) {
     e.preventDefault();
     if (this.state.messageInput.length > 0) {
-      await this.props.sendMessage(this.props.user.id, this.state.currentContact.id, this.state.messageInput);
+      const { id } = this.props.user;
+      await this.props.sendMessage(id, this.state.currentContact.id, this.state.messageInput);
       this.setState({
         visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1),
+        messageInput: '',
       });
     } else {
       message.warning('Cant send an empty message');
@@ -144,7 +146,7 @@ class MessagesTab extends React.Component {
                     value={this.state.messageInput}
                     onChange={this.onInput}
                     placeholder="write message..."
-                    style={{ width: '75%', margin: 'auto' }}
+                    style={{ width: '50%', marginLeft: 'auto' }}
                   />
                 </Form.Item>
                 <Form.Item>
