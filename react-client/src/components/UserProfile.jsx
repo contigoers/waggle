@@ -28,7 +28,11 @@ class UserProfile extends React.Component {
 
   async componentWillMount() {
     await this.props.getContacts(this.props.user.id, this.state.type);
-    this.setState({ menuSelection: 'messages' });
+    if (this.props.location.state) {
+      this.setState(this.props.location.state);
+    } else {
+      this.setState({ menuSelection: 'messages' });
+    }
   }
 
   getOrgDogs() {
