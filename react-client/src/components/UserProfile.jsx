@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { map, isEmpty, mapKeys } from 'lodash';
-import { Row, Col, Menu, Icon } from 'antd';
+import { Row, Col, Menu, Icon, BackTop } from 'antd';
 import { CSSTransitionGroup } from 'react-transition-group';
 
 import SearchResult from './DogPreviewCard';
@@ -16,7 +16,7 @@ class UserProfile extends React.Component {
 
     this.state = {
       type: this.props.user.org_id === 1 ? 'adopter' : 'org',
-      menuSelection: 'messages',
+      menuSelection: null,
     };
     if (this.state.type === 'org') {
       this.getOrgDogs();
@@ -26,8 +26,13 @@ class UserProfile extends React.Component {
     this.updateMenu = this.updateMenu.bind(this);
   }
 
-  componentDidMount() {
-    this.props.getContacts(this.props.user.id, this.state.type);
+  async componentWillMount() {
+    await this.props.getContacts(this.props.user.id, this.state.type);
+    if (this.props.location.state) {
+      this.setState(this.props.location.state);
+    } else {
+      this.setState({ menuSelection: 'messages' });
+    }
   }
 
   getOrgDogs() {
@@ -88,19 +93,23 @@ class UserProfile extends React.Component {
                   }
                 </Col>
               </Row>
-              {this.state.type === 'org' &&
-              <div>
-                {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-              </div>
+                {this.state.type === 'org' &&
+                <div className="search-results-grid" style={{ marginTop: 30 }}>
+                  {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+                </div>
               }
-              {this.state.type === 'adopter' &&
-              <div>
-                {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
-              </div>
+                {this.state.type === 'adopter' &&
+                <div className="search-results-grid" style={{ marginTop: 30 }}>
+                  {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+                </div>
               }
+              <BackTop />
             </div>}
             {(menuSelection === 'messages' &&
-            <MessagesTab />
+              <MessagesTab />
+            )}
+            {(!menuSelection === 'null' &&
+              <div> Loading... </div>
             )}
           </Row>
         </div>
@@ -109,10 +118,6 @@ class UserProfile extends React.Component {
   }
 }
 
-// {(menuSelection === 'messages') &&
-
-
-// }
 const mapStateToProps = ({
   search, storeUser, // fetchContacts, fetchMessages,
 }) => (

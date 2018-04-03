@@ -14,19 +14,18 @@ module.exports = () => {
 
   // LOCAL LOGIN STRATEGY
   passport.use('local-login', new LocalStrategy(async (username, password, cb) => {
-    const userInfo = await db.checkCredentials(username);
-    if (userInfo.length) {
-      const user = userInfo[0];
+    const [user] = await db.checkCredentials(username);
+    if (user) {
       bcrypt.compare(password, user.password, (err, res) => {
         if (err) {
-          cb(err, null);
-        } else if (res === false) {
-          cb(null, false);
+          return cb(err);
+        } else if (!res) {
+          return cb(null, res, 'incorrect password');
         }
-        cb(null, user);
+        return cb(null, user);
       });
     } else {
-      cb(null, false);
+      return cb(null, false, 'user not found');
     }
   }));
 

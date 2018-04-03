@@ -107,31 +107,31 @@ router.put('/resetpass', async (ctx) => {
 });
 
 // get all organizations and contact info
-router.get('/allOrgInfo', async (ctx) => {
-  const allOrgs = await db.getAllOrganizations();
-  ctx.body = {
-    status: 'success',
-    allOrgs,
-  };
-});
+// router.get('/allOrgInfo', async (ctx) => {
+//   const allOrgs = await db.getAllOrganizations();
+//   ctx.body = {
+//     status: 'success',
+//     allOrgs,
+//   };
+// });
 
 // get all dogs
-router.get('/allDogInfo', async (ctx) => {
-  const allDogs = await db.getAllDogs();
-  ctx.body = {
-    status: 'success',
-    allDogs,
-  };
-});
+// router.get('/allDogInfo', async (ctx) => {
+//   const allDogs = await db.getAllDogs();
+//   ctx.body = {
+//     status: 'success',
+//     allDogs,
+//   };
+// });
 
 // get info on single dog by dogId
-router.get('/dogInfo', async (ctx) => {
-  const dog = await db.getDogById(ctx.request.query.dogId);
-  ctx.body = {
-    status: 'success',
-    dog: dog[0],
-  };
-});
+// router.get('/dogInfo', async (ctx) => {
+//   const dog = await db.getDogById(ctx.request.query.dogId);
+//   ctx.body = {
+//     status: 'success',
+//     dog: dog[0],
+//   };
+// });
 
 // mark dog status as 'adopted' - for organization access only
 router.patch('/adopted', async (ctx) => {
@@ -402,12 +402,12 @@ router.get('/randomDog', async (ctx) => {
 });
 
 // not being used for now except for passport debugging purposes
-router.get('/user', (ctx) => {
-  ctx.status = 200;
-  ctx.body = {
-    user: ctx.state.user,
-  };
-});
+// router.get('/user', (ctx) => {
+//   ctx.status = 200;
+//   ctx.body = {
+//     user: ctx.state.user,
+//   };
+// });
 
 // for now this does not use JWT/FBoauth
 router.post('/register', passport.authenticate('local-signup'), (ctx) => {
@@ -418,27 +418,60 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
   };
 });
 
+router.post('/login', async ctx =>
+  passport.authenticate('local-login', async (error, user, info) => { // eslint-disable-line
+    if (error) ctx.body = { error };
+    if (user === false) {
+      ctx.body = { success: false, info };
+      ctx.throw(401, info);
+    } else {
+      let adopterId;
+      let username;
+      if (ctx.state.user.org_id === 1) {
+        const [adopter] = await db.getAdopterId(ctx.state.user.id);
+        adopterId = adopter.id;
+        username = adopter.name;
+      } else {
+        const [org] = await db.getOrgName(ctx.state.user.org_id);
+        username = org.org_name;
+      }
+      const userInfo = {
+        ...ctx.state.user,
+        adopterId,
+        name: username,
+      };
+      ctx.body = {
+        success: true,
+        user: userInfo,
+      };
+      return ctx.login(user);
+    }
+  })(ctx));
+
 // for now this does not use FB oauth/JWT
-router.post('/login', passport.authenticate('local-login'), async (ctx) => {
-  let adopterId = null;
-  let userName = null;
-  if (ctx.state.user.org_id === 1) {
-    const adopter = await db.getAdopterId(ctx.state.user.id);
-    adopterId = adopter[0].id;
-    userName = adopter[0].name;
-  } else {
-    const org = await db.getOrgName(ctx.state.user.org_id);
-    userName = org[0].org_name;
-  }
-  console.log('userName', userName);
-  const user = Object.assign(ctx.state.user, { adopterId, name: userName });
-  console.log(user);
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    user,
-  };
-});
+// router.post('/login', passport.authenticate('local-login'), async (ctx) => {
+//   let adopterId = null;
+//   let userName = null;
+//   if (ctx.state.user.org_id === 1) {
+//     const [adopter] = await db.getAdopterId(ctx.state.user.id);
+//     adopterId = adopter.id;
+//     userName = adopter.name;
+//   } else {
+//     const [org] = await db.getOrgName(ctx.state.user.org_id);
+//     userName = org.org_name;
+//   }
+//   const user = {
+//     ...ctx.state.user,
+//     adopterId,
+//     name: userName,
+//   };
+//   console.log(ctx)
+//   ctx.status = 201;
+//   ctx.body = {
+//     status: 'success',
+//     user,
+//   };
+// });
 
 router.post('/logout', isLoggedIn, async (ctx) => {
   await ctx.logout();
@@ -477,6 +510,7 @@ router.patch('/messages/delete', async (ctx) => {
 
 // gets messages between two users
 router.get('/messages/fetch', async (ctx) => {
+  console.log('fetching messages');
   const { userId } = ctx.request.query;
   const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);
