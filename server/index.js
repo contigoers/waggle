@@ -474,9 +474,7 @@ router.post('/messages/post', async (ctx) => {
 
 // marks a message as deleted in database
 router.patch('/messages/delete', async (ctx) => {
-  console.log('deleting message', ctx.request.body);
-  const msg = await db.deleteMessage(ctx.request.body.messageId);
-  console.log('deleted message', msg);
+  await db.deleteMessage(ctx.request.body.messageId);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -485,7 +483,6 @@ router.patch('/messages/delete', async (ctx) => {
 
 // gets messages between two users
 router.get('/messages/fetch', async (ctx) => {
-  console.log('fetching messages');
   const { userId } = ctx.request.query;
   const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);

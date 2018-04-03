@@ -127,9 +127,13 @@ const removeFavoriteDog = async (adopterId, dogId) => {
   await knex('favoritedogs').where('adopter_id', adopterId).andWhere('dog_id', dogId).del();
   return getFavoriteDogs(adopterId);
 };
+
 /*
 // get all organizations in orgs
-const getAllOrganizations = () => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
+const getAllOrganizations = () =>
+  knex.column(knex.raw
+    ('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*'))
+    .select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw('users.org_id = orgs.id'));
 
@@ -242,6 +246,7 @@ const getOrgContacts = async (userId) => {
 const getAdopterContacts = async (userId) => {
   const messages = await knex('messages').select('recipient_id', 'dogName')
     .where('sender_id', userId);
+    // console.log('messages', messages);
   const namesAndDogs = {};
   messages.forEach((message) => {
     if (!has(namesAndDogs, message.recipient_id)) {
@@ -249,21 +254,28 @@ const getAdopterContacts = async (userId) => {
     }
     namesAndDogs[message.recipient_id].dogs.push(message.dogName);
   });
+  // console.log('namesAndDogs', namesAndDogs);
   const ids = Object.keys(namesAndDogs);
-  const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
-  names[0].forEach((obj) => {
-    if (has(namesAndDogs, obj.id)) {
-      namesAndDogs[obj.id].name = obj.org_name;
-    }
-  });
+  // console.log('ids', ids);
   const contacts = [];
-  forEach(namesAndDogs, (innerObj, key) => {
-    contacts.push({
-      id: key,
-      name: innerObj.name,
-      dogs: innerObj.dogs,
+  if (ids.length) {
+    const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
+    // console.log('names', names);
+    names[0].forEach((obj) => {
+      if (has(namesAndDogs, obj.id)) {
+        namesAndDogs[obj.id].name = obj.org_name;
+      }
     });
-  });
+    forEach(namesAndDogs, (innerObj, key) => {
+      contacts.push({
+        id: key,
+        name: innerObj.name,
+        dogs: innerObj.dogs,
+      });
+    });
+  }
+  // console.log('namesAndDogs2', namesAndDogs);
+  // console.log('contacts', contacts)
   return contacts;
 };
 

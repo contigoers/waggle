@@ -80,12 +80,11 @@ class DogForm extends React.Component {
         .then((response) => {
           this.props.form.resetFields();
           this.setState(this.defaultState);
-          alert('Successful addition of dog!');
+          alert('Successfully added dog!');
           return response;
         })
         .catch((error) => {
-          console.log('error adding dog', error);
-          alert('Error!', error);
+          alert('Error adding dog', error);
         });
       return dog;
     });
@@ -333,10 +332,6 @@ const mapStateToProps = ({ storeUser }) => (
 
 export default connect(mapStateToProps, null)(CreateDogForm);
 
-// TODO: format fields with columns (ughhh)
 // TODO: unfuck falsy validation/checkbox stuff in object
 // TODO: validate on blur
-// TODO: photo upload
-// TODO: custom validation styling
 // TODO: get id of current organization and set to orgId in dog obj
-// TODO: unfuck clear fields and uncheck boxes after successful submit
