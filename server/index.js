@@ -409,8 +409,6 @@ router.get('/randomDog', async (ctx) => {
 //   };
 // });
 
-
-
 // for now this does not use JWT/FBoauth
 router.post('/register', passport.authenticate('local-signup'), (ctx) => {
   ctx.status = 201;
