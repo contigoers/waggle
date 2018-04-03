@@ -27,6 +27,9 @@ class ResetPass extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="reset-pass">
+        <div style={{ textAlign: 'center', marginBottom: 25, fontSize: 30 }}>
+          Reset Password
+        </div>
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
             {getFieldDecorator('password1', {
@@ -41,7 +44,7 @@ class ResetPass extends React.Component {
           <FormItem className="reset-password-buttons">
             <a href="/">Go back home</a>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Reset Password
+              Reset
             </Button>
           </FormItem>
         </Form>
