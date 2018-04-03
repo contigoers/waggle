@@ -27,6 +27,8 @@ const infiniteStyle = {
   height: '400px',
   width: '80%',
   margin: 'auto',
+  marginTop: '15px',
+  marginBottom: '15px',
 };
 
 class MessagesTab extends React.Component {
@@ -34,7 +36,7 @@ class MessagesTab extends React.Component {
     super(props);
     this.state = {
       currentContact: null,
-      visibleContacts: this.props.contacts.slice(0, 5),
+      visibleContacts: this.props.contacts.slice(0, 10),
       visibleMessages: [],
       loading: false,
       hasMore: true,
@@ -49,6 +51,8 @@ class MessagesTab extends React.Component {
   }
 
   handleInfiniteMessagesOnLoad() {
+    console.log('onload messages')
+    this.setState({ loading: true });
     if (this.state.visibleMessages.length >= this.props.messages.length) {
       message.warning('Infinite List loaded all');
       this.setState({
@@ -64,6 +68,7 @@ class MessagesTab extends React.Component {
   }
 
   handleInfiniteContactsOnLoad() {
+    console.log('onload contacts')
     this.setState({ loading: true });
     if (this.state.visibleContacts.length >= this.props.contacts.length) {
       message.warning('Infinite List loaded all');
@@ -86,7 +91,9 @@ class MessagesTab extends React.Component {
   renderContactsList() {
     this.setState({
       currentContact: null,
-      visibleContacts: this.props.contacts.slice(0, 5),
+      visibleContacts: this.props.contacts.slice(0, 10),
+      loading: false,
+      hasMore: true,
     });
   }
 
@@ -96,6 +103,8 @@ class MessagesTab extends React.Component {
     this.setState({
       currentContact: name,
       visibleMessages: this.props.messages.slice(0, 5),
+      loading: false,
+      hasMore: true,
     });
   }
 
@@ -162,7 +171,6 @@ class MessagesTab extends React.Component {
             pageStart={0}
             loadMore={this.handleInfiniteContactsOnLoad}
             hasMore={!this.state.loading && this.state.hasMore}
-            useWindow={false}
           >
             <List
               itemLayout="horizontal"
