@@ -275,23 +275,15 @@ router.post('/searchOrgDogs', async (ctx) => {
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
-    const data = ctx.request.query;
-    // type will be either orgName or orgId
-    // value will either be the org's name or org's Id
-    let orgId;
-    if (data.type === 'orgName') {
-      const orgInfo = await db.searchOrgsByName(data.value);
-      orgId = orgInfo[0].id;
-    } else if (data.type === 'orgId') {
-      orgId = +data.value;
-    }
-    const orgProfile = await db.getOrgProfile(orgId);
+    const orgId = +ctx.request.query.value;
+    const [orgProfile] = await db.getOrgProfile(orgId);
+
     let dogs = await db.getOrgDogs(orgId);
     if (dogs.length) {
-      dogs = mapKeys(dogs[0], 'id');
+      dogs = mapKeys(dogs, 'id');
       const orgDogs = {
         dogs,
-        org: orgProfile[0],
+        org: orgProfile,
       };
       ctx.body = {
         status: 'success',
@@ -301,6 +293,7 @@ router.get('/orgInfo', async (ctx) => {
       ctx.body = {
         orgDogs: {
           dogs: {},
+          org: {},
         },
       };
     }

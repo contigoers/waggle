@@ -82,7 +82,7 @@ const createDog = dog => knex('dogs').insert({
 const getDogById = dogId => knex('dogs').where('id', dogId);
 
 // get organization ID from organization name query
-const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
+// const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
 const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
@@ -302,7 +302,7 @@ module.exports = {
   createDog,
   createUser,
   checkCredentials,
-  searchOrgsByName,
+  // searchOrgsByName,
   getDogById,
   searchOrgDogs,
   getUserById,
