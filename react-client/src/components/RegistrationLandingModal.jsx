@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button } from 'antd';
+import { Modal, Button, message } from 'antd';
 import axios from 'axios';
 
 import { storeUserId } from '../actions/loginActions';
@@ -27,12 +27,23 @@ class LandingModal extends Component {
       };
       ref.setState({ phoneDirty: true });
       if (!err && ref.state.numberIsValid) {
-        axios.post('/register', newValues).then((response) => {
-          ref.setState({ phoneDirty: false });
-          this.toggleModal();
-          this.storeUser({ user: response.data.user });
-          ref.props.form.resetFields();
-        });
+        axios.post('/register', newValues)
+          .then((response) => {
+            ref.setState({ phoneDirty: false });
+            this.toggleModal();
+            this.storeUser({ user: response.data.user });
+            ref.props.form.resetFields();
+          })
+          .catch((error) => {
+            const { status } = error.response;
+            const info = error.response.data;
+
+            if (status === 500 || info === 'error at creation') {
+              message.error('Sorry, an unknown error occurred.', 5);
+            } else if (status === 418 && info === 'username already exists') {
+              message.error('Sorry, this username is already taken.', 5);
+            }
+          });
       }
     });
   }

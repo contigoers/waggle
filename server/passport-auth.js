@@ -35,18 +35,23 @@ module.exports = () => {
     passwordField: 'password',
     passReqToCallback: true,
   }, async (req, username, password, cb) => {
-    bcrypt.hash(password, 10, async (err, hash) => {
-      if (err) {
-        cb(err);
-      } else {
-        const data = await db.createUser(req.body, username, hash);
-        if (data === 'already exists!') {
-          cb(data, null, 'username taken');
+    const [user] = await db.checkCredentials(username);
+    if (!user) {
+      bcrypt.hash(password, 10, async (err, hash) => {
+        if (err) {
+          cb(err);
         } else {
+          try {
+            await db.createUser(req.body, username, hash);
+          } catch (e) {
+            return cb(e, null, 'error at creation');
+          }
           const [userInfo] = await db.checkCredentials(username);
           cb(null, userInfo);
         }
-      }
-    });
+      });
+    } else {
+      return cb(null, null, 'username already exists');
+    }
   }));
 };
