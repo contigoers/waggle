@@ -125,6 +125,7 @@ CREATE TABLE `messages` (
   `deleted` BOOLEAN NOT NULL DEFAULT 0,
   `sent` TIMESTAMP NOT NULL DEFAULT NOW(),
   `dogName` VARCHAR(50) NULL DEFAULT NULL,
+  `read` BOOLEAN NOT NULL DEFAULT 0,
   FOREIGN KEY (sender_id) REFERENCES `users` (`id`),
   FOREIGN KEY (recipient_id) REFERENCES `users` (`id`),
   PRIMARY KEY (`id`)
