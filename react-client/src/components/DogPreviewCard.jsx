@@ -17,7 +17,7 @@ class DogCard extends React.Component {
   onClick() {
     const { dog } = this.props;
     const url = `/dog/${dog.id}`;
-    this.props.history.push(url);
+    this.props.history.push(url, { prevPath: this.props.match.path });
   }
 
   async toggleFavorite() {
