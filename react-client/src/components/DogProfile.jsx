@@ -129,13 +129,13 @@ class DogProfile extends React.Component {
     let cardActions = null;
     let button = '';
     if (this.props.user && this.props.user.org_id > 1) {
-      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}> <Icon type="left" />Return to dogs list</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}>Shortcut to dogs list</Button>;
     }
     if (this.props.user && dog.org_id === this.props.user.org_id) {
       cardActions = [adoptIcon, editIcon];
     } else if (this.props.user && this.props.user.org_id === 1) {
       cardActions = [inquiryIcon, favoriteIcon];
-      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}> <Icon type="left" />Return to favorite dogs</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}>Shortcut to favorite dogs</Button>;
     } else if (!this.props.user) {
       cardActions = [inquiryIcon];
     }

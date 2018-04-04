@@ -5,6 +5,7 @@ const SEARCH_DOGS = 'SEARCH_DOGS';
 const GET_FAVORITES = 'GET_FAVORITES';
 const UPDATE_FAVORITES = 'UPDATE_FAVORITES';
 const UPDATE_DOG_INFO = 'UPDATE_DOG_INFO';
+const CLEAR_SEARCH_QUERY = 'CLEAR_SEARCH_QUERY';
 
 const updateSearchQuery = (values, filterType) =>
   (
@@ -12,6 +13,13 @@ const updateSearchQuery = (values, filterType) =>
       type: UPDATE_SEARCH_QUERY,
       values,
       filterType,
+    }
+  );
+
+const clearSearchQuery = () =>
+  (
+    {
+      type: CLEAR_SEARCH_QUERY,
     }
   );
 
@@ -95,4 +103,6 @@ export {
   UPDATE_DOG_INFO,
   markAdopted,
   unmarkAdopted,
+  clearSearchQuery,
+  CLEAR_SEARCH_QUERY,
 };
