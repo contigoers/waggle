@@ -97,21 +97,16 @@ router.put('/forgotpass', async (ctx) => {
 
 router.patch('/resetpass', async (ctx) => {
   const { password, token } = ctx.request.body;
-  bcrypt.hash(password, 10, async (err, hash) => {
-    if (err) {
-      console.log(err);
-    } else {
-      const response = await db.updatePassword(token, hash);
-      if (response) {
-        ctx.status = 201;
-        ctx.body = {
-          status: 'success',
-        };
-      } else {
-        ctx.throw(500);
-      }
-    }
-  });
+  const hash = await bcrypt.hash(password, 10);
+  const response = await db.updatePassword(token, hash);
+  if (response) {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.throw(500);
+  }
 });
 
 // get all organizations and contact info
