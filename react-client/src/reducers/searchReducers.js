@@ -38,6 +38,18 @@ export default handleActions({
     }
     return state;
   },
+  CLEAR_SEARCH_QUERY: state => ({
+    ...state,
+    breed: [],
+    gender: [],
+    lifestage: [],
+    size: [],
+    mix: [],
+    neutered: [],
+    diet: [],
+    medical: [],
+    energy: [],
+  }),
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
   GET_FAVORITES: (state, action) => {
     if (!isEmpty(state.results)) {

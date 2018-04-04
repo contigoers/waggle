@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Form, Select } from 'antd';
 import { connect } from 'react-redux';
 import { updateSearchQuery } from '../../actions/searchActions';
 
-class Gender extends React.Component {
-  constructor() {
-    super();
+class GenderForm extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       focused: false,
     };
@@ -24,6 +24,7 @@ class Gender extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
     const genders = [
       <Option key="1">Male</Option>,
@@ -34,20 +35,26 @@ class Gender extends React.Component {
         ? 'select-bar focused'
         : 'select-bar';
     return (
-      <Select
-        allowClear
-        showArrow={false}
-        placeholder="Any Gender"
-        className={selectClassNames}
-        onFocus={this.changesFocusState}
-        onBlur={this.changesFocusState}
-        onChange={this.handleChange}
-      >
-        {genders}
-      </Select>
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('gender', {
+        })(<Select
+          allowClear
+          showArrow={false}
+          placeholder="Any Gender"
+          className={selectClassNames}
+          onFocus={this.changesFocusState}
+          onBlur={this.changesFocusState}
+          onChange={this.handleChange}
+        >
+          {genders}
+          </Select>)/* eslint-disable-line */}
+        </Form.Item>
+      </Form>
     );
   }
 }
+const Gender = Form.create()(GenderForm);
 
 const mapDispatchToProps = {
   updateSearchQuery,

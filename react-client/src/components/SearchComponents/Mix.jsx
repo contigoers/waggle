@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Select, Form } from 'antd';
 import { connect } from 'react-redux';
 import { updateSearchQuery } from '../../actions/searchActions';
 
-class Mix extends React.Component {
-  constructor() {
-    super();
+class MixForm extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       focused: false,
     };
@@ -24,6 +24,7 @@ class Mix extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
     const mixed = [
       <Option key="1">Yes</Option>,
@@ -34,20 +35,26 @@ class Mix extends React.Component {
         ? 'select-bar focused'
         : 'select-bar';
     return (
-      <Select
-        allowClear
-        showArrow={false}
-        placeholder="No Preference"
-        className={selectClassNames}
-        onFocus={this.changesFocusState}
-        onBlur={this.changesFocusState}
-        onChange={this.handleChange}
-      >
-        {mixed}
-      </Select>
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('mix', {
+          })(<Select
+            allowClear
+            showArrow={false}
+            placeholder="No Preference"
+            className={selectClassNames}
+            onFocus={this.changesFocusState}
+            onBlur={this.changesFocusState}
+            onChange={this.handleChange}
+          >
+            {mixed}
+             </Select>)/* eslint-disable-line */}
+        </Form.Item>
+      </Form>
     );
   }
 }
+const Mix = Form.create()(MixForm);
 
 const mapDispatchToProps = {
   updateSearchQuery,

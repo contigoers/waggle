@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Select, Form } from 'antd';
 import { connect } from 'react-redux';
 import { updateSearchQuery } from '../../actions/searchActions';
 
-class Lifestage extends React.Component {
-  constructor() {
-    super();
+class LifestageForm extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       focused: false,
     };
@@ -24,6 +24,7 @@ class Lifestage extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
     const lifestages = [
       <Option key="puppy">Puppy</Option>,
@@ -36,20 +37,26 @@ class Lifestage extends React.Component {
         ? 'select-bar focused'
         : 'select-bar';
     return (
-      <Select
-        allowClear
-        mode="multiple"
-        placeholder="Any Lifestage"
-        className={selectClassNames}
-        onFocus={this.changesFocusState}
-        onBlur={this.changesFocusState}
-        onChange={this.handleChange}
-      >
-        {lifestages}
-      </Select>
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('lifestage', {
+          })(<Select
+            allowClear
+            mode="multiple"
+            placeholder="Any Lifestage"
+            className={selectClassNames}
+            onFocus={this.changesFocusState}
+            onBlur={this.changesFocusState}
+            onChange={this.handleChange}
+          >
+            {lifestages}
+          </Select>)/* eslint-disable-line */}
+        </Form.Item>
+      </Form>
     );
   }
 }
+const Lifestage = Form.create()(LifestageForm);
 
 const mapDispatchToProps = {
   updateSearchQuery,
