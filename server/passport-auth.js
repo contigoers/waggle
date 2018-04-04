@@ -37,14 +37,14 @@ module.exports = () => {
   }, async (req, username, password, cb) => {
     bcrypt.hash(password, 10, async (err, hash) => {
       if (err) {
-        cb(err, null);
+        cb(err);
       } else {
         const data = await db.createUser(req.body, username, hash);
         if (data === 'already exists!') {
-          cb(data, null);
+          cb(data, null, 'username taken');
         } else {
-          const userInfo = await db.checkCredentials(username);
-          cb(null, userInfo[0]);
+          const [userInfo] = await db.checkCredentials(username);
+          cb(null, userInfo);
         }
       }
     });

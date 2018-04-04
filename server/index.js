@@ -420,8 +420,10 @@ router.post('/register', passport.authenticate('local-signup'), (ctx) => {
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
-    if (error) ctx.body = { error };
-    if (user === false) {
+    if (error) {
+      ctx.body = { error };
+      ctx.throw(500, 'unknown error');
+    } else if (!user) {
       ctx.body = { success: false, info };
       ctx.throw(401, info);
     } else {
