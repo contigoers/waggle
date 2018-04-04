@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form, Icon, Input, Button, message } from 'antd';
+import { Form, Icon, Input, Button, message, Spin } from 'antd';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 const FormItem = Form.Item;
@@ -9,11 +10,30 @@ class ResetPass extends React.Component {
     super();
     this.state = {
       confirmDirty: false,
+      validLink: null,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.handleConfirmBlur = this.handleConfirmBlur.bind(this);
+  }
+
+  componentDidMount() {
+    axios.get('/checkLink', {
+      params: {
+        token: this.props.match.params.token,
+      },
+    })
+      .then(() => {
+        this.setState({
+          validLink: true,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          validLink: false,
+        });
+      });
   }
 
   handleConfirmBlur(e) {
@@ -53,39 +73,48 @@ class ResetPass extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
+    if (this.state.validLink === false) {
+      return <Redirect to="/notfound" />;
+    } else if (this.state.validLink === true) {
+      return (
+        <div className="reset-pass">
+          <div className="reset-form">
+            <div style={{ textAlign: 'center', marginBottom: 25, fontSize: 30 }}>
+              Reset Password
+            </div>
+            <Form onSubmit={this.handleSubmit} className="login-form">
+              <FormItem>
+                {getFieldDecorator('password1', {
+                  rules: [{
+                    required: true, message: 'Please enter a password!',
+                  }, {
+                    validator: this.validateToNextPassword,
+                  }],
+                })(<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="New Password" />)}
+              </FormItem>
+              <FormItem>
+                {getFieldDecorator('password2', {
+                  rules: [{
+                    required: true, message: 'Please confirm your password!',
+                  }, {
+                    validator: this.compareToFirstPassword,
+                  }],
+                })(<Input onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Confirm Password" />)}
+              </FormItem>
+              <FormItem className="reset-password-buttons">
+                <a href="/">Go back home</a>
+                <Button type="primary" htmlType="submit" className="login-form-button">
+                  Reset
+                </Button>
+              </FormItem>
+            </Form>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="reset-pass">
-        <div className="reset-form">
-          <div style={{ textAlign: 'center', marginBottom: 25, fontSize: 30 }}>
-            Reset Password
-          </div>
-          <Form onSubmit={this.handleSubmit} className="login-form">
-            <FormItem>
-              {getFieldDecorator('password1', {
-                rules: [{
-                  required: true, message: 'Please enter a password!',
-                }, {
-                  validator: this.validateToNextPassword,
-                }],
-              })(<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="New Password" />)}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('password2', {
-                rules: [{
-                  required: true, message: 'Please confirm your password!',
-                }, {
-                  validator: this.compareToFirstPassword,
-                }],
-              })(<Input onBlur={this.handleConfirmBlur} prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Confirm Password" />)}
-            </FormItem>
-            <FormItem className="reset-password-buttons">
-              <a href="/">Go back home</a>
-              <Button type="primary" htmlType="submit" className="login-form-button">
-                Reset
-              </Button>
-            </FormItem>
-          </Form>
-        </div>
+        <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
       </div>
     );
   }
