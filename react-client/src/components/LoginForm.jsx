@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Form, Icon, Input, Button, Modal, Alert, message } from 'antd';
+import { Form, Icon, Input, Button, Modal, message } from 'antd';
 import axios from 'axios';
 
 import { toggleLoginModal, storeUserId } from '../actions/loginActions';
@@ -15,9 +15,6 @@ const WrappedLoginForm = Form.create()(class extends Component {
       loggedIn: false,
       forgotPassword: false,
       loading: false,
-      userError: false,
-      passwordError: false,
-      unknownError: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -125,35 +122,27 @@ const WrappedLoginForm = Form.create()(class extends Component {
               </FormItem>
             </Form>
           ) : (
-            <div>
-              <Form onSubmit={this.handleSubmit} className="login-form">
-                <FormItem>
-                  {getFieldDecorator('username', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
-                  })(<Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Username"
-                    onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                  />)}
-                </FormItem>
-                <FormItem>
-                  {getFieldDecorator('password', {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
-                  })(<Input
-                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                    type="password"
-                    placeholder="Password"
-                  />)}
-                </FormItem>
-              </Form>
-              {this.state.userError &&
-                <Alert type="error" message="Sorry, this username could not be found." showIcon closable />}
-              {this.state.unknownError &&
-                <Alert type="error" message="Sorry, an unknown error has occurred." showIcon closable />}
-              {this.state.passwordError &&
-                <Alert type="error" message="Sorry, the entered password was incorrect." showIcon closable />}
-            </div>
+            <Form onSubmit={this.handleSubmit} className="login-form">
+              <FormItem>
+                {getFieldDecorator('username', {
+                  rules: [{ required: true, message: 'Please input your username!' }],
+                })(<Input
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Username"
+                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+                />)}
+              </FormItem>
+              <FormItem>
+                {getFieldDecorator('password', {
+                  rules: [{ required: true, message: 'Please input your Password!' }],
+                })(<Input
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+                  type="password"
+                  placeholder="Password"
+                />)}
+              </FormItem>
+            </Form>
           )
         }
       </Modal>
