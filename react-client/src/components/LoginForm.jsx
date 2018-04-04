@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Form, Icon, Input, Button, Modal } from 'antd';
+import { Form, Icon, Input, Button, Modal, message } from 'antd';
 import axios from 'axios';
 
 import { toggleLoginModal, storeUserId } from '../actions/loginActions';
@@ -34,9 +34,15 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios.put('/forgotpass', {
-          email: values.username,
+          email: values.emailReset,
         })
-          .then(res => console.log(res.data))
+          .then((res) => {
+            if (res.data.message !== 'This Email Does Not Exists') {
+              message.success('A rescue pack of dogs have sent you an email!');
+            } else {
+              message.error('We do not recognize this email address');
+            }
+          })
           .catch(error => console.log(error));
       }
     });
@@ -93,7 +99,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
         {this.state.forgotPassword ?
           <Form onSubmit={this.handleSubmit} className="login-form">
             <FormItem>
-              {getFieldDecorator('username', {
+              {getFieldDecorator('emailReset', {
                 rules: [
                   { type: 'email', message: 'Please input a valid email address!' },
                   { required: true, message: 'Please input a email address!' },

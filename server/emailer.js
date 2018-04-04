@@ -8,7 +8,7 @@ const sendEmail = (emailData) => {
     service: 'gmail',
     auth: {
       user: 'waggl.help@gmail.com',
-      pass: 'waggl2018',
+      pass: process.env.EMAIL_PW,
     },
   });
   return transporter
