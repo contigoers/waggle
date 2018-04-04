@@ -74,7 +74,7 @@ class DogProfile extends React.Component {
   render() {
     const { id } = this.props.match.params;
     if (!Object.keys(this.props.results).length) {
-      return <Redirect to="/" />;
+      return <Redirect to="/notfound" />;
     }
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
