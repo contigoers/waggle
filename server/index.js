@@ -410,13 +410,29 @@ router.get('/randomDog', async (ctx) => {
 // });
 
 // for now this does not use JWT/FBoauth
-router.post('/register', passport.authenticate('local-signup'), (ctx) => {
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    user: ctx.state.user,
-  };
-});
+// router.post('/register', passport.authenticate('local-signup'), (ctx) => {
+//   ctx.status = 201;
+//   ctx.body = {
+//     status: 'success',
+//     user: ctx.state.user,
+//   };
+// });
+
+router.post('/register', async ctx =>
+  passport.authenticate('local-signup', async (error, user, info) => {
+    if (error) {
+      ctx.body = { error };
+      ctx.throw(500, 'unknown error');
+    } else if (!user) {
+      ctx.body = { success: false };
+      ctx.throw(418, info);
+    } else {
+      ctx.body = {
+        status: 'success',
+        user,
+      };
+    }
+  })(ctx));
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
@@ -424,7 +440,7 @@ router.post('/login', async ctx =>
       ctx.body = { error };
       ctx.throw(500, 'unknown error');
     } else if (!user) {
-      ctx.body = { success: false, info };
+      ctx.body = { success: false };
       ctx.throw(401, info);
     } else {
       let adopterId;
