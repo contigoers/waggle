@@ -293,6 +293,8 @@ const updatePassword = (token, hash) =>
 
 const checkEmail = email => knex('users').where('email', email);
 
+const checkLinkExists = token => knex('users').where('forgot_pw_link', token);
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 module.exports = {
@@ -325,6 +327,7 @@ module.exports = {
   getUserByEmail,
   updatePassword,
   checkEmail,
+  checkLinkExists,
   // getAllOrganizations,
   // getAdopterContacts,
   // getAllDogs,
