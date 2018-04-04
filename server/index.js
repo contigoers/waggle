@@ -109,33 +109,6 @@ router.patch('/resetpass', async (ctx) => {
   }
 });
 
-// get all organizations and contact info
-// router.get('/allOrgInfo', async (ctx) => {
-//   const allOrgs = await db.getAllOrganizations();
-//   ctx.body = {
-//     status: 'success',
-//     allOrgs,
-//   };
-// });
-
-// get all dogs
-// router.get('/allDogInfo', async (ctx) => {
-//   const allDogs = await db.getAllDogs();
-//   ctx.body = {
-//     status: 'success',
-//     allDogs,
-//   };
-// });
-
-// get info on single dog by dogId
-// router.get('/dogInfo', async (ctx) => {
-//   const dog = await db.getDogById(ctx.request.query.dogId);
-//   ctx.body = {
-//     status: 'success',
-//     dog: dog[0],
-//   };
-// });
-
 // mark dog status as 'adopted' - for organization access only
 router.patch('/adopted', async (ctx) => {
   await db.markAsAdopted(ctx.request.body.dogId);
@@ -386,7 +359,7 @@ router.get('/randomDog', async (ctx) => {
   try {
     [dog] = await db.getRandomDog();
   } catch (err) {
-    console.log(err);
+    throw err;
   }
   const [org] = await db.getOrgProfile(dog.org_id);
   const dogsAndOrgs = {
@@ -489,8 +462,12 @@ router.post('/messages/post', async (ctx) => {
   const { recipientId } = ctx.request.body;
   const { dogName } = ctx.request.body;
   const msg = ctx.request.body.message;
-  const fullMessage = await db.addMessage(senderId, recipientId, msg, dogName);
-  const message = fullMessage[0];
+  let message;
+  try {
+    [message] = await db.addMessage(senderId, recipientId, msg, dogName);
+  } catch (error) {
+    ctx.throw(500);
+  }
   ctx.status = 201;
   ctx.body = {
     status: 'success',

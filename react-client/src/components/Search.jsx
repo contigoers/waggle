@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, BackTop, Divider, Collapse } from 'antd';
 import { forOwn, keys } from 'lodash';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
 import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
 import SearchResults from './SearchResults';
@@ -19,9 +19,7 @@ import EnergySelect from './SearchComponents/Energy';
 class Search extends React.Component {
   constructor() {
     super();
-    this.state = {
-      redirect: false,
-    };
+
     this.fetchAndRedirect = this.fetchAndRedirect.bind(this);
     this.submitData = this.submitData.bind(this);
   }
@@ -53,15 +51,8 @@ class Search extends React.Component {
 
   async fetchAndRedirect() {
     await this.props.getRandomDog();
-    let id;
-
-    forOwn(this.props.results.dogs, (value, key) => {
-      id = key;
-    });
-    this.setState({
-      redirect: true,
-      id,
-    });
+    const [id] = Object.keys(this.props.results.dogs);
+    this.props.history.push(`/dog/${id}`);
   }
 
   render() {
@@ -78,7 +69,6 @@ class Search extends React.Component {
           <div className="title">
             <Divider>Find The Dog That Fits Your Lifestyle!</Divider>
           </div>
-          {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
           <div className="default-filters">
             <div className="breed">
               <p>Breed</p>
@@ -184,4 +174,4 @@ const mapDispatchToProps = {
   getOrgDogs,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Search));
