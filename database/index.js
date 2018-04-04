@@ -287,6 +287,8 @@ const updatePassword = async (token, hash) => {
   await knex('users').where('forgot_pw_link', token).update('password', hash);
 };
 
+const checkEmail = email => knex('users').where('email', email);
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 module.exports = {
@@ -318,6 +320,7 @@ module.exports = {
   updateForgotPassword,
   getUserByEmail,
   updatePassword,
+  checkEmail,
   // getAllOrganizations,
   // getAdopterContacts,
   // getAllDogs,
