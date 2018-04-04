@@ -405,7 +405,7 @@ router.post('/register', async ctx =>
   passport.authenticate('local-signup', async (error, user, info) => {
     if (error) {
       ctx.body = { error };
-      ctx.throw(500, 'unknown error');
+      ctx.throw(500);
     } else if (!user) {
       ctx.body = { success: false };
       ctx.throw(418, info);
