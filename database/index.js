@@ -1,4 +1,5 @@
 const has = require('lodash/has');
+const orderBy = require('lodash/orderBy');
 const forEach = require('lodash/forEach');
 
 const config = {
@@ -291,25 +292,25 @@ const updatePassword = async (token, hash) => {
 const getOrgContacts = async (orgId) => {
   let messageInfo = await knex.raw(`select messages.*, adopters.name from (select * from messages where sender_id = ${orgId} or recipient_id = ${orgId}) as messages inner join adopters on adopters.user_id = messages.sender_id or adopters.user_id = messages.recipient_id order by messages.id desc`);
   [messageInfo] = messageInfo;
-  console.log(messageInfo[0].name)
-  const contacts = {};
-  const ids = [];
+  console.log(messageInfo[0].name);
+  const contactsObj = {};
   messageInfo.forEach((message) => {
     const contactId = message.sender_id === parseInt(orgId, 10) ? message.recipient_id : message.sender_id;
     console.log(message.sender_id === orgId, orgId, contactId)
-    if (!has(contacts, contactId)) {
-      contacts[contactId] = {
+    if (!has(contactsObj, contactId)) {
+      contactsObj[contactId] = {
+        userId: contactId,
         name: message.name,
         dogs: [message.dogName],
+        lastMessage: message.id,
       };
-      ids.push(contactId); // this should keep the order of contacts by latest message
     } else {
-      contacts[contactId].dogs.push(message.dogName); // should never need to reassign last message because they're ordered by message id descending
+      contactsObj[contactId].dogs.push(message.dogName); // should never need to reassign last message because they're ordered by message id descending
     }
   });
-  const messageData = {ids: ids, contacts: contacts};
-  console.log('message data', messageData);
-  return messageData;
+  const contacts = orderBy(contactsObj, 'lastMessage', 'desc');
+  console.log('contacts', contacts);
+  return contacts;
 };
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */

@@ -35,7 +35,7 @@ class MessagesTab extends React.Component {
     super(props);
     this.state = {
       currentContact: null,
-      visibleContacts: this.props.contacts.slice(0, 10),
+      visibleContacts: this.props.contacts === null ? this.props.contacts.slice(0, 10) : null,
       visibleMessages: [],
       loading: false,
       hasMore: true,
@@ -206,7 +206,7 @@ class MessagesTab extends React.Component {
       return (<div style={{ margin: '15px' }}> Loading... </div>);
     }
     if (this.props.contacts) {
-      if (this.props.contacts.length === 0) {
+      if (!this.props.contacts.length) {
         return (<div> you have no messages </div>);
       }
       return (
