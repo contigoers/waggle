@@ -283,9 +283,13 @@ const updateForgotPassword = async (email, token) => {
   await knex('users').where('email', email).update('forgot_pw_link', token);
 };
 
-const updatePassword = async (token, hash) => {
-  await knex('users').where('forgot_pw_link', token).update('password', hash);
-};
+const updatePassword = (token, hash) =>
+  knex('users')
+    .where('forgot_pw_link', token)
+    .update({
+      password: hash,
+      forgot_pw_link: null,
+    });
 
 const checkEmail = email => knex('users').where('email', email);
 

@@ -16,7 +16,6 @@ const WrappedLoginForm = Form.create()(class extends Component {
       forgotPassword: false,
       loading: false,
     };
-
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleLoginModal.bind(this);
     this.storeUser = this.props.storeUserId.bind(this);
@@ -36,10 +35,18 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios.put('/forgotpass', {
-          email: values.username,
+          email: values.emailReset,
         })
-          .then(res => console.log(res.data))
-          .catch(error => console.log(error));
+          .then((res) => {
+            if (res.data.message !== 'This Email Does Not Exists') {
+              message.success('A pack of search dogs have sent you an email!', 5);
+            } else {
+              message.error('Uh oh, we do not recognize this email address.', 5);
+            }
+          })
+          .catch((error) => {
+            message.error(`Uh oh, something went wrong: ${error}`, 10);
+          });
       }
     });
   }
@@ -106,44 +113,42 @@ const WrappedLoginForm = Form.create()(class extends Component {
         }
       >
         {this.state.forgotPassword ?
-          (
-            <Form onSubmit={this.handleSubmit} className="login-form">
-              <FormItem>
-                {getFieldDecorator('username', {
-                  rules: [
-                    { type: 'email', message: 'Please input a valid email address!' },
-                    { required: true, message: 'Please input a email address!' },
-                  ],
-                })(<Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Email"
-                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmitForgotPassword(e); }}
-                />)}
-              </FormItem>
-            </Form>
-          ) : (
-            <Form onSubmit={this.handleSubmit} className="login-form">
-              <FormItem>
-                {getFieldDecorator('username', {
-                  rules: [{ required: true, message: 'Please input your username!' }],
-                })(<Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
-                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                />)}
-              </FormItem>
-              <FormItem>
-                {getFieldDecorator('password', {
-                  rules: [{ required: true, message: 'Please input your Password!' }],
-                })(<Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                  type="password"
-                  placeholder="Password"
-                />)}
-              </FormItem>
-            </Form>
-          )
+          <Form onSubmit={this.handleSubmit} className="login-form">
+            <FormItem>
+              {getFieldDecorator('emailReset', {
+                rules: [
+                  { type: 'email', message: 'Please input a valid email address!' },
+                  { required: true, message: 'Please input a email address!' },
+                ],
+              })(<Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="Email"
+                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmitForgotPassword(e); }}
+              />)}
+            </FormItem>
+          </Form>
+          :
+          <Form onSubmit={this.handleSubmit} className="login-form">
+            <FormItem>
+              {getFieldDecorator('username', {
+                rules: [{ required: true, message: 'Please input your username!' }],
+              })(<Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="Username"
+                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+              />)}
+            </FormItem>
+            <FormItem>
+              {getFieldDecorator('password', {
+                rules: [{ required: true, message: 'Please input your Password!' }],
+              })(<Input
+                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+                type="password"
+                placeholder="Password"
+              />)}
+            </FormItem>
+          </Form>
         }
       </Modal>
     );
