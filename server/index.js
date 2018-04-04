@@ -95,43 +95,19 @@ router.put('/forgotpass', async (ctx) => {
   }
 });
 
-router.put('/resetpass', async (ctx) => {
+router.patch('/resetpass', async (ctx) => {
   const { password, token } = ctx.request.body;
-  bcrypt.hash(password, 10, async (err, hash) => {
-    if (err) {
-      console.log(err);
-    } else {
-      await db.updatePassword(token, hash);
-    }
-  });
+  const hash = await bcrypt.hash(password, 10);
+  const response = await db.updatePassword(token, hash);
+  if (response) {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.throw(500);
+  }
 });
-
-// get all organizations and contact info
-// router.get('/allOrgInfo', async (ctx) => {
-//   const allOrgs = await db.getAllOrganizations();
-//   ctx.body = {
-//     status: 'success',
-//     allOrgs,
-//   };
-// });
-
-// get all dogs
-// router.get('/allDogInfo', async (ctx) => {
-//   const allDogs = await db.getAllDogs();
-//   ctx.body = {
-//     status: 'success',
-//     allDogs,
-//   };
-// });
-
-// get info on single dog by dogId
-// router.get('/dogInfo', async (ctx) => {
-//   const dog = await db.getDogById(ctx.request.query.dogId);
-//   ctx.body = {
-//     status: 'success',
-//     dog: dog[0],
-//   };
-// });
 
 // mark dog status as 'adopted' - for organization access only
 router.patch('/adopted', async (ctx) => {
@@ -299,24 +275,15 @@ router.post('/searchOrgDogs', async (ctx) => {
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
-    const data = ctx.request.query;
-    // type will be either orgName or orgId
-    // value will either be the org's name or org's Id
-    let orgId;
-    if (data.type === 'orgName') {
-      const orgInfo = await db.searchOrgsByName(data.value);
-      orgId = orgInfo[0].id;
-    } else if (data.type === 'orgId') {
-      orgId = +data.value;
-    }
-    const orgProfile = await db.getOrgProfile(orgId);
-    console.log('org profile', orgProfile)
+    const orgId = +ctx.request.query.value;
+    const [orgProfile] = await db.getOrgProfile(orgId);
+
     let dogs = await db.getOrgDogs(orgId);
     if (dogs.length) {
-      dogs = mapKeys(dogs[0], 'id');
+      dogs = mapKeys(dogs, 'id');
       const orgDogs = {
         dogs,
-        org: orgProfile[0],
+        org: orgProfile,
       };
       ctx.body = {
         status: 'success',
@@ -326,6 +293,7 @@ router.get('/orgInfo', async (ctx) => {
       ctx.body = {
         orgDogs: {
           dogs: {},
+          org: {},
         },
       };
     }
@@ -384,7 +352,7 @@ router.get('/randomDog', async (ctx) => {
   try {
     [dog] = await db.getRandomDog();
   } catch (err) {
-    console.log(err);
+    throw err;
   }
   const [org] = await db.getOrgProfile(dog.org_id);
   const dogsAndOrgs = {
@@ -402,37 +370,43 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
-router.post('/register', async ctx =>
-  passport.authenticate('local-signup', async (error, user, info) => {
-    if (error) {
-      ctx.body = { error };
-      ctx.throw(500);
-    } else if (!user) {
-      ctx.body = { success: false };
-      ctx.throw(418, info);
-    } else {
-      let adopterId;
-      let username;
-      if (user.org_id === 1) {
-        const [adopter] = await db.getAdopterId(user.id);
-        adopterId = adopter.id;
-        username = adopter.name;
+router.post('/register', async (ctx) => {
+  const { email } = ctx.request.body;
+  const query = await db.checkEmail(email);
+  if (!query.length) {
+    return passport.authenticate('local-signup', async (error, user, info) => {
+      if (error) {
+        ctx.body = { error };
+        ctx.throw(500);
+      } else if (!user) {
+        ctx.body = { success: false };
+        ctx.throw(418, info);
       } else {
-        const [org] = await db.getOrgName(user.org_id);
-        username = org.org_name;
+        let adopterId;
+        let username;
+        if (user.org_id === 1) {
+          const [adopter] = await db.getAdopterId(user.id);
+          adopterId = adopter.id;
+          username = adopter.name;
+        } else {
+          const [org] = await db.getOrgName(user.org_id);
+          username = org.org_name;
+        }
+        const userInfo = {
+          ...user,
+          adopterId,
+          name: username,
+        };
+        ctx.body = {
+          success: true,
+          user: userInfo,
+        };
+        return ctx.login(user);
       }
-      const userInfo = {
-        ...user,
-        adopterId,
-        name: username,
-      };
-      ctx.body = {
-        success: true,
-        user: userInfo,
-      };
-      return ctx.login(user);
-    }
-  })(ctx));
+    })(ctx);
+  }
+  ctx.throw(418, 'email exists');
+});
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
@@ -481,8 +455,12 @@ router.post('/messages/post', async (ctx) => {
   const { recipientId } = ctx.request.body;
   const { dogName } = ctx.request.body;
   const msg = ctx.request.body.message;
-  const fullMessage = await db.addMessage(senderId, recipientId, msg, dogName);
-  const message = fullMessage[0];
+  let message;
+  try {
+    [message] = await db.addMessage(senderId, recipientId, msg, dogName);
+  } catch (error) {
+    ctx.throw(500);
+  }
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -530,6 +508,19 @@ router.get('/contacts/adopter', async (ctx) => {
     status: 'success',
     contacts,
   };
+});
+
+router.get('/checkLink', async (ctx) => {
+  const { token } = ctx.request.query;
+  const response = await db.checkLinkExists(token);
+  if (response.length) {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.throw(500);
+  }
 });
 
 router.post('/imageUpload', (ctx) => {

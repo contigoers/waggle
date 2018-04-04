@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Form, Select } from 'antd';
 import { connect } from 'react-redux';
 import { updateSearchQuery } from '../../actions/searchActions';
 
-class Energy extends React.Component {
-  constructor() {
-    super();
+class EnergyForm extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       focused: false,
     };
@@ -24,6 +24,7 @@ class Energy extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
     const energyLevels = [
       <Option key="low">Low</Option>,
@@ -35,21 +36,27 @@ class Energy extends React.Component {
         ? 'select-bar focused'
         : 'select-bar';
     return (
-      <Select
-        allowClear
-        mode="multiple"
-        showArrow={false}
-        placeholder="No Preference"
-        className={selectClassNames}
-        onFocus={this.changesFocusState}
-        onBlur={this.changesFocusState}
-        onChange={this.handleChange}
-      >
-        {energyLevels}
-      </Select>
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('energy', {
+        })(<Select
+          allowClear
+          mode="multiple"
+          showArrow={false}
+          placeholder="No Preference"
+          className={selectClassNames}
+          onFocus={this.changesFocusState}
+          onBlur={this.changesFocusState}
+          onChange={this.handleChange}
+        >
+          {energyLevels}
+        </Select>)/* eslint-disable-line */}
+        </Form.Item>
+      </Form>
     );
   }
 }
+const Energy = Form.create()(EnergyForm);
 
 const mapDispatchToProps = {
   updateSearchQuery,

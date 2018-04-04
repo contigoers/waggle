@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Form, Icon, Input, Button, Modal, message } from 'antd';
 import axios from 'axios';
 
@@ -11,8 +11,8 @@ const FormItem = Form.Item;
 const WrappedLoginForm = Form.create()(class extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      loggedIn: false,
       forgotPassword: false,
       loading: false,
     };
@@ -36,10 +36,18 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios.put('/forgotpass', {
-          email: values.username,
+          email: values.emailReset,
         })
-          .then(res => console.log(res.data))
-          .catch(error => console.log(error));
+          .then((res) => {
+            if (res.data.message !== 'This Email Does Not Exists') {
+              message.success('A pack of search dogs have sent you an email!', 5);
+            } else {
+              message.error('Uh oh, we do not recognize this email address.', 5);
+            }
+          })
+          .catch((error) => {
+            message.error(`Uh oh, something went wrong: ${error}`, 10);
+          });
       }
     });
   }
@@ -54,8 +62,8 @@ const WrappedLoginForm = Form.create()(class extends Component {
             this.toggleModal();
             this.storeUser({ user: response.data.user });
             this.props.form.resetFields();
-            this.setState({ loggedIn: true });
-            this.setState({ loggedIn: false, loading: false });
+            this.setState({ loading: false });
+            this.props.history.push('/profile');
           })
           .catch((error) => {
             this.setState({ loading: false });
@@ -81,9 +89,6 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 
   render() {
-    if (this.state.loggedIn) {
-      return <Redirect to="/profile" />;
-    }
     const { getFieldDecorator } = this.props.form;
     return (
       <Modal
@@ -106,44 +111,42 @@ const WrappedLoginForm = Form.create()(class extends Component {
         }
       >
         {this.state.forgotPassword ?
-          (
-            <Form onSubmit={this.handleSubmit} className="login-form">
-              <FormItem>
-                {getFieldDecorator('username', {
-                  rules: [
-                    { type: 'email', message: 'Please input a valid email address!' },
-                    { required: true, message: 'Please input a email address!' },
-                  ],
-                })(<Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Email"
-                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmitForgotPassword(e); }}
-                />)}
-              </FormItem>
-            </Form>
-          ) : (
-            <Form onSubmit={this.handleSubmit} className="login-form">
-              <FormItem>
-                {getFieldDecorator('username', {
-                  rules: [{ required: true, message: 'Please input your username!' }],
-                })(<Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
-                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                />)}
-              </FormItem>
-              <FormItem>
-                {getFieldDecorator('password', {
-                  rules: [{ required: true, message: 'Please input your Password!' }],
-                })(<Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                  type="password"
-                  placeholder="Password"
-                />)}
-              </FormItem>
-            </Form>
-          )
+          <Form onSubmit={this.handleSubmit} className="login-form">
+            <FormItem>
+              {getFieldDecorator('emailReset', {
+                rules: [
+                  { type: 'email', message: 'Please input a valid email address!' },
+                  { required: true, message: 'Please input a email address!' },
+                ],
+              })(<Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="Email"
+                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmitForgotPassword(e); }}
+              />)}
+            </FormItem>
+          </Form>
+          :
+          <Form onSubmit={this.handleSubmit} className="login-form">
+            <FormItem>
+              {getFieldDecorator('username', {
+                rules: [{ required: true, message: 'Please input your username!' }],
+              })(<Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="Username"
+                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+              />)}
+            </FormItem>
+            <FormItem>
+              {getFieldDecorator('password', {
+                rules: [{ required: true, message: 'Please input your Password!' }],
+              })(<Input
+                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+                type="password"
+                placeholder="Password"
+              />)}
+            </FormItem>
+          </Form>
         }
       </Modal>
     );
@@ -157,4 +160,4 @@ const mapStateToProps = state => (
   }
 );
 
-export default connect(mapStateToProps, { toggleLoginModal, storeUserId })(WrappedLoginForm);
+export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId })(WrappedLoginForm)); // eslint-disable-line

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Divider, Row, Col, Icon, Button, message, Tooltip } from 'antd';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { startCase } from 'lodash';
 
 import OrgCard from './OrgCard';
@@ -16,9 +16,15 @@ class DogProfile extends React.Component {
   constructor(props) {
     super(props);
 
+    let prevPath = null;
+    if (this.props.location.state) {
+      ({ prevPath } = this.props.location.state);
+    }
+
+    this.state = { prevPath };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
-    this.renderDogsList = this.renderDogsList.bind(this);
+    this.goBack = this.goBack.bind(this);
   }
 
   async toggleFavorite() {
@@ -57,18 +63,20 @@ class DogProfile extends React.Component {
     message.info(adopted ? `${dog.name} not adopted.` : `${dog.name} adopted!`);
   }
 
-  renderDogsList() {
-    if (this.props.user && this.props.user.org_id > 1) {
+  goBack() {
+    if (this.props.user && this.props.user.org_id > 1 && this.state.prevPath === '/profile') {
       this.props.history.push('/profile', { menuSelection: 'dogs' });
-    } else if (this.props.user && this.props.user.org_id === 1) {
+    } else if (this.props.user && this.props.user.org_id === 1 && this.state.prevPath === '/profile') {
       this.props.history.push('/profile', { menuSelection: 'favorites' });
+    } else if (this.state.prevPath === '/search') {
+      this.props.history.push('/search');
     }
   }
 
   render() {
     const { id } = this.props.match.params;
     if (!Object.keys(this.props.results).length) {
-      return <Redirect to="/" />;
+      return <Redirect to="/notfound" />;
     }
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
@@ -121,15 +129,19 @@ class DogProfile extends React.Component {
     const editIcon = <Tooltip title="Edit info"><Icon type="edit" onClick={this.props.toggleEditModal} /></Tooltip>;
 
     let cardActions = null;
-    let button = '';
-    if (this.props.user && this.props.user.org_id > 1) {
-      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}> <Icon type="left" />Return to dogs list</Button>;
+    let button = null;
+    if (this.props.user && this.props.user.org_id > 1 && this.state.prevPath === '/profile') {
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}>Back to dogs list</Button>;
+    } else if (this.props.user && this.props.user.org_id === 1 && this.state.prevPath === '/profile') {
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}>Back to favorite dogs</Button>;
+    } else if (this.state.prevPath === '/search') {
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}>Back to search</Button>;
     }
+
     if (this.props.user && dog.org_id === this.props.user.org_id) {
       cardActions = [adoptIcon, editIcon];
     } else if (this.props.user && this.props.user.org_id === 1) {
       cardActions = [inquiryIcon, favoriteIcon];
-      button = <Button type="primary" className="hoverable" onClick={this.renderDogsList} style={{ margin: '20px' }}> <Icon type="left" />Return to favorite dogs</Button>;
     } else if (!this.props.user) {
       cardActions = [inquiryIcon];
     }
@@ -220,6 +232,6 @@ const mapDispatchToProps = {
   toggleEditModal,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DogProfile);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DogProfile));
 
 // TODO: editable?????
