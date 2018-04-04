@@ -4,7 +4,7 @@ import { Button, BackTop, Divider, Collapse } from 'antd';
 import { forOwn, keys, some } from 'lodash';
 import { Redirect } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
-import { updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
+import { clearSearchQuery, updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
 import SearchResults from './SearchResults';
 import GenderSelect from './SearchComponents/Gender';
 import LifestageSelect from './SearchComponents/Lifestage';
@@ -17,8 +17,8 @@ import MedicalSelect from './SearchComponents/Medical';
 import EnergySelect from './SearchComponents/Energy';
 
 class Search extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       redirect: false,
     };
@@ -42,10 +42,16 @@ class Search extends React.Component {
   }
 
   clearSearch() {
-    const { params } = this.props;
-    forOwn(params, (value, key) => {
-      console.log(value, key);
-    });
+    this.props.clearSearchQuery();
+    this.sizeRef.props.form.resetFields();
+    this.genderRef.props.form.resetFields();
+    this.lifestageRef.props.form.resetFields();
+    this.breedRef.props.form.resetFields();
+    this.mixRef.props.form.resetFields();
+    this.medicalRef.props.form.resetFields();
+    this.dietRef.props.form.resetFields();
+    this.energyRef.props.form.resetFields();
+    this.neuteredRef.props.form.resetFields();
   }
 
   submitData() {
@@ -74,6 +80,7 @@ class Search extends React.Component {
 
   render() {
     const { Panel } = Collapse;
+
     return (
       <CSSTransitionGroup
         transitionName="fade-appear"
@@ -87,50 +94,71 @@ class Search extends React.Component {
             <Divider>Find The Dog That Fits Your Lifestyle!</Divider>
           </div>
           {this.state.redirect && <Redirect to={`/dog/${this.state.id}`} />}
-          <div className="default-filters">
-            <div className="breed">
-              <p>Breed</p>
-              <BreedSelect />
-            </div>
-            <div className="gender">
-              <p>Gender</p>
-              <GenderSelect />
-            </div>
-            <div className="size">
-              <p>Size</p>
-              <SizeSelect />
-            </div>
-            <div className="lifestage">
-              <p>Lifestage</p>
-              <LifestageSelect />
-            </div>
-          </div>
-          <Collapse>
-            <Panel header="More filters">
-              <div className="more-filters">
-                <div className="mix">
-                  <p>Mix Breed</p>
-                  <MixSelect />
-                </div>
-                <div className="neutered">
-                  <p>Neutered</p>
-                  <NeuteredSelect />
-                </div>
-                <div className="diet">
-                  <p>Diet Needs</p>
-                  <DietSelect />
-                </div>
-                <div className="medical">
-                  <p>Medical Needs</p>
-                  <MedicalSelect />
-                </div>
-                <div className="energy">
-                  <p>Energy Level</p>
-                  <EnergySelect />
-                </div>
+          <div>
+            <div className="default-filters">
+              <div className="breed">
+                <p>Breed</p>
+                <BreedSelect
+                  wrappedComponentRef={(breedRef) => { this.breedRef = breedRef; }}
+                />
               </div>
-            </Panel>
-          </Collapse>
+              <div className="gender">
+                <p>Gender</p>
+                <GenderSelect
+                  wrappedComponentRef={(genderRef) => { this.genderRef = genderRef; }}
+                />
+              </div>
+              <div className="size">
+                <p>Size</p>
+                <SizeSelect
+                  wrappedComponentRef={(sizeRef) => { this.sizeRef = sizeRef; }}
+                />
+              </div>
+              <div className="lifestage">
+                <p>Lifestage</p>
+                <LifestageSelect
+                  wrappedComponentRef={(lifestageRef) => { this.lifestageRef = lifestageRef; }}
+                />
+              </div>
+            </div>
+            <Collapse>
+              <Panel header="More filters">
+                <div className="more-filters">
+                  <div className="mix">
+                    <p>Mix Breed</p>
+                    <MixSelect
+                      wrappedComponentRef={(mixRef) => { this.mixRef = mixRef; }}
+                    />
+                  </div>
+                  <div className="neutered">
+                    <p>Neutered</p>
+                    <NeuteredSelect
+                      wrappedComponentRef={(neuteredRef) => { this.neuteredRef = neuteredRef; }}
+                    />
+                  </div>
+                  <div className="diet">
+                    <p>Diet Needs</p>
+                    <DietSelect
+                      wrappedComponentRef={(dietRef) => { this.dietRef = dietRef; }}
+                    />
+                  </div>
+                  <div className="medical">
+                    <p>Medical Needs</p>
+                    <MedicalSelect
+                      wrappedComponentRef={(medicalRef) => { this.medicalRef = medicalRef; }}
+                    />
+                  </div>
+                  <div className="energy">
+                    <p>Energy Level</p>
+                    <EnergySelect
+                      wrappedComponentRef={(energyRef) => { this.energyRef = energyRef; }}
+                    />
+                  </div>
+                </div>
+              </Panel>
+            </Collapse>
+          </div>
+
           <Button className="lucky-button search-button" onClick={this.fetchAndRedirect} style={{ marginBottom: 10 }} >
             I&apos;m Feeling Lucky
           </Button>
@@ -164,6 +192,7 @@ class Search extends React.Component {
   }
 }
 
+
 const mapStateToProps = ({ search, storeUser }) => (
   {
     params: {
@@ -196,6 +225,7 @@ const mapDispatchToProps = {
   getFavorites,
   getRandomDog,
   getOrgDogs,
+  clearSearchQuery,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

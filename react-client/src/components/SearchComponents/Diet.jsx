@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Form, Select } from 'antd';
 import { connect } from 'react-redux';
 import { updateSearchQuery } from '../../actions/searchActions';
 
-class Diet extends React.Component {
-  constructor() {
-    super();
+class DietForm extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       focused: false,
     };
@@ -24,6 +24,7 @@ class Diet extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
     const diet = [
       <Option key="1">Yes</Option>,
@@ -34,20 +35,26 @@ class Diet extends React.Component {
         ? 'select-bar focused'
         : 'select-bar';
     return (
-      <Select
-        allowClear
-        showArrow={false}
-        placeholder="No Preference"
-        className={selectClassNames}
-        onFocus={this.changesFocusState}
-        onBlur={this.changesFocusState}
-        onChange={this.handleChange}
-      >
-        {diet}
-      </Select>
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('diet', {
+        })(<Select
+          allowClear
+          showArrow={false}
+          placeholder="No Preference"
+          className={selectClassNames}
+          onFocus={this.changesFocusState}
+          onBlur={this.changesFocusState}
+          onChange={this.handleChange}
+        >
+          {diet}
+        </Select>)/* eslint-disable-line */}
+        </Form.Item>
+      </Form>
     );
   }
 }
+const Diet = Form.create()(DietForm);
 
 const mapDispatchToProps = {
   updateSearchQuery,

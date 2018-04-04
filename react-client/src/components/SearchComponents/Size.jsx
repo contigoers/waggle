@@ -1,11 +1,11 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Form, Select } from 'antd';
 import { connect } from 'react-redux';
 import { updateSearchQuery } from '../../actions/searchActions';
 
-class Size extends React.Component {
-  constructor() {
-    super();
+class SizeForm extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       focused: false,
     };
@@ -24,6 +24,7 @@ class Size extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
     const sizes = [
       <Option key="tiny">Tiny</Option>,
@@ -37,20 +38,26 @@ class Size extends React.Component {
         ? 'select-bar focused'
         : 'select-bar';
     return (
-      <Select
-        allowClear
-        mode="multiple"
-        placeholder="Any Size"
-        className={selectClassNames}
-        onFocus={this.changesFocusState}
-        onBlur={this.changesFocusState}
-        onChange={this.handleChange}
-      >
-        {sizes}
-      </Select>
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('size', {
+          })(<Select
+            allowClear
+            mode="multiple"
+            placeholder="Any Size"
+            className={selectClassNames}
+            onFocus={this.changesFocusState}
+            onBlur={this.changesFocusState}
+            onChange={this.handleChange}
+          >
+            {sizes}
+          </Select>)/* eslint-disable-line */}
+        </Form.Item>
+      </Form>
     );
   }
 }
+const Size = Form.create()(SizeForm);
 
 const mapDispatchToProps = {
   updateSearchQuery,
