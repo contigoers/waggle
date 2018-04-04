@@ -401,37 +401,43 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
-router.post('/register', async ctx =>
-  passport.authenticate('local-signup', async (error, user, info) => {
-    if (error) {
-      ctx.body = { error };
-      ctx.throw(500);
-    } else if (!user) {
-      ctx.body = { success: false };
-      ctx.throw(418, info);
-    } else {
-      let adopterId;
-      let username;
-      if (user.org_id === 1) {
-        const [adopter] = await db.getAdopterId(user.id);
-        adopterId = adopter.id;
-        username = adopter.name;
+router.post('/register', async (ctx) => {
+  const { email } = ctx.request.body;
+  const query = await db.checkEmail(email);
+  if (!query.length) {
+    return passport.authenticate('local-signup', async (error, user, info) => {
+      if (error) {
+        ctx.body = { error };
+        ctx.throw(500);
+      } else if (!user) {
+        ctx.body = { success: false };
+        ctx.throw(418, info);
       } else {
-        const [org] = await db.getOrgName(user.org_id);
-        username = org.org_name;
+        let adopterId;
+        let username;
+        if (user.org_id === 1) {
+          const [adopter] = await db.getAdopterId(user.id);
+          adopterId = adopter.id;
+          username = adopter.name;
+        } else {
+          const [org] = await db.getOrgName(user.org_id);
+          username = org.org_name;
+        }
+        const userInfo = {
+          ...user,
+          adopterId,
+          name: username,
+        };
+        ctx.body = {
+          success: true,
+          user: userInfo,
+        };
+        return ctx.login(user);
       }
-      const userInfo = {
-        ...user,
-        adopterId,
-        name: username,
-      };
-      ctx.body = {
-        success: true,
-        user: userInfo,
-      };
-      return ctx.login(user);
-    }
-  })(ctx));
+    })(ctx);
+  }
+  ctx.throw(418, 'email exists');
+});
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
