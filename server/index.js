@@ -486,8 +486,12 @@ router.post('/messages/post', async (ctx) => {
   const { recipientId } = ctx.request.body;
   const { dogName } = ctx.request.body;
   const msg = ctx.request.body.message;
-  const fullMessage = await db.addMessage(senderId, recipientId, msg, dogName);
-  const message = fullMessage[0];
+  let message;
+  try {
+    [message] = await db.addMessage(senderId, recipientId, msg, dogName);
+  } catch (error) {
+    ctx.throw(500);
+  }
   ctx.status = 201;
   ctx.body = {
     status: 'success',
