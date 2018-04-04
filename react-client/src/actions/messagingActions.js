@@ -40,7 +40,8 @@ const deleteMessage = async (messageId, userId, contactId) => {
   };
 };
 
-const sendMessage = async (senderId, recipientId, message) => {
+const sendMessage = async (senderId, recipientId, recipientType, message) => {
+  console.log('action', senderId, recipientId, recipientType, message);
   await axios.post('/messages/post', {
     senderId,
     recipientId,

@@ -84,7 +84,7 @@ const getDogById = dogId => knex('dogs').where('id', dogId);
 // get organization ID from organization name query
 const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
-const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
+const getOrgProfile = orgId => knex.column(knex.raw('users.id as userId, users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw(`users.org_id = ${orgId} and orgs.id = ${orgId}`));
 
@@ -183,7 +183,7 @@ const getOrgsAfterDogs = (orgs) => {
     }
   });
 
-  return knex.column(knex.raw('orgs.*, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
+  return knex.column(knex.raw('orgs.*, users.id as userId, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
     .select()
     .from(knex.raw('users, orgs'))
     .where(knex.raw(whereQuery));
@@ -194,6 +194,7 @@ const getRandomDog = () => knex.select()
   .where(knex.raw('adopted = false order by rand() limit 1'));
 
 const addMessage = async (senderId, recipientId, message, dogName) => {
+  console.log('addmessage', senderId, recipientId)
   const id = await knex('messages').insert({
     sender_id: senderId,
     recipient_id: recipientId,
@@ -244,9 +245,9 @@ const getOrgContacts = async (userId) => {
 };
 
 const getAdopterContacts = async (userId) => {
-  const messages = await knex('messages').select('recipient_id', 'dogName')
-    .where('sender_id', userId);
-    // console.log('messages', messages);
+  const messages = await knex('messages').select('id', 'recipient_id', 'sender_id', 'dogName')
+    .where(knex.raw(`sender_id = ${userId} or recipient_id = ${userId}`));
+    console.log('messages', messages);
   const namesAndDogs = {};
   messages.forEach((message) => {
     if (!has(namesAndDogs, message.recipient_id)) {
@@ -260,7 +261,7 @@ const getAdopterContacts = async (userId) => {
   const contacts = [];
   if (ids.length) {
     const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
-    // console.log('names', names);
+    console.log('names', names);
     names[0].forEach((obj) => {
       if (has(namesAndDogs, obj.id)) {
         namesAndDogs[obj.id].name = obj.org_name;
