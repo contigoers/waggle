@@ -40,6 +40,3 @@ bower_components/
 package-lock.json
 package.json
 webpack.config.js
-
-react-client/src/BrianOrgReg.jsx
-react-client/src/BrianRegReducer.jsx

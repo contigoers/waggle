@@ -109,7 +109,7 @@ $z-index: (
 .nav-bar {
   height: 85px;
   display: grid;
-  grid-template-columns: repeat(10, 10%);;
+  grid-template-columns: repeat(9, 1fr);
   background: $primary;
   color: white;
   border-bottom: 4px solid $primary-dark;
@@ -149,11 +149,11 @@ $z-index: (
 }
 
 .login {
-  grid-column: 9 / 10;
+  grid-column: 8 / 9;
 }
 
 .signup, .logout {
-  grid-column: 10 / 11;
+  grid-column: 9 / 10;
 }
 
 .body {
@@ -308,4 +308,42 @@ $z-index: (
 .hoverable:hover {
   cursor: pointer;
   color: lightgreen;
+}
+
+.forgot {
+  float: left;
+  border: none;
+}
+
+.reset-pass {
+  min-height: 100vh;
+}
+
+.reset-form {
+  margin: 100px 35% 0 35%;
+  padding: 4% 5% 3% 5%;
+  border: 4px solid $primary;
+  border-radius: 3px;
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+}
+
+.reset-password-buttons {
+  margin-top: 50;
+  a {
+    float: left;
+    color: $primary-dark;
+    &:hover {
+      transition-duration: 0.25s;
+      color: $primary;
+    }
+  }
+  button {
+    float: right;
+    background-color: $primary;
+    border-color: $primary;
+    &:hover, &:active, &:focus {
+      background-color: $primary-dark;
+      border-color: $primary-dark;
+    }
+  }
 }

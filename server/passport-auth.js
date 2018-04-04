@@ -14,19 +14,18 @@ module.exports = () => {
 
   // LOCAL LOGIN STRATEGY
   passport.use('local-login', new LocalStrategy(async (username, password, cb) => {
-    const userInfo = await db.checkCredentials(username);
-    if (userInfo.length) {
-      const user = userInfo[0];
+    const [user] = await db.checkCredentials(username);
+    if (user) {
       bcrypt.compare(password, user.password, (err, res) => {
         if (err) {
-          cb(err, null);
-        } else if (res === false) {
-          cb(null, false);
+          return cb(err);
+        } else if (!res) {
+          return cb(null, res, 'incorrect password');
         }
-        cb(null, user);
+        return cb(null, user);
       });
     } else {
-      cb(null, false);
+      return cb(null, false, 'user not found');
     }
   }));
 
@@ -36,18 +35,23 @@ module.exports = () => {
     passwordField: 'password',
     passReqToCallback: true,
   }, async (req, username, password, cb) => {
-    bcrypt.hash(password, 10, async (err, hash) => {
-      if (err) {
-        cb(err, null);
-      } else {
-        const data = await db.createUser(req.body, username, hash);
-        if (data === 'already exists!') {
-          cb(data, null);
+    const [user] = await db.checkCredentials(username);
+    if (!user) {
+      bcrypt.hash(password, 10, async (err, hash) => {
+        if (err) {
+          cb(err);
         } else {
-          const userInfo = await db.checkCredentials(username);
-          cb(null, userInfo[0]);
+          try {
+            await db.createUser(req.body, username, hash);
+          } catch (e) {
+            return cb(e, null, 'error at creation');
+          }
+          const [userInfo] = await db.checkCredentials(username);
+          cb(null, userInfo);
         }
-      }
-    });
+      });
+    } else {
+      return cb(null, null, 'username already exists');
+    }
   }));
 };

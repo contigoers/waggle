@@ -27,10 +27,8 @@ class BreedForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { Option } = Select;
-    const breeds = [];
-    breedList.forEach((breed) => {
-      breeds.push(<Option key={breed}>{breed}</Option>);
-    });
+    const breeds = breedList.map(breed =>
+      <Option key={breed}>{breed}</Option>);
     const selectClassNames =
       this.state.focused
         ? 'select-bar focused'

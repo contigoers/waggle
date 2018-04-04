@@ -30,6 +30,7 @@ CREATE TABLE `users` (
   `state` VARCHAR(2) NULL DEFAULT NULL,
   `zipcode` INTEGER(5) NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
+  `forgot_pw_link` VARCHAR(40) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 

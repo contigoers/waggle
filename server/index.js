@@ -1,16 +1,28 @@
 const Koa = require('koa');
+const path = require('path');
+const fs = require('fs');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
 const passport = require('koa-passport');
 const session = require('koa-session');
+const bcrypt = require('bcrypt');
 const serve = require('koa-static');
 const db = require('../database/index');
+const { sendEmail } = require('./emailer');
 const { mapKeys } = require('lodash');
 
 const app = new Koa();
 
 app.keys = ['supersecret'];
 app.use(session(app));
+
+const readFileThunk = src =>
+  new Promise((resolve, reject) => {
+    fs.readFile(src, 'utf8', (err, data) => {
+      if (err) return reject(err);
+      return resolve(data);
+    });
+  });
 
 app
   .use(serve(`${__dirname}/../react-client/dist`))
@@ -29,32 +41,73 @@ const isLoggedIn = (ctx, next) => {
   // ctx.redirect('/');  <---redirect to home page??
 };
 
-// get all organizations and contact info
-// router.get('/allOrgInfo', async (ctx) => {
-//   const allOrgs = await db.getAllOrganizations();
-//   ctx.body = {
-//     status: 'success',
-//     allOrgs,
-//   };
-// });
+const randomString = (length) => {
+  let text = '';
+  const possible = 'abcdefghijklmnopqrstuvqxyz0123456789';
+  for (let i = 0; i < length; i += 1) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
 
-// get all dogs
-// router.get('/allDogInfo', async (ctx) => {
-//   const allDogs = await db.getAllDogs();
-//   ctx.body = {
-//     status: 'success',
-//     allDogs,
-//   };
-// });
+router.put('/forgotpass', async (ctx) => {
+  const { email } = ctx.request.body;
+  if (!ctx.request.body) {
+    ctx.body = {
+      status: 204,
+      message: 'No Request Body',
+    };
+  }
+  if (!email) {
+    ctx.body = {
+      status: 204,
+      message: 'No Email Address in Request Body',
+    };
+  }
+  const emailDoesExist = await db.getUserByEmail(email);
+  if (!emailDoesExist.length) {
+    ctx.body = {
+      status: 204,
+      message: 'This Email Does Not Exists',
+    };
+  } else {
+    const token = randomString(40);
+    const emailData = {
+      to: email,
+      subject: 'Waggl Password Reset',
+      text: `Please follow the link for instructions to reset your password: http://www.waggl.dog/resetpass/${token}`,
+      html: `<p>Please use the link below for instructions to reset your password.</p><p>http://www.waggl.dog/resetpass/${token}</p>`,
+    };
+    try {
+      await db.updateForgotPassword(email, token);
+      sendEmail(emailData);
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: err.message || 'Sorry, an error has occurred.',
+      };
+    }
+    ctx.body = {
+      status: 200,
+      message: `Email has been sent to ${ctx.request.body.email}`,
+    };
+  }
+});
 
-// get info on single dog by dogId
-// router.get('/dogInfo', async (ctx) => {
-//   const dog = await db.getDogById(ctx.request.query.dogId);
-//   ctx.body = {
-//     status: 'success',
-//     dog: dog[0],
-//   };
-// });
+router.patch('/resetpass', async (ctx) => {
+  const { password, token } = ctx.request.body;
+  const hash = await bcrypt.hash(password, 10);
+  const response = await db.updatePassword(token, hash);
+  if (response) {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.throw(500);
+  }
+});
 
 // mark dog status as 'adopted' - for organization access only
 router.patch('/adopted', async (ctx) => {
@@ -306,7 +359,7 @@ router.get('/randomDog', async (ctx) => {
   try {
     [dog] = await db.getRandomDog();
   } catch (err) {
-    console.log(err);
+    throw err;
   }
   const [org] = await db.getOrgProfile(dog.org_id);
   const dogsAndOrgs = {
@@ -324,43 +377,75 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
-// not being used for now except for passport debugging purposes
-// router.get('/user', (ctx) => {
-//   ctx.status = 200;
-//   ctx.body = {
-//     user: ctx.state.user,
-//   };
-// });
-
-// for now this does not use JWT/FBoauth
-router.post('/register', passport.authenticate('local-signup'), (ctx) => {
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    user: ctx.state.user,
-  };
-});
-
-// for now this does not use FB oauth/JWT
-router.post('/login', passport.authenticate('local-login'), async (ctx) => {
-  let adopterId = null;
-  let userName = null;
-  if (ctx.state.user.org_id === 1) {
-    const adopter = await db.getAdopterId(ctx.state.user.id);
-    adopterId = adopter[0].id;
-    userName = adopter[0].name;
-  } else {
-    const org = await db.getOrgName(ctx.state.user.org_id);
-    userName = org[0].org_name;
+router.post('/register', async (ctx) => {
+  const { email } = ctx.request.body;
+  const query = await db.checkEmail(email);
+  if (!query.length) {
+    return passport.authenticate('local-signup', async (error, user, info) => {
+      if (error) {
+        ctx.body = { error };
+        ctx.throw(500);
+      } else if (!user) {
+        ctx.body = { success: false };
+        ctx.throw(418, info);
+      } else {
+        let adopterId;
+        let username;
+        if (user.org_id === 1) {
+          const [adopter] = await db.getAdopterId(user.id);
+          adopterId = adopter.id;
+          username = adopter.name;
+        } else {
+          const [org] = await db.getOrgName(user.org_id);
+          username = org.org_name;
+        }
+        const userInfo = {
+          ...user,
+          adopterId,
+          name: username,
+        };
+        ctx.body = {
+          success: true,
+          user: userInfo,
+        };
+        return ctx.login(user);
+      }
+    })(ctx);
   }
-  console.log('userName', userName);
-  const user = Object.assign(ctx.state.user, { adopterId, name: userName });
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    user,
-  };
+  ctx.throw(418, 'email exists');
 });
+
+router.post('/login', async ctx =>
+  passport.authenticate('local-login', async (error, user, info) => {
+    if (error) {
+      ctx.body = { error };
+      ctx.throw(500, 'unknown error');
+    } else if (!user) {
+      ctx.body = { success: false };
+      ctx.throw(401, info);
+    } else {
+      let adopterId;
+      let username;
+      if (user.org_id === 1) {
+        const [adopter] = await db.getAdopterId(user.id);
+        adopterId = adopter.id;
+        username = adopter.name;
+      } else {
+        const [org] = await db.getOrgName(user.org_id);
+        username = org.org_name;
+      }
+      const userInfo = {
+        ...user,
+        adopterId,
+        name: username,
+      };
+      ctx.body = {
+        success: true,
+        user: userInfo,
+      };
+      return ctx.login(user);
+    }
+  })(ctx));
 
 router.post('/logout', isLoggedIn, async (ctx) => {
   await ctx.logout();
@@ -377,8 +462,12 @@ router.post('/messages/post', async (ctx) => {
   const { recipientId } = ctx.request.body;
   const { dogName } = ctx.request.body;
   const msg = ctx.request.body.message;
-  const fullMessage = await db.addMessage(senderId, recipientId, msg, dogName);
-  const message = fullMessage[0];
+  let message;
+  try {
+    [message] = await db.addMessage(senderId, recipientId, msg, dogName);
+  } catch (error) {
+    ctx.throw(500);
+  }
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -388,9 +477,7 @@ router.post('/messages/post', async (ctx) => {
 
 // marks a message as deleted in database
 router.patch('/messages/delete', async (ctx) => {
-  console.log('deleting message', ctx.request.body);
-  const msg = await db.deleteMessage(ctx.request.body.messageId);
-  console.log('deleted message', msg);
+  await db.deleteMessage(ctx.request.body.messageId);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -399,7 +486,6 @@ router.patch('/messages/delete', async (ctx) => {
 
 // gets messages between two users
 router.get('/messages/fetch', async (ctx) => {
-  console.log('fetching messages');
   const { userId } = ctx.request.query;
   const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);
@@ -445,12 +531,13 @@ router.post('/imageUpload', (ctx) => {
   }
 });
 
+router.get('/*', async (ctx) => {
+  ctx.body = await readFileThunk(path.join(__dirname, '../react-client/dist/index.html'));
+});
+
 app
   .use(router.routes())
-  .use(router.allowedMethods())
-  .use(function* () { // eslint-disable-line
-    this.redirect('/');
-  });
+  .use(router.allowedMethods());
 
 
 app.listen(process.env.PORT, () => {

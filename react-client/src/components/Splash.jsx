@@ -18,7 +18,7 @@ class Splash extends React.Component {
     this.state = {
       count: 1,
       isHovered: false,
-      dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend'],
+      dogNicknames: ['good boy', 'buddy', 'good girl', 'bubba', 'best friend', 'soul mate'],
       currentName: 'best friend',
       video: splashImage,
     };
@@ -61,9 +61,6 @@ class Splash extends React.Component {
     const iconClass = this.state.isHovered
       ? 'down-icon animated infinite rubberBand'
       : 'down-icon';
-    const dogNameClass = this.state.isHovered
-      ? 'dog-names animated infinite'
-      : 'dog-names';
     return (
       <CSSTransitionGroup
         transitionName="fade-appear"
@@ -83,7 +80,7 @@ class Splash extends React.Component {
                 Splash.scrollToNav();
               }}
             >
-              Find your new <div className={dogNameClass}>{this.state.currentName}</div>
+              Find your new <div className="dog-names animated infinite">{this.state.currentName}</div>
               <Icon className={iconClass} type="down" />
             </button>
           </div>
