@@ -288,7 +288,7 @@ router.get('/orgInfo', async (ctx) => {
     const orgProfile = await db.getOrgProfile(orgId);
     let dogs = await db.getOrgDogs(orgId);
     if (dogs.length) {
-      dogs = mapKeys(dogs[0], 'id');
+      dogs = mapKeys(dogs, 'id');
       const orgDogs = {
         dogs,
         org: orgProfile[0],
