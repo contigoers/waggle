@@ -401,28 +401,45 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
-// not being used for now except for passport debugging purposes
-// router.get('/user', (ctx) => {
-//   ctx.status = 200;
-//   ctx.body = {
-//     user: ctx.state.user,
-//   };
-// });
-
-// for now this does not use JWT/FBoauth
-router.post('/register', passport.authenticate('local-signup'), (ctx) => {
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    user: ctx.state.user,
-  };
-});
+router.post('/register', async ctx =>
+  passport.authenticate('local-signup', async (error, user, info) => {
+    if (error) {
+      ctx.body = { error };
+      ctx.throw(500);
+    } else if (!user) {
+      ctx.body = { success: false };
+      ctx.throw(418, info);
+    } else {
+      let adopterId;
+      let username;
+      if (user.org_id === 1) {
+        const [adopter] = await db.getAdopterId(user.id);
+        adopterId = adopter.id;
+        username = adopter.name;
+      } else {
+        const [org] = await db.getOrgName(user.org_id);
+        username = org.org_name;
+      }
+      const userInfo = {
+        ...user,
+        adopterId,
+        name: username,
+      };
+      ctx.body = {
+        success: true,
+        user: userInfo,
+      };
+      return ctx.login(user);
+    }
+  })(ctx));
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
-    if (error) ctx.body = { error };
-    if (user === false) {
-      ctx.body = { success: false, info };
+    if (error) {
+      ctx.body = { error };
+      ctx.throw(500, 'unknown error');
+    } else if (!user) {
+      ctx.body = { success: false };
       ctx.throw(401, info);
     } else {
       let adopterId;

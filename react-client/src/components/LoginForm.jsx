@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Form, Icon, Input, Button, Modal } from 'antd';
+import { Form, Icon, Input, Button, Modal, message } from 'antd';
 import axios from 'axios';
 
 import { toggleLoginModal, storeUserId } from '../actions/loginActions';
@@ -12,9 +12,11 @@ const WrappedLoginForm = Form.create()(class extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loggedIn: false,
       forgotPassword: false,
+      loading: false,
     };
-    this.state = { loggedIn: false };
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.props.toggleLoginModal.bind(this);
     this.storeUser = this.props.storeUserId.bind(this);
@@ -46,13 +48,26 @@ const WrappedLoginForm = Form.create()(class extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        axios.post('/login', values).then((response) => {
-          this.toggleModal();
-          this.storeUser({ user: response.data.user });
-          this.props.form.resetFields();
-          this.setState({ loggedIn: true });
-          this.setState({ loggedIn: false });
-        });
+        this.setState({ loading: true });
+        axios.post('/login', values)
+          .then((response) => {
+            this.toggleModal();
+            this.storeUser({ user: response.data.user });
+            this.props.form.resetFields();
+            this.setState({ loggedIn: true });
+            this.setState({ loggedIn: false, loading: false });
+          })
+          .catch((error) => {
+            this.setState({ loading: false });
+            const info = error.response.data;
+            if (info === 'user not found') {
+              message.error('Sorry, this username could not be found.', 5);
+            } else if (info === 'incorrect password') {
+              message.error('Sorry, the password was incorrect.', 5);
+            } else if (info === 'unknown error') {
+              message.error('Sorry, an unknown error occurred.', 5);
+            }
+          });
       }
     });
   }
@@ -86,47 +101,49 @@ const WrappedLoginForm = Form.create()(class extends Component {
           [
             <Button key="reset" className="forgot" onClick={this.handleForgotPasswordOrGoBack}>Reset Password</Button>,
             <Button key="back" onClick={() => { this.toggleModal(); }}>Cancel</Button>,
-            <Button id="login" key="login" type="primary" onClick={this.handleSubmit}>Log In</Button>,
+            <Button id="login" key="login" type="primary" onClick={this.handleSubmit} loading={this.state.loading}>Log In</Button>,
           ]
         }
       >
         {this.state.forgotPassword ?
-          <Form onSubmit={this.handleSubmit} className="login-form">
-            <FormItem>
-              {getFieldDecorator('username', {
-                rules: [
-                  { type: 'email', message: 'Please input a valid email address!' },
-                  { required: true, message: 'Please input a email address!' },
-                ],
-              })(<Input
-                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Email"
-                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmitForgotPassword(e); }}
-              />)}
-            </FormItem>
-          </Form>
-          :
-          <Form onSubmit={this.handleSubmit} className="login-form">
-            <FormItem>
-              {getFieldDecorator('username', {
-                rules: [{ required: true, message: 'Please input your username!' }],
-              })(<Input
-                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Username"
-                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-              />)}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }],
-              })(<Input
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
-                type="password"
-                placeholder="Password"
-              />)}
-            </FormItem>
-          </Form>
+          (
+            <Form onSubmit={this.handleSubmit} className="login-form">
+              <FormItem>
+                {getFieldDecorator('username', {
+                  rules: [
+                    { type: 'email', message: 'Please input a valid email address!' },
+                    { required: true, message: 'Please input a email address!' },
+                  ],
+                })(<Input
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Email"
+                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmitForgotPassword(e); }}
+                />)}
+              </FormItem>
+            </Form>
+          ) : (
+            <Form onSubmit={this.handleSubmit} className="login-form">
+              <FormItem>
+                {getFieldDecorator('username', {
+                  rules: [{ required: true, message: 'Please input your username!' }],
+                })(<Input
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Username"
+                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+                />)}
+              </FormItem>
+              <FormItem>
+                {getFieldDecorator('password', {
+                  rules: [{ required: true, message: 'Please input your Password!' }],
+                })(<Input
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  onKeyUp={(e) => { if (e.key === 'Enter') this.handleSubmit(e); }}
+                  type="password"
+                  placeholder="Password"
+                />)}
+              </FormItem>
+            </Form>
+          )
         }
       </Modal>
     );
