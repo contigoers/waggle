@@ -44,11 +44,13 @@ class Search extends React.Component {
     this.genderRef.props.form.resetFields();
     this.lifestageRef.props.form.resetFields();
     this.breedRef.props.form.resetFields();
-    this.mixRef.props.form.resetFields();
-    this.medicalRef.props.form.resetFields();
-    this.dietRef.props.form.resetFields();
-    this.energyRef.props.form.resetFields();
-    this.neuteredRef.props.form.resetFields();
+    if (this.mixRef) {
+      this.mixRef.props.form.resetFields();
+      this.medicalRef.props.form.resetFields();
+      this.dietRef.props.form.resetFields();
+      this.energyRef.props.form.resetFields();
+      this.neuteredRef.props.form.resetFields();
+    }
   }
 
   submitData() {
