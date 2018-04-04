@@ -41,7 +41,7 @@ ReactDOM.render(
             <Route path="/searchResults" component={SearchResults} />
             <Route path="/dog/:id" component={DogProfile} />
             <Route path="/about" component={About} />
-            <Route path="/resetpass/:id" component={ResetPass} />
+            <Route path="/resetpass/:token" component={ResetPass} />
             <Route path="/" component={Landing} />
           </Switch>
           <Footer />

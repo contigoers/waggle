@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import axios from 'axios';
 
 const FormItem = Form.Item;
@@ -42,12 +42,18 @@ class ResetPass extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        axios.put('/resetpass', {
+        axios.patch('/resetpass', {
           password: values.password1,
-          token: window.location.href.split('/').pop(),
+          token: this.props.match.params.token,
         })
-          .then(res => console.log(res.data))
-          .catch(error => console.log(error));
+          .then((res) => {
+            console.log(res.data);
+            message.success('Password updated', 5);
+          })
+          .catch((error) => {
+            console.log(error.response);
+            message.error('Uh oh, something went wrong. Try again.', 5);
+          });
       }
     });
   }

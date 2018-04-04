@@ -39,12 +39,14 @@ const WrappedLoginForm = Form.create()(class extends Component {
         })
           .then((res) => {
             if (res.data.message !== 'This Email Does Not Exists') {
-              message.success('A rescue pack of dogs have sent you an email!');
+              message.success('A pack of search dogs have sent you an email!', 5);
             } else {
-              message.error('We do not recognize this email address');
+              message.error('Uh oh, we do not recognize this email address.', 5);
             }
           })
-          .catch(error => console.log(error));
+          .catch((error) => {
+            message.error(`Uh oh, something went wrong: ${error}`, 10);
+          });
       }
     });
   }
