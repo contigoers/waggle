@@ -114,33 +114,6 @@ router.patch('/resetpass', async (ctx) => {
   });
 });
 
-// get all organizations and contact info
-// router.get('/allOrgInfo', async (ctx) => {
-//   const allOrgs = await db.getAllOrganizations();
-//   ctx.body = {
-//     status: 'success',
-//     allOrgs,
-//   };
-// });
-
-// get all dogs
-// router.get('/allDogInfo', async (ctx) => {
-//   const allDogs = await db.getAllDogs();
-//   ctx.body = {
-//     status: 'success',
-//     allDogs,
-//   };
-// });
-
-// get info on single dog by dogId
-// router.get('/dogInfo', async (ctx) => {
-//   const dog = await db.getDogById(ctx.request.query.dogId);
-//   ctx.body = {
-//     status: 'success',
-//     dog: dog[0],
-//   };
-// });
-
 // mark dog status as 'adopted' - for organization access only
 router.patch('/adopted', async (ctx) => {
   await db.markAsAdopted(ctx.request.body.dogId);
@@ -391,7 +364,7 @@ router.get('/randomDog', async (ctx) => {
   try {
     [dog] = await db.getRandomDog();
   } catch (err) {
-    console.log(err);
+    throw err;
   }
   const [org] = await db.getOrgProfile(dog.org_id);
   const dogsAndOrgs = {
