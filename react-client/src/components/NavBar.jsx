@@ -15,7 +15,6 @@ const NavBar = (props) => {
   const logout = () => {
     axios.post('/logout').then((response) => {
       console.log(response);
-      // props.storeUserId({ user: null });
       props.logoutUser();
       props.history.push('/');
     });
