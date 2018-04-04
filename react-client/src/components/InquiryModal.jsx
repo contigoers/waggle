@@ -15,7 +15,6 @@ class InquiryModal extends Component {
   }
 
   handleSubmit(e) {
-    console.log(this.props);
     const { id, results, user } = this.props;
     e.preventDefault();
     this.ref.props.form.validateFields((err, values) => {

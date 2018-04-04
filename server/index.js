@@ -504,6 +504,7 @@ router.get('/messages/fetch', async (ctx) => {
   const { userId } = ctx.request.query;
   const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);
+  console.log(messages);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -546,9 +547,21 @@ router.post('/imageUpload', (ctx) => {
   }
 });
 
+router.get('/testing', async (ctx) => {
+  console.log('testing');
+  const stuff = await db.getOrgContacts(ctx.request.query.orgId);
+  console.log('stuff', stuff)
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    stuff,
+  };
+});
+
 router.get('/*', async (ctx) => {
   ctx.body = await readFileThunk(path.join(__dirname, '../react-client/dist/index.html'));
 });
+
 
 app
   .use(router.routes())

@@ -166,6 +166,9 @@ class MessagesTab extends React.Component {
                   {
                     this.state.visibleMessages.map((msg) => {
                       const isMine = msg.sender_id === this.props.user.id;
+                      const { sent } = msg;
+                      const datetime = `${sent.slice(5, 7)}/${sent.slice(8, 10)}/${sent.slice(0, 4)}, ${sent.slice(11, 19)}`;
+
                       return (
                         <Card
                           key={msg.id}
@@ -186,7 +189,7 @@ class MessagesTab extends React.Component {
                         }
                         >
                           <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
-                          <div style={{ fontSize: 'smaller' }} > {message.sent} </div>
+                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime} </div>
                         </Card>
                       );
                     })

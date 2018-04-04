@@ -17,7 +17,6 @@ class InquiryForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { orgs } = this.props.results;
-    console.log(orgs[this.props.orgId])
     return (
       <Form>
         <FormItem label="To:">
