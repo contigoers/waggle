@@ -516,6 +516,19 @@ router.get('/contacts/adopter', async (ctx) => {
   };
 });
 
+router.get('/checkLink', async (ctx) => {
+  const { token } = ctx.request.query;
+  const response = await db.checkLinkExists(token);
+  if (response.length) {
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+    };
+  } else {
+    ctx.throw(500);
+  }
+});
+
 router.post('/imageUpload', (ctx) => {
   if (ctx.request.url === '/imageUpload') {
     ctx.status = 201;

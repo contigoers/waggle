@@ -14,6 +14,7 @@ import UserProfile from './UserProfile';
 import ScrollToTop from './ScrollToTop';
 import About from './About';
 import ResetPass from './ResetPass';
+import NotFound from './404';
 
 const Router = props => (
   <BrowserRouter>
@@ -30,7 +31,8 @@ const Router = props => (
             <Route path="/dog/:id" component={DogProfile} />
             <Route path="/about" component={About} />
             <Route path="/resetpass/:token" component={ResetPass} />
-            <Route path="/" component={Landing} />
+            <Route exact path="/" component={Landing} />
+            <Route path="/" component={NotFound} />
           </Switch>
           <Footer />
         </ScrollToTop>
