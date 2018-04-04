@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { map, isEmpty, mapKeys } from 'lodash';
 import { Row, Col, Menu, Icon, BackTop } from 'antd';
 import { CSSTransitionGroup } from 'react-transition-group';
@@ -147,4 +148,4 @@ const mapDispatchToProps = {
   getMessages,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserProfile));

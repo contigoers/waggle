@@ -65,7 +65,7 @@ class Search extends React.Component {
   async fetchAndRedirect() {
     await this.props.getRandomDog();
     const [id] = Object.keys(this.props.results.dogs);
-    this.props.history.push(`/dog/${id}`);
+    this.props.history.push(`/dog/${id}`, { prevPath: this.props.match.path });
   }
 
   render() {
