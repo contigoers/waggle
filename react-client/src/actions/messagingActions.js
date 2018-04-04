@@ -40,6 +40,20 @@ const deleteMessage = async (messageId, userId, contactId) => {
   };
 };
 
+const sendMessage = async (senderId, recipientId, message) => {
+  await axios.post('/messages/post', {
+    senderId,
+    recipientId,
+    message,
+    dogName: null,
+  });
+  const { data } = await axios.get('/messages/fetch', { params: { userId: senderId, contactId: recipientId } });
+  return {
+    type: GET_MESSAGES,
+    data,
+  };
+};
+
 export {
   TOGGLE_INQUIRY_MODAL,
   toggleInquiryModal,
@@ -48,4 +62,5 @@ export {
   GET_MESSAGES,
   getMessages,
   deleteMessage,
+  sendMessage,
 };
