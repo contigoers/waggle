@@ -44,10 +44,11 @@ class DogCard extends React.Component {
 
   render() {
     const { dog } = this.props;
-    if (dog.photo !== null) {
-      dog.photo = Buffer.from(dog.photo);
+    let photo;
+    if (dog.photo) {
+      photo = Buffer.from(dog.photo);
     } else {
-      dog.photo = 'https://i.redd.it/uwptaiy07xn01.jpg';
+      photo = 'https://i.redd.it/uwptaiy07xn01.jpg';
     }
     const { favorites } = this.props;
     const { id } = this.props.dog;
@@ -61,7 +62,7 @@ class DogCard extends React.Component {
       <Card
         hoverable
         style={{ width: 300, margin: 30 }}
-        cover={<img alt="pupper" onClick={this.onClick} src={dog.photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
+        cover={<img alt="pupper" onClick={this.onClick} src={photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
         actions={
           (this.props.user && this.props.user.org_id === 1 &&
           [(favorites && favorites[id] ?
