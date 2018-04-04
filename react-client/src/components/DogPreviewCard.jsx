@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { startCase } from 'lodash';
 import { Card, Divider, Icon, message, Tooltip } from 'antd';
 
@@ -9,15 +9,15 @@ import { addFavorite, removeFavorite } from '../actions/searchActions';
 class DogCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      seeProfile: false,
-    };
+
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.onClick = this.onClick.bind(this);
   }
 
   onClick() {
-    this.setState({ seeProfile: true });
+    const { dog } = this.props;
+    const url = `/dog/${dog.id}`;
+    this.props.history.push(url);
   }
 
   async toggleFavorite() {
@@ -51,11 +51,6 @@ class DogCard extends React.Component {
     }
     const { favorites } = this.props;
     const { id } = this.props.dog;
-
-    const url = `/dog/${dog.id}`;
-    if (this.state.seeProfile) {
-      return <Redirect to={url} />;
-    }
 
     const stage = startCase(dog.lifestage);
 
@@ -106,6 +101,6 @@ const mapDispatchToProps = {
   removeFavorite,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DogCard);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DogCard));
 
 // TODO: make photo in card view square
