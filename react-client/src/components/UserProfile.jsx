@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { map, isEmpty, mapKeys } from 'lodash';
+import { map, isEmpty } from 'lodash';
 import { Row, Col, Menu, Icon, BackTop } from 'antd';
 import { CSSTransitionGroup } from 'react-transition-group';
 
@@ -19,8 +19,10 @@ class UserProfile extends React.Component {
       type: this.props.user.org_id === 1 ? 'adopter' : 'org',
       menuSelection: null,
     };
+
     if (this.state.type === 'org') {
-      this.getOrgDogs();
+      const value = this.props.user.org_id;
+      this.getOrgDogs({ value });
     } else if (isEmpty(this.props.favorites)) {
       this.getFavorites();
     }
@@ -56,8 +58,7 @@ class UserProfile extends React.Component {
     const { user } = this.props;
     const { results } = this.props;
     const { menuSelection } = this.state;
-    const { favorites } = this.props;
-    const faves = mapKeys(favorites.favoriteDogs, 'id');
+    const { favoriteDogs, adopter } = this.props.favorites;
 
     return (
       <CSSTransitionGroup
@@ -90,7 +91,7 @@ class UserProfile extends React.Component {
                   <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
                   }
                   {this.state.type === 'adopter' &&
-                  <div>{!isEmpty(favorites.adopter) ? <OrgCard org={favorites.adopter} adopterUser={user} /> : 'Loading...'} </div>
+                  <div>{!isEmpty(adopter) ? <OrgCard org={adopter} adopterUser={user} /> : 'Loading...'} </div>
                   }
                 </Col>
               </Row>
@@ -101,7 +102,7 @@ class UserProfile extends React.Component {
               }
                 {this.state.type === 'adopter' &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
-                  {!isEmpty(faves) ? map(faves, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+                  {!isEmpty(favoriteDogs) ? map(favoriteDogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
                 </div>
               }
               <BackTop />
