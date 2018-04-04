@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button } from 'antd';
+import { Modal, Button, message } from 'antd';
 import axios from 'axios';
 
 import { toggleInquiryModal } from '../actions/messagingActions';
@@ -24,7 +24,12 @@ class InquiryModal extends Component {
         senderId: user.id,
         dogName: results.dogs[id].name,
       };
-      axios.post('/messages/post', body); // response.data.message has message object (id, sender_id, recipient_id, message, timestamp)
+      axios.post('/messages/post', body) // response.data.message has message object (id, sender_id, recipient_id, message, timestamp)
+        .then(() => {
+          message.success('Message sent!', 3);
+          this.props.toggleInquiryModal();
+        })
+        .catch(() => message.error('Sorry, the message could not be sent.', 5));
     });
   }
 
