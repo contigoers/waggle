@@ -46,14 +46,8 @@ class ResetPass extends React.Component {
           password: values.password1,
           token: this.props.match.params.token,
         })
-          .then((res) => {
-            console.log(res.data);
-            message.success('Password updated', 5);
-          })
-          .catch((error) => {
-            console.log(error.response);
-            message.error('Uh oh, something went wrong. Try again.', 5);
-          });
+          .then(() => message.success('Password updated', 5))
+          .catch(() => message.error('Uh oh, something went wrong. Try again.', 5));
       }
     });
   }

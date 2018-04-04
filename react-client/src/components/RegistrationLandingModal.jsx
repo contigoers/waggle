@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, message } from 'antd';
+import { CSSTransitionGroup } from 'react-transition-group';
 import axios from 'axios';
 
 import { storeUserId } from '../actions/loginActions';
@@ -87,16 +88,32 @@ class LandingModal extends Component {
           </div>
         )}
         {org && !adopter && (
-          <WrappedOrgRegistration
-            wrappedComponentRef={(orgRef) => { this.orgRef = orgRef; }}
-            onSubmit={this.handleSubmit}
-          />
+          <CSSTransitionGroup
+            transitionName="fade-appear"
+            transitionAppear
+            transitionAppearTimeout={500}
+            transitionEnter={false}
+            transitionLeave={false}
+          >
+            <WrappedOrgRegistration
+              wrappedComponentRef={(orgRef) => { this.orgRef = orgRef; }}
+              onSubmit={this.handleSubmit}
+            />
+          </CSSTransitionGroup>
         )}
         {adopter && !org && (
-          <WrappedAdopterRegistration
-            wrappedComponentRef={(adopterRef) => { this.adopterRef = adopterRef; }}
-            onSubmit={this.handleSubmit}
-          />
+          <CSSTransitionGroup
+            transitionName="fade-appear"
+            transitionAppear
+            transitionAppearTimeout={500}
+            transitionEnter={false}
+            transitionLeave={false}
+          >
+            <WrappedAdopterRegistration
+              wrappedComponentRef={(adopterRef) => { this.adopterRef = adopterRef; }}
+              onSubmit={this.handleSubmit}
+            />
+          </CSSTransitionGroup>
         )}
 
       </Modal>
