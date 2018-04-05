@@ -508,6 +508,39 @@ router.get('/contacts/adopter', async (ctx) => {
   };
 });
 
+router.get('/searchDogById', async (ctx) => {
+  const { id } = ctx.request.query;
+  let dog;
+  try {
+    [dog] = await db.getDogById(id);
+  } catch (err) {
+    throw err;
+  }
+  if (dog) {
+    const [org] = await db.getOrgProfile(dog.org_id);
+    const dogsAndOrgs = {
+      dogs: {
+        [dog.id]: dog,
+      },
+      orgs: {
+        [org.id]: org,
+      },
+    };
+
+    ctx.status = 200;
+    ctx.body = {
+      dogsAndOrgs,
+    };
+  } else {
+    ctx.body = {
+      dogsAndOrgs: {
+        dogs: {},
+        orgs: {},
+      },
+    };
+  }
+});
+
 router.get('/checkLink', async (ctx) => {
   const { token } = ctx.request.query;
   const response = await db.checkLinkExists(token);
