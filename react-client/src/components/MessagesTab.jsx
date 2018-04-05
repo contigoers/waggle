@@ -35,7 +35,7 @@ class MessagesTab extends React.Component {
     super(props);
     this.state = {
       currentContact: null,
-      visibleContacts: this.props.contacts === null ? this.props.contacts.slice(0, 10) : null,
+      visibleContacts: this.props.contacts === null ? null : this.props.contacts.slice(0, 10),
       visibleMessages: [],
       loading: false,
       hasMore: true,
@@ -177,7 +177,7 @@ class MessagesTab extends React.Component {
                           extra={msg.deleted ? null : (
                             <span
                               className="hoverable"
-                              id={msg.id}
+                              id={msg.idd}
                               style={{ fontSize: 'smaller' }}
                               tabIndex={msg.id}
                               role="button"
@@ -225,7 +225,7 @@ class MessagesTab extends React.Component {
                 <List.Item>
                   <List.Item.Meta
                     avatar={<Avatar icon="mail" />}
-                    title={<div className="hoverable" id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
+                    title={<div className="hoverable" id={contact.userId} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)

@@ -492,7 +492,7 @@ router.get('/messages/fetch', async (ctx) => {
 
 // gets list of adopter contacts and associated dogs for an organization
 router.get('/contacts/org', async (ctx) => {
-  const contacts = await db.getOrgContacts(ctx.request.query.orgId);
+  const contacts = await db.getOrgContacts(ctx.request.query.id);
   ctx.status = 201;
   ctx.body = {
     status: 'success',

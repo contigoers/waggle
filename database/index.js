@@ -209,6 +209,7 @@ const deleteMessage = messageId => knex('messages')
   .update('deleted', true);
 
 const getMessagesForChat = async (userId, contactId) => {
+  console.log('usercontact', userId, contactId)
   const messages = await knex.select()
     .from(knex.raw('messages'))
     .where(knex.raw(`sender_id in (${userId}, ${contactId}) and recipient_id in (${userId}, ${contactId})`))
@@ -219,33 +220,6 @@ const getMessagesForChat = async (userId, contactId) => {
 const updateDogInfo = values => knex('dogs')
   .where('id', values.id)
   .update(values);
-
-// const getOrgContacts = async (userId) => {
-//   const messages = await knex('messages').select('sender_id', 'dogName')
-//     .where('recipient_id', userId);
-//   const namesAndDogs = {};
-//   messages.forEach((message) => {
-//     if (!has(namesAndDogs, message.sender_id)) {
-//       namesAndDogs[message.sender_id] = { name: null, dogs: [] };
-//     }
-//     namesAndDogs[message.sender_id].dogs.push(message.dogName);
-//   });
-//   const ids = Object.keys(namesAndDogs);
-//   const contacts = [];
-//   if (ids.length) {
-//     const names = await knex.raw
-//       ('select user_id, name from adopters where user_id in (?)', [ids]);
-//     names[0].forEach((obj) => {
-//       if (has(namesAndDogs, obj.user_id)) {
-//         namesAndDogs[obj.user_id].name = obj.name;
-//       }
-//     });
-//     forEach(namesAndDogs, (innerObj, key) => {
-//       contacts.push({ id: key, name: innerObj.name, dogs: innerObj.dogs });
-//     });
-//   }
-//   return contacts;
-// };
 
 const getAdopterContacts = async (userId) => {
   const messages = await knex('messages').select('recipient_id', 'dogName')
@@ -289,35 +263,35 @@ const updatePassword = (token, hash) =>
       forgot_pw_link: null,
     });
 
+const getOrgContacts = async (userId) => {
+  let results = await knex.raw(`select messages.*, adopters.name from (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages inner join adopters on adopters.user_id = messages.sender_id or adopters.user_id = messages.recipient_id order by messages.id desc`);
+  [results] = results;
+  let contacts = [];
+  if (results[0]) {
+    const contactsObj = {};
+    results.forEach((message) => {
+      const contactId = message.sender_id === parseInt(userId, 10) ?
+        message.recipient_id : message.sender_id;
+      if (!has(contactsObj, contactId)) {
+        contactsObj[contactId] = {
+          userId: contactId,
+          name: message.name,
+          dogs: [message.dogName],
+          lastMessage: message.id,
+        };
+      } else {
+        contactsObj[contactId].dogs.push(message.dogName);
+      }
+    });
+    contacts = orderBy(contactsObj, 'lastMessage', 'desc');
+  }
+  return contacts;
+};
+
 const checkEmail = email => knex('users').where('email', email);
 
 const checkLinkExists = token => knex('users').where('forgot_pw_link', token);
 
-const getOrgContacts = async (orgId) => {
-  let messageInfo = await knex.raw(`select messages.*, adopters.name from (select * from messages where sender_id = ${orgId} or recipient_id = ${orgId}) as messages inner join adopters on adopters.user_id = messages.sender_id or adopters.user_id = messages.recipient_id order by messages.id desc`);
-  [messageInfo] = messageInfo;
-  console.log(messageInfo[0].name);
-  const contactsObj = {};
-  messageInfo.forEach((message) => {
-    const contactId = message.sender_id === parseInt(orgId, 10) ?
-      message.recipient_id : message.sender_id;
-    // console.log(message.sender_id === orgId, orgId, contactId);
-    if (!has(contactsObj, contactId)) {
-      contactsObj[contactId] = {
-        userId: contactId,
-        name: message.name,
-        dogs: [message.dogName],
-        lastMessage: message.id,
-      };
-    } else {
-      contactsObj[contactId].dogs.push(message.dogName);
-      // should never need to reassign last message because they're ordered by message id descending
-    }
-  });
-  const contacts = orderBy(contactsObj, 'lastMessage', 'desc');
-  console.log('contacts', contacts);
-  return contacts;
-};
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
