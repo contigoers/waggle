@@ -21,7 +21,7 @@ const Router = props => (
     <Provider store={props.store}>
       <React.Fragment>
         <ScrollToTop>
-          <Route exact path="/" component={Splash} />
+          <Route exact path="/" render={() => !props.user && <Splash />} />
           <NavBar />
           <Switch>
             <Route path="/search" component={Search} />

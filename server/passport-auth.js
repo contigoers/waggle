@@ -35,23 +35,32 @@ module.exports = () => {
     passwordField: 'password',
     passReqToCallback: true,
   }, async (req, username, password, cb) => {
-    const [user] = await db.checkCredentials(username);
-    if (!user) {
-      bcrypt.hash(password, 10, async (err, hash) => {
-        if (err) {
-          cb(err);
-        } else {
-          try {
-            await db.createUser(req.body, username, hash);
-          } catch (e) {
-            return cb(e, null, 'error at creation');
-          }
-          const [userInfo] = await db.checkCredentials(username);
-          cb(null, userInfo);
-        }
-      });
-    } else {
-      return cb(null, null, 'username already exists');
+    const users = await db.checkCredentials(username, req.body.email);
+    if (users.length) {
+      let info;
+      if (users.length === 2) {
+        info = 'username and email taken';
+        return cb(null, null, info);
+      }
+      info = users[0].email === req.body.email ? 'email taken' : 'username taken';
+      return cb(null, null, info);
     }
+    if (req.body.type === 'organization') {
+      const orgs = await db.getOrgByName(req.body.name);
+      if (orgs.length) return cb(null, null, 'org name taken');
+    }
+    bcrypt.hash(password, 10, async (err, hash) => {
+      if (err) {
+        cb(err);
+      } else {
+        try {
+          await db.createUser(req.body, username, hash);
+        } catch (e) {
+          return cb(e, null, 'error at creation');
+        }
+        const [userInfo] = await db.checkCredentials(username);
+        cb(null, userInfo);
+      }
+    });
   }));
 };
