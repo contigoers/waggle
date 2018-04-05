@@ -6,6 +6,7 @@ const GET_FAVORITES = 'GET_FAVORITES';
 const UPDATE_FAVORITES = 'UPDATE_FAVORITES';
 const UPDATE_DOG_INFO = 'UPDATE_DOG_INFO';
 const CLEAR_SEARCH_QUERY = 'CLEAR_SEARCH_QUERY';
+const SEARCH_DOG_BY_ID = 'SEARCH_DOG_BY_ID';
 
 const updateSearchQuery = (values, filterType) =>
   (
@@ -29,6 +30,18 @@ const dogsSearch = async (searchObject) => {
     type: SEARCH_DOGS,
     data: data.dogsAndOrgs,
   };
+};
+
+const searchDogById = async (id) => {
+  const { data } = await axios.get('/searchDogById', {
+    params: {
+      id,
+    },
+  });
+  return Promise.resolve({
+    type: SEARCH_DOGS,
+    data: data.dogsAndOrgs,
+  });
 };
 
 const getRandomDog = async () => {
@@ -105,4 +118,6 @@ export {
   unmarkAdopted,
   clearSearchQuery,
   CLEAR_SEARCH_QUERY,
+  searchDogById,
+  SEARCH_DOG_BY_ID,
 };
