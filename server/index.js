@@ -538,6 +538,17 @@ router.post('/imageUpload', (ctx) => {
   }
 });
 
+router.get('/test', async (ctx) => {
+  console.log('testing');
+  const contacts = await db.getContacts(ctx.request.query.userId);
+  console.log('contacts', contacts);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    contacts,
+  };
+});
+
 
 router.get('/*', async (ctx) => {
   ctx.body = await readFileThunk(path.join(__dirname, '../react-client/dist/index.html'));
