@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { map } from 'lodash';
-import { Row, Col, Menu, Icon, BackTop } from 'antd';
+import { Row, Col, Menu, Icon, BackTop, Divider } from 'antd';
 import { CSSTransitionGroup } from 'react-transition-group';
 
 import SearchResult from './DogPreviewCard';
@@ -56,7 +56,7 @@ class UserProfile extends Component {
         transitionLeave={false}
       >
         <div className="user-profile-body" style={{ backgroundColor: 'rgba(205, 83, 96, 0.05)' }}>
-          <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu} style={{ color: '#972036', backgroundColor: 'rgba(205, 83, 96, 0.35)' }}>
+          <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu} style={{ color: '#972036', backgroundColor: 'rgba(205, 83, 96, 0.2)' }}>
             <Menu.Item key="profile">
               <Icon type="user" />Profile
             </Menu.Item>
@@ -87,13 +87,25 @@ class UserProfile extends Component {
             {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
             <div>
               {!user.adopterId &&
-                <div className="search-results-grid" style={{ marginTop: 30 }}>
+              <div>
+                <div style={{ marginTop: 30, marginLeft: 75 }}>
+                  {Object.keys(results.dogs).length ? `${Object.keys(results.dogs).length} Organization Dog(s)` : ''}
+                </div>
+                <Divider />
+                <div className="search-results-grid" style={{ marginTop: 25, marginLeft: 35 }}>
                   {Object.keys(results.dogs).length ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-                </div>}
+                </div>
+              </div>}
               {user.adopterId &&
-                <div className="search-results-grid" style={{ marginTop: 30 }}>
+              <div>
+                <div style={{ marginTop: 30, marginLeft: 75 }}>
+                  {Object.keys(favoriteDogs).length ? `${Object.keys(favoriteDogs).length} Favorite Dog(s)` : ''}
+                </div>
+                <Divider />
+                <div className="search-results-grid" style={{ marginTop: 25, marginLeft: 35 }}>
                   {Object.keys(favoriteDogs).length ? map(favoriteDogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
-                </div>}
+                </div>
+              </div>}
               <BackTop />
             </div>}
             {(menuSelection === 'messages' &&
