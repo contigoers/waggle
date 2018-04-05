@@ -82,7 +82,6 @@ const createDog = dog => knex('dogs').insert({
 const getDogById = dogId => knex('dogs').where('id', dogId);
 
 // get organization ID from organization name query
-// const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
 const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
@@ -128,20 +127,6 @@ const removeFavoriteDog = async (adopterId, dogId) => {
   return getFavoriteDogs(adopterId);
 };
 
-/*
-// get all organizations in orgs
-const getAllOrganizations = () =>
-  knex.column(knex.raw
-    ('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*'))
-    .select()
-  .from(knex.raw('users, orgs'))
-  .where(knex.raw('users.org_id = orgs.id'));
-
-// get all dogs and info
-const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw('orgs.id = dogs.org_id'));
-*/
 const getUserById = userId => knex('users').where('id', userId);
 
 const getUserByEmail = email => knex('users').where('email', email);
@@ -242,7 +227,7 @@ const getOrgContacts = async (userId) => {
       contacts.push({ id: key, name: innerObj.name, dogs: innerObj.dogs });
     });
   }
-  return contacts; 
+  return contacts;
 };
 
 const getAdopterContacts = async (userId) => {
