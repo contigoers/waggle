@@ -489,6 +489,11 @@ router.get('/messages/fetch', async (ctx) => {
   };
 });
 
+// marks all user's messages from contact as read
+router.patch('/messages/read', (ctx) => {
+  db.markAllRead(ctx.request.body.userId, ctx.request.body.contactId);
+});
+
 // gets list of adopter contacts and associated dogs for an organization
 router.get('/contacts/org', async (ctx) => {
   const contacts = await db.getOrgContacts(ctx.request.query.id);
@@ -501,6 +506,7 @@ router.get('/contacts/org', async (ctx) => {
 
 router.get('/contacts/adopter', async (ctx) => {
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
+  console.log('router contacts', contacts);
   ctx.status = 201;
   ctx.body = {
     status: 'success',

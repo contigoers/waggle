@@ -236,7 +236,7 @@ class MessagesTab extends React.Component {
               renderItem={contact => (
                 <List.Item>
                   <List.Item.Meta
-                    avatar={<Avatar icon="mail" />}
+                    avatar={<Avatar icon={contact.hasUnreads ? 'folder' : 'folder-open'} />}
                     title={<div className="hoverable" id={contact.userId} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
                     description={contact.dogs.join(', ')}
                   />
