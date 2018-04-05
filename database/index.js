@@ -287,7 +287,6 @@ module.exports = {
   createDog,
   createUser,
   checkCredentials,
-  // searchOrgsByName,
   getDogById,
   searchOrgDogs,
   getUserById,
@@ -309,7 +308,4 @@ module.exports = {
   updatePassword,
   checkEmail,
   checkLinkExists,
-  // getAllOrganizations,
-  // getAdopterContacts,
-  // getAllDogs,
 };
