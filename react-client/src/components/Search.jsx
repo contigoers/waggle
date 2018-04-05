@@ -17,8 +17,8 @@ import MedicalSelect from './SearchComponents/Medical';
 import EnergySelect from './SearchComponents/Energy';
 
 class Search extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.fetchAndRedirect = this.fetchAndRedirect.bind(this);
     this.submitData = this.submitData.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
@@ -28,18 +28,13 @@ class Search extends React.Component {
     const { user } = this.props;
     if (user) {
       if (user.adopterId) {
-        this.getFavorites();
+        this.props.getFavorites(user.adopterId);
       }
     }
   }
 
   componentWillUnmount() {
     this.props.clearSearchQuery();
-  }
-
-  getFavorites() {
-    const { adopterParams } = this.props;
-    this.props.getFavorites({ params: adopterParams });
   }
 
   clearSearch() {
@@ -205,9 +200,6 @@ const mapStateToProps = ({ search, storeUser }) => (
     results: search.results,
     favorites: search.favorites.favoriteDogs,
     user: storeUser.user,
-    adopterParams: {
-      adopterId: !storeUser.user ? null : storeUser.user.adopterId,
-    },
     orgParams: {
       type: 'orgId',
       value: !storeUser.user ? 1 : storeUser.user.org_id,
