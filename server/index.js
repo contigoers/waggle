@@ -275,7 +275,7 @@ router.post('/searchOrgDogs', async (ctx) => {
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
-    const orgId = +ctx.request.query.value;
+    const orgId = +ctx.request.query.orgId;
     const [orgProfile] = await db.getOrgProfile(orgId);
 
     let dogs = await db.getOrgDogs(orgId);
