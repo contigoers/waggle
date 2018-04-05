@@ -102,6 +102,11 @@ class EditForm extends React.Component {
           org_id: dogInfo.org_id,
           org_name: undefined,
         };
+        if (dogInfo.photo) {
+          if (dogInfo.photo.type === 'Buffer' && this.state.imageUrl.type === 'Buffer') {
+            delete dog.photo;
+          }
+        }
         this.props.editDogInfo(dog);
         this.props.toggleEditModal();
       }
@@ -112,8 +117,6 @@ class EditForm extends React.Component {
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
     const dog = this.props.dogs[this.props.id];
-
-    dog.photo = Buffer.from(dog.photo);
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
@@ -330,7 +333,7 @@ class EditForm extends React.Component {
                 beforeUpload={beforeUpload}
                 onChange={val => this.onChangeImage(val)}
               >
-                {this.state.imageUrl ? <img src={this.state.imageUrl} alt="" /> : uploadButton}
+                {this.state.imageUrl ? <img src={Buffer.from(this.state.imageUrl)} alt="" /> : uploadButton}
               </Upload>
             </Form.Item>
           </Row>
