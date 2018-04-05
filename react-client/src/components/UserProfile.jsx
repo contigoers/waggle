@@ -20,6 +20,19 @@ class UserProfile extends Component {
       menuSelection: 'profile',
     };
 
+    if (this.props.location.state) {
+      const { menuSelection } = this.props.location.state;
+      this.state = {
+        type: this.props.user.org_id === 1 ? 'adopter' : 'org',
+        menuSelection,
+      };
+    } else {
+      this.state = {
+        type: this.props.user.org_id === 1 ? 'adopter' : 'org',
+        menuSelection: 'profile',
+      };
+    }
+
     if (this.state.type === 'org') {
       const value = this.props.user.org_id;
       this.getOrgDogs({ value });

@@ -204,17 +204,16 @@ const updateDogInfo = values => knex('dogs')
   .update(values);
 
 const getOrgContacts = async (userId) => {
-  let results = await knex.raw(`select
+  const [results] = await knex.raw(`select
   messages.*, adopters.name from
     (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages
     inner join adopters on adopters.user_id = messages.sender_id or adopters.user_id = messages.recipient_id
     order by messages.id desc`);
-  [results] = results;
   let contacts = [];
   if (results[0]) {
     const contactsObj = {};
     results.forEach((message) => {
-      const contactId = message.sender_id === parseInt(userId, 10) ?
+      const contactId = message.sender_id === +userId ?
         message.recipient_id : message.sender_id;
       if (!Object.prototype.hasOwnProperty.call(contactsObj, contactId)) {
         contactsObj[contactId] = {
@@ -233,18 +232,17 @@ const getOrgContacts = async (userId) => {
 };
 
 const getAdopterContacts = async (userId) => {
-  let results = await knex.raw(`select
+  const [results] = await knex.raw(`select
     messages.*, orgs.org_name from
     (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages 
     inner join (select * from users where org_id > 1) as users 
     on users.id = messages.sender_id or users.id = messages.recipient_id inner join orgs
     on users.org_id = orgs.id order by messages.id desc`);
-  [results] = results;
   let contacts = [];
   if (results[0]) {
     const contactsObj = {};
     results.forEach((message) => {
-      const contactId = message.sender_id === parseInt(userId, 10) ?
+      const contactId = message.sender_id === +userId ?
         message.recipient_id : message.sender_id;
       if (!Object.prototype.hasOwnProperty.call(contactsObj, contactId)) {
         contactsObj[contactId] = {
