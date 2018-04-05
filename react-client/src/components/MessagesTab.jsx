@@ -155,6 +155,9 @@ class MessagesTab extends React.Component {
               </Form>
             </Row>
             <Row>
+              <div style={{ margin: 'auto', width: '80%', border: '1px solid #1a4672', padding: '10px' }} > Messages with {this.state.currentContact.name} </div>
+            </Row>
+            <Row>
               <div style={infiniteStyle}>
                 <InfiniteScroll
                   initialLoad={false}

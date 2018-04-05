@@ -266,10 +266,10 @@ const getAdopterContacts = async (userId) => {
         contactsObj[contactId] = {
           userId: contactId,
           name: message.org_name,
-          dogs: [message.dogName],
+          dogs: message.dogName ? [message.dogName] : [],
           lastMessage: message.id,
         };
-      } else {
+      } else if (message.dogName) {
         contactsObj[contactId].dogs.push(message.dogName);
       }
     });
