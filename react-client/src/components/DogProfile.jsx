@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Divider, Row, Col, Icon, Button, message, Tooltip } from 'antd';
+import { Card, Divider, Row, Col, Icon, Button, message, Tooltip, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import { startCase } from 'lodash';
@@ -7,7 +7,7 @@ import { startCase } from 'lodash';
 import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
 
-import { addFavorite, removeFavorite, markAdopted, unmarkAdopted } from '../actions/searchActions';
+import { addFavorite, removeFavorite, markAdopted, unmarkAdopted, searchDogById } from '../actions/searchActions';
 import { toggleInquiryModal } from '../actions/messagingActions';
 import { toggleEditModal } from '../actions/editActions';
 import EditModal from './EditModal';
@@ -20,13 +20,26 @@ class DogProfile extends React.Component {
     if (this.props.location.state) {
       ({ prevPath } = this.props.location.state);
     }
-
-    this.state = { prevPath };
+    this.state = {
+      fetching: false,
+    };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
     this.renderDogsList = this.renderDogsList.bind(this);
   }
 
+  async componentWillMount() {
+    const { id } = this.props.match.params;
+    if (!this.props.results[id]) {
+      this.setState({
+        fetching: true,
+      });
+      await this.props.searchDogById(id);
+      this.setState({
+        fetching: false,
+      });
+    }
+  }
   async toggleFavorite() {
     const { id } = this.props.match.params;
     const dog = this.props.results.dogs[id];
@@ -73,8 +86,14 @@ class DogProfile extends React.Component {
 
   render() {
     const { id } = this.props.match.params;
-    if (!Object.keys(this.props.results).length) {
-      return <Redirect to="/notfound" />;
+    if (this.state.fetching) {
+      return (
+        <div className="reset-pass">
+          <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+        </div>
+      );
+    } else if (!this.state.fetching && !this.props.results.dogs[id]) {
+      return (<Redirect to="/notfound" />);
     }
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
@@ -224,6 +243,7 @@ const mapDispatchToProps = {
   markAdopted,
   unmarkAdopted,
   toggleEditModal,
+  searchDogById,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DogProfile));
