@@ -275,7 +275,7 @@ router.post('/searchOrgDogs', async (ctx) => {
 // render organization profile and dogs by org ID or org name
 router.get('/orgInfo', async (ctx) => {
   try {
-    const orgId = +ctx.request.query.value;
+    const { orgId } = ctx.request.query;
     const [orgProfile] = await db.getOrgProfile(orgId);
 
     let dogs = await db.getOrgDogs(orgId);
@@ -370,43 +370,39 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
-router.post('/register', async (ctx) => {
-  const { email } = ctx.request.body;
-  const query = await db.checkEmail(email);
-  if (!query.length) {
-    return passport.authenticate('local-signup', async (error, user, info) => {
-      if (error) {
-        ctx.body = { error };
-        ctx.throw(500);
-      } else if (!user) {
-        ctx.body = { success: false };
-        ctx.throw(418, info);
+router.post('/register', async ctx =>
+  passport.authenticate('local-signup', async (error, user, info) => {
+    if (error) {
+      ctx.body = { error };
+      ctx.throw(500);
+    } else if (!user) {
+      ctx.body = { success: false };
+      ctx.throw(418, info);
+    } else {
+      let adopterId;
+      let name;
+      if (user.org_id === 1) {
+        const [adopter] = await db.getAdopterId(user.id);
+        adopterId = adopter.id;
+        ({ name } = adopter);
       } else {
-        let adopterId;
-        let username;
-        if (user.org_id === 1) {
-          const [adopter] = await db.getAdopterId(user.id);
-          adopterId = adopter.id;
-          username = adopter.name;
-        } else {
-          const [org] = await db.getOrgName(user.org_id);
-          username = org.org_name;
-        }
-        const userInfo = {
-          ...user,
-          adopterId,
-          name: username,
-        };
-        ctx.body = {
-          success: true,
-          user: userInfo,
-        };
-        return ctx.login(user);
+        const [org] = await db.getOrgName(user.org_id);
+        name = org.org_name;
       }
-    })(ctx);
-  }
-  ctx.throw(418, 'email exists');
-});
+      const userInfo = {
+        ...user,
+        adopterId,
+        name,
+      };
+      delete userInfo.password;
+      delete userInfo.forgot_pw_link;
+      ctx.body = {
+        success: true,
+        user: userInfo,
+      };
+      return ctx.login(user);
+    }
+  })(ctx));
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
@@ -418,20 +414,22 @@ router.post('/login', async ctx =>
       ctx.throw(401, info);
     } else {
       let adopterId;
-      let username;
+      let name;
       if (user.org_id === 1) {
         const [adopter] = await db.getAdopterId(user.id);
         adopterId = adopter.id;
-        username = adopter.name;
+        ({ name } = adopter);
       } else {
         const [org] = await db.getOrgName(user.org_id);
-        username = org.org_name;
+        name = org.org_name;
       }
       const userInfo = {
         ...user,
         adopterId,
-        name: username,
+        name,
       };
+      delete userInfo.password;
+      delete userInfo.forgot_pw_link;
       ctx.body = {
         success: true,
         user: userInfo,
