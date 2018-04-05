@@ -73,8 +73,8 @@ class UserProfile extends Component {
         transitionEnter={false}
         transitionLeave={false}
       >
-        <div className="user-profile-body">
-          <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu}>
+        <div className="user-profile-body" style={{ backgroundColor: 'rgba(205, 83, 96, 0.05)' }}>
+          <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu} style={{ color: '#972036', backgroundColor: 'rgba(205, 83, 96, 0.35)' }}>
             <Menu.Item key="profile">
               <Icon type="user" />Profile
             </Menu.Item>
