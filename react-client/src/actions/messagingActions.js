@@ -12,6 +12,8 @@ const toggleInquiryModal = () => (
 
 const getContacts = async (userId, type) => {
   let someData;
+  // can this be done more efficiently with destructuring
+  // or does that not work with the conditionals?
   if (type === 'adopter') {
     someData = await axios.get('/contacts/adopter', { params: { id: userId } });
   } else {
@@ -54,6 +56,23 @@ const sendMessage = async (senderId, recipientId, message) => {
   };
 };
 
+const updateReadStatus = async (userId, contactId, type) => {
+  await axios.patch('/messages/read', {
+    userId,
+    contactId,
+  });
+  let someData; // can everything from this on just be calling getcontacts?
+  if (type === 'adopter') {
+    someData = await axios.get('/contacts/adopter', { params: { id: userId } });
+  } else {
+    someData = await axios.get('/contacts/org', { params: { id: userId } });
+  }
+  return {
+    type: GET_CONTACTS,
+    someData,
+  };
+};
+
 export {
   TOGGLE_INQUIRY_MODAL,
   toggleInquiryModal,
@@ -63,4 +82,5 @@ export {
   getMessages,
   deleteMessage,
   sendMessage,
+  updateReadStatus,
 };

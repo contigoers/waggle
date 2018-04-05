@@ -167,6 +167,10 @@ const getRandomDog = () => knex.select()
   .from(knex.raw('dogs'))
   .where(knex.raw('adopted = false order by rand() limit 1'));
 
+const updateDogInfo = values => knex('dogs')
+  .where('id', values.id)
+  .update(values);
+
 const addMessage = async (senderId, recipientId, message, dogName) => {
   const id = await knex('messages').insert({
     sender_id: senderId,
@@ -189,10 +193,6 @@ const getMessagesForChat = async (userId, contactId) => {
   return messages;
 };
 
-const updateDogInfo = values => knex('dogs')
-  .where('id', values.id)
-  .update(values);
-
 const getOrgContacts = async (userId) => {
   const [results] = await knex.raw(`select
   messages.*, adopters.name from
@@ -209,11 +209,15 @@ const getOrgContacts = async (userId) => {
         contactsObj[contactId] = {
           userId: contactId,
           name: message.name,
-          dogs: [message.dogName],
+          dogs: message.dogName ? [message.dogName] : [],
           lastMessage: message.id,
+          hasUnreads: false,
         };
-      } else {
+      } else if (message.dogName) {
         contactsObj[contactId].dogs.push(message.dogName);
+      }
+      if (message.recipient_id === +userId && message.read === 0) {
+        contactsObj[contactId].hasUnreads = true;
       }
     });
     contacts = orderBy(contactsObj, 'lastMessage', 'desc');
@@ -238,17 +242,28 @@ const getAdopterContacts = async (userId) => {
         contactsObj[contactId] = {
           userId: contactId,
           name: message.org_name,
-          dogs: [message.dogName],
+          dogs: message.dogName ? [message.dogName] : [],
           lastMessage: message.id,
+          hasUnreads: false,
         };
-      } else {
+      } else if (message.dogName && !contactsObj[contactId].dogs.includes(message.dogName)) {
         contactsObj[contactId].dogs.push(message.dogName);
+      }
+      if (message.recipient_id === +userId && message.read === 0) {
+        contactsObj[contactId].hasUnreads = true;
       }
     });
     contacts = orderBy(contactsObj, 'lastMessage', 'desc');
   }
   return contacts;
 };
+
+const markAllRead = (userId, contactId) => knex('messages')
+  .where({
+    sender_id: contactId,
+    recipient_id: userId,
+  })
+  .update({ read: 1 });
 
 const updateForgotPassword = (email, token) => knex('users')
   .where('email', email)
@@ -300,4 +315,5 @@ module.exports = {
   checkEmail,
   checkLinkExists,
   getOrgByName,
+  markAllRead,
 };
