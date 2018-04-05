@@ -490,9 +490,9 @@ router.get('/messages/fetch', async (ctx) => {
 });
 
 // marks all user's messages from contact as read
-router.patch('/messages/read', (ctx) => {
-  console.log('update read status')
-  db.markAllRead(ctx.request.body.userId, ctx.request.body.contactId);
+router.patch('/messages/read', async (ctx) => {
+  const response = await db.markAllRead(ctx.request.body.userId, ctx.request.body.contactId);
+  console.log(response);
   ctx.status = 201;
   ctx.body = {
     status: 'success',

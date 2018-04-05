@@ -121,6 +121,7 @@ class MessagesTab extends React.Component {
   async renderMessageFeed(e) {
     const { id } = e.target;
     const { name } = e.target.dataset;
+    const { unreads } = e.target.dataset;
     await this.getMessages(this.props.user.id, id);
     this.setState({
       currentContact: { id, name },
@@ -128,7 +129,6 @@ class MessagesTab extends React.Component {
       loading: false,
       hasMore: true,
     });
-    const { unreads } = e.target.dataset;
     if (unreads) {
       const type = this.props.user.org_id === 1 ? 'adopter' : 'org';
       this.updateReadStatus(this.props.user.id, id, type);
@@ -266,9 +266,9 @@ const mapStateToProps = ({ fetchContacts, fetchMessages, storeUser }) => ({
 
 const mapDispatchToProps = {
   getMessages,
-  sendMessages,
-  deleteMessages,
+  sendMessage,
+  deleteMessage,
   updateReadStatus,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessagesTab);
