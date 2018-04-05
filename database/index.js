@@ -251,7 +251,7 @@ const getAdopterContacts = async (userId) => {
           dogs: message.dogName ? [message.dogName] : [],
           lastMessage: message.id,
         };
-      } else if (message.dogName) {
+      } else if (message.dogName && !contactsObj[contactId].dogs.includes(message.dogName)) {
         contactsObj[contactId].dogs.push(message.dogName);
       }
     });
