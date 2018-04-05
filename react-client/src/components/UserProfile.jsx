@@ -17,7 +17,7 @@ class UserProfile extends React.Component {
 
     this.state = {
       type: this.props.user.org_id === 1 ? 'adopter' : 'org',
-      menuSelection: null,
+      menuSelection: 'profile',
     };
 
     if (this.state.type === 'org') {
@@ -26,16 +26,8 @@ class UserProfile extends React.Component {
     } else if (!Object.keys(this.props.favorites).length) {
       this.getFavorites();
     }
+    this.props.getContacts(this.props.user.id, this.state.type);
     this.updateMenu = this.updateMenu.bind(this);
-  }
-
-  async componentWillMount() {
-    await this.props.getContacts(this.props.user.id, this.state.type);
-    if (this.props.location.state) {
-      this.setState(this.props.location.state);
-    } else {
-      this.setState({ menuSelection: 'messages' });
-    }
   }
 
   getOrgDogs() {
@@ -70,6 +62,9 @@ class UserProfile extends React.Component {
       >
         <div className="user-profile-body">
           <Menu mode="horizontal" selectedKeys={[menuSelection]} onClick={this.updateMenu}>
+            <Menu.Item key="profile">
+              <Icon type="user" />Profile
+            </Menu.Item>
             <Menu.Item key="messages">
               <Icon type="mail" />Messages
             </Menu.Item>
@@ -83,28 +78,31 @@ class UserProfile extends React.Component {
             </Menu.Item>}
           </Menu>
           <Row>
+            {menuSelection === 'profile' &&
+            <div>
+              {adopter || results.org ? (
+                <Row style={{ marginTop: 30 }} >
+                  <Col span={15} offset={3}>
+                    {this.state.type === 'org' &&
+                    <div>{Object.keys(results.org).length ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>}
+                    {this.state.type === 'adopter' &&
+                    <div>{Object.keys(adopter).length ? <OrgCard org={adopter} adopterUser={user} /> : 'Loading...'} </div>}
+                  </Col>
+                </Row>
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>}
             {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
             <div>
-              <Row style={{ marginTop: 30 }} >
-                <Col span={15} offset={3}>
-                  {this.state.type === 'org' &&
-                  <div>{Object.keys(results.org).length ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
-                  }
-                  {this.state.type === 'adopter' &&
-                  <div>{Object.keys(adopter).length ? <OrgCard org={adopter} adopterUser={user} /> : 'Loading...'} </div>
-                  }
-                </Col>
-              </Row>
-                {this.state.type === 'org' &&
+              {this.state.type === 'org' &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
                   {Object.keys(results.dogs).length ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
-                </div>
-              }
-                {this.state.type === 'adopter' &&
+                </div>}
+              {this.state.type === 'adopter' &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
                   {Object.keys(favoriteDogs).length ? map(favoriteDogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
-                </div>
-              }
+                </div>}
               <BackTop />
             </div>}
             {(menuSelection === 'messages' &&
