@@ -139,6 +139,18 @@ class MessagesTab extends React.Component {
               <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
             <Row>
+              <div
+                style={{
+                  margin: 'auto',
+                  width: '80%',
+                  border: '1px solid #1a4672',
+                  padding: '10px',
+                }}
+              >
+                Messages with {this.state.currentContact.name}
+              </div>
+            </Row>
+            <Row>
               <Form onSubmit={this.sendMessageAndRender}>
                 <Form.Item>
                   <Input.TextArea
@@ -146,16 +158,13 @@ class MessagesTab extends React.Component {
                     value={this.state.messageInput}
                     onChange={this.onInput}
                     placeholder="write message..."
-                    style={{ width: '50%', marginLeft: '200px', marginTop: '30px' }}
+                    style={{ width: '50%', marginLeft: '200px' }}
                   />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" htmlType="submit" style={{ marginLeft: '200px' }}> Send </Button>
                 </Form.Item>
               </Form>
-            </Row>
-            <Row>
-              <div style={{ margin: 'auto', width: '80%', border: '1px solid #1a4672', padding: '10px' }} > Messages with {this.state.currentContact.name} </div>
             </Row>
             <Row>
               <div style={infiniteStyle}>

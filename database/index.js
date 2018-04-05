@@ -236,10 +236,10 @@ const getOrgContacts = async (userId) => {
         contactsObj[contactId] = {
           userId: contactId,
           name: message.name,
-          dogs: [message.dogName],
+          dogs: message.dogName ? [message.dogName] : [],
           lastMessage: message.id,
         };
-      } else {
+      } else if (message.dogName) {
         contactsObj[contactId].dogs.push(message.dogName);
       }
     });
