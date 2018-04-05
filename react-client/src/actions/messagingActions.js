@@ -19,7 +19,6 @@ const getContacts = async (userId, type) => {
   } else {
     someData = await axios.get('/contacts/org', { params: { id: userId } });
   }
-  console.log('some data', someData)
   return {
     type: GET_CONTACTS,
     someData,
@@ -58,6 +57,7 @@ const sendMessage = async (senderId, recipientId, message) => {
 };
 
 const updateReadStatus = async (userId, contactId, type) => {
+  console.log('updating read status');
   await axios.patch('/messages/read', {
     userId,
     contactId,
@@ -68,6 +68,7 @@ const updateReadStatus = async (userId, contactId, type) => {
   } else {
     someData = await axios.get('/contacts/org', { params: { id: userId } });
   }
+  console.log('some data', someData);
   return {
     type: GET_CONTACTS,
     someData,

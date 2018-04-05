@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Row, List, Icon, Card, Button, Spin, Avatar, message, Form, Input } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { getMessages, deleteMessage, sendMessage } from '../actions/messagingActions';
+import { getMessages, deleteMessage, sendMessage, updateReadStatus } from '../actions/messagingActions';
 
 const userStyle = {
   margin: '10px',
@@ -49,6 +49,7 @@ class MessagesTab extends React.Component {
     this.renderContactsList = this.renderContactsList.bind(this);
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
     this.getMessages = this.props.getMessages.bind(this);
+    this.updateReadStatus = this.props.updateReadStatus.bind(this);
   }
 
   onInput(e) {
@@ -127,8 +128,12 @@ class MessagesTab extends React.Component {
       loading: false,
       hasMore: true,
     });
+    const { unreads } = e.target.dataset;
+    if (unreads) {
+      const type = this.props.user.org_id === 1 ? 'adopter' : 'org';
+      this.updateReadStatus(this.props.user.id, id, type);
+    }
   }
-
 
   render() {
     if (this.state.currentContact) {
@@ -237,7 +242,7 @@ class MessagesTab extends React.Component {
                 <List.Item>
                   <List.Item.Meta
                     avatar={<Avatar icon={contact.hasUnreads ? 'folder' : 'folder-open'} />}
-                    title={<div className="hoverable" id={contact.userId} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
+                    title={<div className="hoverable" id={contact.userId} data-name={contact.name} data-unreads={contact.hasUnreads} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)
@@ -259,5 +264,11 @@ const mapStateToProps = ({ fetchContacts, fetchMessages, storeUser }) => ({
   messages: fetchMessages.messages,
 });
 
-export default connect(mapStateToProps, { getMessages, sendMessage, deleteMessage })(MessagesTab);
+const mapDispatchToProps = {
+  getMessages,
+  sendMessages,
+  deleteMessages,
+  updateReadStatus,
+}
 
+export default connect(mapStateToProps, mapDispatchToProps)(MessagesTab);
