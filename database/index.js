@@ -227,7 +227,6 @@ const getOrgContacts = async (userId) => {
         contactsObj[contactId].dogs.push(message.dogName);
       }
       if (message.recipient_id === +userId && message.read === 0) {
-        console.log('deez some unreads dere')
         contactsObj[contactId].hasUnreads = true;
       }
     });
@@ -237,7 +236,6 @@ const getOrgContacts = async (userId) => {
 };
 
 const getAdopterContacts = async (userId) => {
-  console.log('huh?')
   const [results] = await knex.raw(`select
     messages.*, orgs.org_name from
     (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages 
@@ -270,6 +268,13 @@ const getAdopterContacts = async (userId) => {
   return contacts;
 };
 
+const markAllRead = (userId, contactId) => knex('messages')
+  .where({
+    sender_id: contactId,
+    recipient_id: userId,
+  })
+  .update({ read: 1 });
+
 const updateForgotPassword = (email, token) => knex('users')
   .where('email', email)
   .update('forgot_pw_link', token);
@@ -289,16 +294,7 @@ const checkLinkExists = token => knex('users').where('forgot_pw_link', token);
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
-const markAllRead = (userId, contactId) => {
-  console.log('itz read')
-  return knex('messages')
-  .where({
-    sender_id: contactId,
-    recipient_id: userId,
-  })
-  .update({ read: 1 });
 
-}
 
 module.exports = {
   getAdopterProfile,

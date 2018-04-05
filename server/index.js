@@ -458,7 +458,6 @@ router.post('/messages/post', async (ctx) => {
   let message;
   try {
     [message] = await db.addMessage(senderId, recipientId, msg, dogName);
-    console.log('dis a message dat got sent', message)
   } catch (error) {
     ctx.throw(500);
   }
@@ -492,18 +491,15 @@ router.get('/messages/fetch', async (ctx) => {
 
 // marks all user's messages from contact as read
 router.patch('/messages/read', async (ctx) => {
-  console.log('markin dem messages read')
-  const response = await db.markAllRead(ctx.request.body.userId, ctx.request.body.contactId);
-  console.log(response);
+  await db.markAllRead(ctx.request.body.userId, ctx.request.body.contactId);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
-  }
+  };
 });
 
 // gets list of adopter contacts and associated dogs for an organization
 router.get('/contacts/org', async (ctx) => {
-  console.log('gettin dem org contacts')
   const contacts = await db.getOrgContacts(ctx.request.query.id);
   ctx.status = 201;
   ctx.body = {
@@ -513,7 +509,6 @@ router.get('/contacts/org', async (ctx) => {
 });
 
 router.get('/contacts/adopter', async (ctx) => {
-  console.log('gettin dem adopter contacts')
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
   ctx.status = 201;
   ctx.body = {
