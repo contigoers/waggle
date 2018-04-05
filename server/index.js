@@ -499,7 +499,6 @@ router.get('/contacts/org', async (ctx) => {
   };
 });
 
-// gets list of organization contacts and associated dogs for an adopter
 router.get('/contacts/adopter', async (ctx) => {
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
   ctx.status = 201;
@@ -570,9 +569,11 @@ router.post('/imageUpload', (ctx) => {
   }
 });
 
+
 router.get('/*', async (ctx) => {
   ctx.body = await readFileThunk(path.join(__dirname, '../react-client/dist/index.html'));
 });
+
 
 app
   .use(router.routes())

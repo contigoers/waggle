@@ -35,7 +35,7 @@ class MessagesTab extends React.Component {
     super(props);
     this.state = {
       currentContact: null,
-      visibleContacts: this.props.contacts.slice(0, 10),
+      visibleContacts: this.props.contacts === null ? null : this.props.contacts.slice(0, 10),
       visibleMessages: [],
       loading: false,
       hasMore: true,
@@ -142,15 +142,15 @@ class MessagesTab extends React.Component {
               <Form onSubmit={this.sendMessageAndRender}>
                 <Form.Item>
                   <Input.TextArea
-                    rows={2}
+                    rows={3}
                     value={this.state.messageInput}
                     onChange={this.onInput}
                     placeholder="write message..."
-                    style={{ width: '50%', marginLeft: 'auto' }}
+                    style={{ width: '50%', marginLeft: '200px', marginTop: '30px' }}
                   />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit"> Send </Button>
+                  <Button type="primary" htmlType="submit" style={{ marginLeft: '200px' }}> Send </Button>
                 </Form.Item>
               </Form>
             </Row>
@@ -166,12 +166,15 @@ class MessagesTab extends React.Component {
                   {
                     this.state.visibleMessages.map((msg) => {
                       const isMine = msg.sender_id === this.props.user.id;
+                      const { sent } = msg;
+                      const datetime = `${sent.slice(5, 7)}/${sent.slice(8, 10)}/${sent.slice(0, 4)}, ${sent.slice(11, 19)}`;
+
                       return (
                         <Card
                           key={msg.id}
                           style={isMine ? userStyle : contactStyle}
                           title={isMine ? this.props.user.name : this.state.currentContact.name}
-                          extra={msg.deleted ? null : (
+                          extra={msg.deleted || !isMine ? null : (
                             <span
                               className="hoverable"
                               id={msg.id}
@@ -186,7 +189,7 @@ class MessagesTab extends React.Component {
                         }
                         >
                           <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
-                          <div style={{ fontSize: 'smaller' }} > {message.sent} </div>
+                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime} </div>
                         </Card>
                       );
                     })
@@ -203,7 +206,7 @@ class MessagesTab extends React.Component {
       return (<div style={{ margin: '15px' }}> Loading... </div>);
     }
     if (this.props.contacts) {
-      if (this.props.contacts.length === 0) {
+      if (!this.props.contacts.length) {
         return (<div> you have no messages </div>);
       }
       return (
@@ -222,7 +225,7 @@ class MessagesTab extends React.Component {
                 <List.Item>
                   <List.Item.Meta
                     avatar={<Avatar icon="mail" />}
-                    title={<div className="hoverable" id={contact.id} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
+                    title={<div className="hoverable" id={contact.userId} data-name={contact.name} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)
