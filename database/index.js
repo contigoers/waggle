@@ -260,9 +260,9 @@ const getAdopterContacts = async (userId) => {
   return contacts;
 };
 
-const updateForgotPassword = async (email, token) => {
-  await knex('users').where('email', email).update('forgot_pw_link', token);
-};
+const updateForgotPassword = (email, token) => knex('users')
+  .where('email', email)
+  .update('forgot_pw_link', token);
 
 const updatePassword = (token, hash) =>
   knex('users')
