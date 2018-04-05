@@ -380,20 +380,22 @@ router.post('/register', async ctx =>
       ctx.throw(418, info);
     } else {
       let adopterId;
-      let username;
+      let name;
       if (user.org_id === 1) {
         const [adopter] = await db.getAdopterId(user.id);
         adopterId = adopter.id;
-        username = adopter.name;
+        ({ name } = adopter);
       } else {
         const [org] = await db.getOrgName(user.org_id);
-        username = org.org_name;
+        name = org.org_name;
       }
       const userInfo = {
         ...user,
         adopterId,
-        name: username,
+        name,
       };
+      delete userInfo.password;
+      delete userInfo.forgot_pw_link;
       ctx.body = {
         success: true,
         user: userInfo,
@@ -412,20 +414,22 @@ router.post('/login', async ctx =>
       ctx.throw(401, info);
     } else {
       let adopterId;
-      let username;
+      let name;
       if (user.org_id === 1) {
         const [adopter] = await db.getAdopterId(user.id);
         adopterId = adopter.id;
-        username = adopter.name;
+        ({ name } = adopter);
       } else {
         const [org] = await db.getOrgName(user.org_id);
-        username = org.org_name;
+        name = org.org_name;
       }
       const userInfo = {
         ...user,
         adopterId,
-        name: username,
+        name,
       };
+      delete userInfo.password;
+      delete userInfo.forgot_pw_link;
       ctx.body = {
         success: true,
         user: userInfo,
