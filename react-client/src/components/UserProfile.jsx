@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { map } from 'lodash';
@@ -11,7 +11,7 @@ import OrgCard from './OrgCard';
 import { getOrgDogs, getFavorites, dogsSearch } from '../actions/searchActions';
 import { getContacts, getMessages } from '../actions/messagingActions';
 
-class UserProfile extends React.Component {
+class UserProfile extends Component {
   constructor(props) {
     super(props);
 
@@ -108,9 +108,6 @@ class UserProfile extends React.Component {
             {(menuSelection === 'messages' &&
               <MessagesTab />
             )}
-            {(!menuSelection === 'null' &&
-              <div> Loading... </div>
-            )}
           </Row>
         </div>
       </CSSTransitionGroup>
@@ -118,9 +115,7 @@ class UserProfile extends React.Component {
   }
 }
 
-const mapStateToProps = ({
-  search, storeUser, // fetchContacts, fetchMessages,
-}) => (
+const mapStateToProps = ({ search, storeUser }) => (
   {
     results: search.results,
     favorites: search.favorites,
@@ -132,10 +127,6 @@ const mapStateToProps = ({
       type: 'orgId',
       value: !storeUser.user ? 1 : storeUser.user.org_id,
     },
-    // messaging: {
-    //   contacts: fetchContacts.contacts,
-    //   messages: fetchMessages.messages,
-    // },
   }
 );
 
