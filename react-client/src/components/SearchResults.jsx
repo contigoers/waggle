@@ -29,7 +29,7 @@ class SearchResults extends Component {
 
     return (
       <div>
-        <div className="search-results-grid" style={{ marginTop: 30 }} >
+        <div className="search-results-grid" style={{ marginTop: 30, marginLeft: 30 }} >
           {!isEmpty(dogs) ? map(this.state.visibleDogIds, dogId => (<DogCard key={dogs[dogId].id} dog={dogs[dogId]} />)) : 'No Results'}
         </div>
         <Pagination

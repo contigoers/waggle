@@ -156,11 +156,11 @@ class DogProfile extends React.Component {
     let cardActions = null;
     let button = null;
     if (this.props.user && this.props.user.org_id > 1 && this.state.prevPath === '/profile') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}><Icon type="left" />Back to dogs list</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px', backgroundColor: '#cd5360', borderColor: '#cd5360' }}><Icon type="left" />Back to dogs list</Button>;
     } else if (this.props.user && this.props.user.org_id === 1 && this.state.prevPath === '/profile') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}><Icon type="left" />Back to favorite dogs</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px', backgroundColor: '#cd5360', borderColor: '#cd5360' }}><Icon type="left" />Back to favorite dogs</Button>;
     } else if (this.state.prevPath === '/search') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}><Icon type="left" />Back to search</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px', backgroundColor: '#cd5360', borderColor: '#cd5360' }}><Icon type="left" />Back to search</Button>;
     }
 
     if (this.props.user && dog.org_id === this.props.user.org_id) {
@@ -179,14 +179,16 @@ class DogProfile extends React.Component {
         transitionEnter={false}
         transitionLeave={false}
       >
-        <div>
+        <div style={{ backgroundColor: 'rgba(205, 83, 96, 0.05)' }}>
           <Row>
             {button}
           </Row>
           <Row>
             <Col span={10} offset={3} >
               <Row style={{ marginTop: 30, marginBottom: 30 }} >
-                <Card>
+                <Card
+                  style={{ borderRadius: 2, boxShadow: '0 4px 6px 0 hsla(0, 0%, 0%, 0.2)' }}
+                >
                   <h1> {dog.name} </h1>
                   <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
                   <Divider type="vertical" />
@@ -227,7 +229,7 @@ class DogProfile extends React.Component {
             <Col span={8} offset={1}>
               <Row style={{ marginTop: 30 }}>
                 <Card
-                  style={{ width: 350 }}
+                  style={{ width: 350, backgroundColor: 'rgba(205, 83, 96, 0.05)' }}
                   cover={<img
                     alt="pupper"
                     src={photo}

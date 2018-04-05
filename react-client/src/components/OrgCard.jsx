@@ -7,7 +7,7 @@ const OrgCard = (props) => {
   const phone = `(${user.phone.slice(0, 3)}) ${user.phone.slice(3, 6)}-${user.phone.slice(6)}`;
   return (
     <Col>
-      <Card>
+      <Card style={{ borderRadius: 2, boxShadow: '0 4px 6px 0 hsla(0, 0%, 0%, 0.2)' }}>
         <h2 style={{ fontWeight: 700 }}> {user.name} </h2>
         {!user.adopterId &&
           <div>

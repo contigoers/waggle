@@ -2,8 +2,9 @@ $primary: #cd5360;
 $primary-dark: #972036;
 
 .search-div {
+  background: rgba(205, 83, 96, 0.05);
   min-height: 100vh;
-  margin: 30px;
+  padding: 30px;
 }
 
 .title {
@@ -53,12 +54,14 @@ $primary-dark: #972036;
 }
 
 .search-button {
-  &:hover {
-    background: $primary;
-    color: white;
-    border-color: $primary;
-  }
+  background: $primary;
+  color: white;
+  border-color: $primary;
   margin-top: 30px;
+  &:hover {
+    border-color: white;
+    background: $primary-dark;
+  }
 }
 
 .submit-search {
