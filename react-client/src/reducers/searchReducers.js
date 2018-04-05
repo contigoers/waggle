@@ -1,5 +1,4 @@
 import { handleActions } from 'redux-actions';
-import { isEmpty } from 'lodash';
 
 const initialState = {
   breed: [],
@@ -52,7 +51,7 @@ export default handleActions({
   }),
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
   GET_FAVORITES: (state, action) => {
-    if (!isEmpty(state.results)) {
+    if (Object.keys(state.results).length) {
       return {
         ...state,
         favorites: action.data,

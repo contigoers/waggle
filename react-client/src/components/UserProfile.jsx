@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { map, isEmpty } from 'lodash';
+import { map } from 'lodash';
 import { Row, Col, Menu, Icon, BackTop } from 'antd';
 import { CSSTransitionGroup } from 'react-transition-group';
 
@@ -23,7 +23,7 @@ class UserProfile extends React.Component {
     if (this.state.type === 'org') {
       const value = this.props.user.org_id;
       this.getOrgDogs({ value });
-    } else if (isEmpty(this.props.favorites)) {
+    } else if (!Object.keys(this.props.favorites).length) {
       this.getFavorites();
     }
     this.updateMenu = this.updateMenu.bind(this);
@@ -88,21 +88,21 @@ class UserProfile extends React.Component {
               <Row style={{ marginTop: 30 }} >
                 <Col span={15} offset={3}>
                   {this.state.type === 'org' &&
-                  <div>{!isEmpty(results.org) ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
+                  <div>{Object.keys(results.org).length ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>
                   }
                   {this.state.type === 'adopter' &&
-                  <div>{!isEmpty(adopter) ? <OrgCard org={adopter} adopterUser={user} /> : 'Loading...'} </div>
+                  <div>{Object.keys(adopter).length ? <OrgCard org={adopter} adopterUser={user} /> : 'Loading...'} </div>
                   }
                 </Col>
               </Row>
                 {this.state.type === 'org' &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
-                  {!isEmpty(results.dogs) ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
+                  {Object.keys(results.dogs).length ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
                 </div>
               }
                 {this.state.type === 'adopter' &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
-                  {!isEmpty(favoriteDogs) ? map(favoriteDogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
+                  {Object.keys(favoriteDogs).length ? map(favoriteDogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
                 </div>
               }
               <BackTop />
