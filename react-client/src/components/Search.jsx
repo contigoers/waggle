@@ -33,6 +33,10 @@ class Search extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.clearSearchQuery();
+  }
+
   getFavorites() {
     const { adopterParams } = this.props;
     this.props.getFavorites({ params: adopterParams });
