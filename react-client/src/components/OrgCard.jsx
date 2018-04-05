@@ -7,7 +7,9 @@ const OrgCard = (props) => {
   const phone = `(${org.phone.slice(0, 3)}) ${org.phone.slice(3, 6)}-${org.phone.slice(6)}`;
   return (
     <Col>
-      <Card>
+      <Card
+        style={{ borderRadius: 2, boxShadow: '0 4px 6px 0 hsla(0, 0%, 0%, 0.2)' }}
+      >
         {org.org_name && <h2 style={{ fontWeight: 700 }}> {org.org_name} </h2>
         }
         {org.name && <h2 style={{ fontWeight: 700 }}> {org.name} </h2>
