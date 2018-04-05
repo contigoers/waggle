@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Col, Card, Divider } from 'antd';
 
 const OrgCard = (props) => {
-  const { user } = props;
+  // const { user } = props;
+  const user = props.org ? props.org : props.user;
   const phone = `(${user.phone.slice(0, 3)}) ${user.phone.slice(3, 6)}-${user.phone.slice(6)}`;
   return (
     <Col>
