@@ -25,25 +25,14 @@ class UserProfile extends Component {
     }
 
     if (!user.adopterId) {
-      const value = this.props.user.org_id;
-      this.getOrgDogs({ value });
-      this.props.getContacts(this.props.user.id, 'org');
+      this.props.getOrgDogs(+user.org_id);
+      this.props.getContacts(user.id, 'org');
     } else if (!Object.keys(this.props.favorites).length) {
-      this.getFavorites();
-      this.props.getContacts(this.props.user.id, 'adopter');
+      this.props.getFavorites(user.adopterId);
+      this.props.getContacts(user.id, 'adopter');
     }
 
     this.updateMenu = this.updateMenu.bind(this);
-  }
-
-  getOrgDogs() {
-    const { orgParams } = this.props;
-    this.props.getOrgDogs({ params: orgParams });
-  }
-
-  getFavorites() {
-    const { adopterParams } = this.props;
-    this.props.getFavorites({ params: adopterParams });
   }
 
   updateMenu({ key }) {
@@ -122,13 +111,6 @@ const mapStateToProps = ({ search, storeUser }) => (
     results: search.results,
     favorites: search.favorites,
     user: storeUser.user,
-    adopterParams: {
-      adopterId: storeUser.user.adopterId,
-    },
-    orgParams: {
-      type: 'orgId',
-      value: storeUser.user.org_id,
-    },
   }
 );
 
