@@ -20,7 +20,7 @@ class InquiryModal extends Component {
     this.ref.props.form.validateFields((err, values) => {
       const body = {
         message: values.message,
-        recipientId: results.dogs[id].org_id,
+        recipientId: results.orgs[results.dogs[id].org_id].userId,
         senderId: user.id,
         dogName: results.dogs[id].name,
       };

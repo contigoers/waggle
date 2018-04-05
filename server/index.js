@@ -499,7 +499,6 @@ router.get('/contacts/org', async (ctx) => {
   };
 });
 
-// gets list of organization contacts and associated dogs for an adopter
 router.get('/contacts/adopter', async (ctx) => {
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
   ctx.status = 201;
@@ -507,6 +506,39 @@ router.get('/contacts/adopter', async (ctx) => {
     status: 'success',
     contacts,
   };
+});
+
+router.get('/searchDogById', async (ctx) => {
+  const { id } = ctx.request.query;
+  let dog;
+  try {
+    [dog] = await db.getDogById(id);
+  } catch (err) {
+    throw err;
+  }
+  if (dog) {
+    const [org] = await db.getOrgProfile(dog.org_id);
+    const dogsAndOrgs = {
+      dogs: {
+        [dog.id]: dog,
+      },
+      orgs: {
+        [org.id]: org,
+      },
+    };
+
+    ctx.status = 200;
+    ctx.body = {
+      dogsAndOrgs,
+    };
+  } else {
+    ctx.body = {
+      dogsAndOrgs: {
+        dogs: {},
+        orgs: {},
+      },
+    };
+  }
 });
 
 router.get('/checkLink', async (ctx) => {
@@ -537,9 +569,11 @@ router.post('/imageUpload', (ctx) => {
   }
 });
 
+
 router.get('/*', async (ctx) => {
   ctx.body = await readFileThunk(path.join(__dirname, '../react-client/dist/index.html'));
 });
+
 
 app
   .use(router.routes())

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Divider, Row, Col, Icon, Button, message, Tooltip } from 'antd';
+import { Card, Divider, Row, Col, Icon, Button, message, Tooltip, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 import { startCase } from 'lodash';
@@ -7,7 +7,7 @@ import { CSSTransitionGroup } from 'react-transition-group';
 import OrgCard from './OrgCard';
 import InquiryModal from './InquiryModal';
 
-import { addFavorite, removeFavorite, markAdopted, unmarkAdopted } from '../actions/searchActions';
+import { addFavorite, removeFavorite, markAdopted, unmarkAdopted, searchDogById } from '../actions/searchActions';
 import { toggleInquiryModal } from '../actions/messagingActions';
 import { toggleEditModal } from '../actions/editActions';
 import EditModal from './EditModal';
@@ -20,13 +20,27 @@ class DogProfile extends React.Component {
     if (this.props.location.state) {
       ({ prevPath } = this.props.location.state);
     }
-
-    this.state = { prevPath };
+    this.state = {
+      fetching: false,
+      prevPath,
+    };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
     this.goBack = this.goBack.bind(this);
   }
 
+  async componentWillMount() {
+    const { id } = this.props.match.params;
+    if (!this.props.results.dogs) {
+      this.setState({
+        fetching: true,
+      });
+      await this.props.searchDogById(id);
+      this.setState({
+        fetching: false,
+      });
+    }
+  }
   async toggleFavorite() {
     const { id } = this.props.match.params;
     const dog = this.props.results.dogs[id];
@@ -75,8 +89,14 @@ class DogProfile extends React.Component {
 
   render() {
     const { id } = this.props.match.params;
-    if (!Object.keys(this.props.results).length) {
-      return <Redirect to="/notfound" />;
+    if (this.state.fetching) {
+      return (
+        <div className="reset-pass">
+          <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+        </div>
+      );
+    } else if (!this.state.fetching && !this.props.results.dogs[id]) {
+      return (<Redirect to="/notfound" />);
     }
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
@@ -148,73 +168,73 @@ class DogProfile extends React.Component {
 
     return (
       <CSSTransitionGroup
-        transitionName="fade-appear"
-        transitionAppear
-        transitionAppearTimeout={500}
-        transitionEnter={false}
-        transitionLeave={false}
-      >
-        <div>
-          <Row>
-            {button}
-          </Row>
-          <Row>
-            <Col span={10} offset={3} >
-              <Row style={{ marginTop: 30, marginBottom: 30 }} >
-                <Card>
-                  <h1> {dog.name} </h1>
-                  <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
-                  <Divider type="vertical" />
-                  <span style={{ fontWeight: 600, fontSize: 16 }} > {dog.male ? 'Male' : 'Female'} </span>
-                  <Divider type="vertical" />
-                  <span style={{ fontWeight: 600, fontSize: 16 }} > {stage} </span>
+      transitionName="fade-appear"
+      transitionAppear
+      transitionAppearTimeout={500}
+      transitionEnter={false}
+      transitionLeave={false}
+    >
+      <div>
+        <Row>
+          {button}
+        </Row>
+        <Row>
+          <Col span={10} offset={3} >
+            <Row style={{ marginTop: 30, marginBottom: 30 }} >
+              <Card>
+                <h1> {dog.name} </h1>
+                <span style={{ fontWeight: 600, fontSize: 18, marginLeft: 5 }} > {dog.breed} {dog.mix ? 'mix' : ''} </span>
+                <Divider type="vertical" />
+                <span style={{ fontWeight: 600, fontSize: 16 }} > {dog.male ? 'Male' : 'Female'} </span>
+                <Divider type="vertical" />
+                <span style={{ fontWeight: 600, fontSize: 16 }} > {stage} </span>
 
-                  <Divider />
+                <Divider />
 
-                  <h2> About </h2>
+                <h2> About </h2>
 
-                  <h3 style={{ marginLeft: 20 }}> Health </h3>
-                  <div style={{ marginLeft: 40 }}>
-                    <span style={{ fontWeight: 700 }}> Size: </span> {dog.size}
-                  </div>
-                  <div style={{ marginLeft: 40 }}> <span style={{ fontWeight: 700 }}> Neutered/spayed: </span> {dog.fixed ? 'yes' : 'no'} </div>
-                  <div style={{ marginLeft: 40 }}>
-                    <span style={{ fontWeight: 700 }}> Special needs: </span> {specialNeeds}
-                  </div>
+                <h3 style={{ marginLeft: 20 }}> Health </h3>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Size: </span> {dog.size}
+                </div>
+                <div style={{ marginLeft: 40 }}> <span style={{ fontWeight: 700 }}> Neutered/spayed: </span> {dog.fixed ? 'yes' : 'no'} </div>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Special needs: </span> {specialNeeds}
+                </div>
 
-                  <h3 style={{ marginLeft: 20, marginTop: 20 }}> Behavior </h3>
-                  <div style={{ marginLeft: 40 }}>
-                    <span style={{ fontWeight: 700 }}> Energy level: </span> {dog.energy_level}
-                  </div>
-                  <div style={{ marginLeft: 40 }}>
-                    <span style={{ fontWeight: 700 }}> Temperament concerns: </span> {temperament}
-                  </div>
+                <h3 style={{ marginLeft: 20, marginTop: 20 }}> Behavior </h3>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Energy level: </span> {dog.energy_level}
+                </div>
+                <div style={{ marginLeft: 40 }}>
+                  <span style={{ fontWeight: 700 }}> Temperament concerns: </span> {temperament}
+                </div>
 
-                  <h2 style={{ marginTop: 20 }} > Bio </h2>
-                  <div style={{ marginLeft: 20 }} > {dog.description} </div>
-                </Card>
-              </Row>
-              <Row style={{ marginBottom: 50 }} >
-                {(!this.props.user || (this.props.user.org_id !== dog.org_id)) &&
-                <OrgCard org={org} />}
-              </Row>
-            </Col>
-            <Col span={8} offset={1}>
-              <Row style={{ marginTop: 30 }}>
-                <Card
-                  style={{ width: 350 }}
-                  cover={<img
-                    alt="pupper"
-                    src={photo}
-                  />}
-                  actions={cardActions}
-                />
-              </Row>
-            </Col>
-            <InquiryModal id={id} />
-            <EditModal id={id} />
-          </Row>
-        </div>
+                <h2 style={{ marginTop: 20 }} > Bio </h2>
+                <div style={{ marginLeft: 20 }} > {dog.description} </div>
+              </Card>
+            </Row>
+            <Row style={{ marginBottom: 50 }} >
+              {(!this.props.user || (this.props.user.org_id !== dog.org_id)) &&
+              <OrgCard org={org} />}
+            </Row>
+          </Col>
+          <Col span={8} offset={1}>
+            <Row style={{ marginTop: 30 }}>
+              <Card
+                style={{ width: 350 }}
+                cover={<img
+                  alt="pupper"
+                  src={photo}
+                />}
+                actions={cardActions}
+              />
+            </Row>
+          </Col>
+          <InquiryModal id={id} />
+          <EditModal id={id} />
+        </Row>
+      </div>
       </CSSTransitionGroup>
     );
   }
@@ -238,6 +258,7 @@ const mapDispatchToProps = {
   markAdopted,
   unmarkAdopted,
   toggleEditModal,
+  searchDogById,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DogProfile));

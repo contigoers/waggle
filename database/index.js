@@ -1,5 +1,4 @@
-const has = require('lodash/has');
-const forEach = require('lodash/forEach');
+const { orderBy } = require('lodash');
 
 const config = {
   client: 'mysql',
@@ -82,9 +81,8 @@ const createDog = dog => knex('dogs').insert({
 const getDogById = dogId => knex('dogs').where('id', dogId);
 
 // get organization ID from organization name query
-// const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
-const getOrgProfile = orgId => knex.column(knex.raw('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
+const getOrgProfile = orgId => knex.column(knex.raw('users.id as userId, users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
   .where(knex.raw(`users.org_id = ${orgId} and orgs.id = ${orgId}`));
 
@@ -128,20 +126,6 @@ const removeFavoriteDog = async (adopterId, dogId) => {
   return getFavoriteDogs(adopterId);
 };
 
-/*
-// get all organizations in orgs
-const getAllOrganizations = () =>
-  knex.column(knex.raw
-    ('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*'))
-    .select()
-  .from(knex.raw('users, orgs'))
-  .where(knex.raw('users.org_id = orgs.id'));
-
-// get all dogs and info
-const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw('orgs.id = dogs.org_id'));
-*/
 const getUserById = userId => knex('users').where('id', userId);
 
 const getUserByEmail = email => knex('users').where('email', email);
@@ -183,7 +167,7 @@ const getOrgsAfterDogs = (orgs) => {
     }
   });
 
-  return knex.column(knex.raw('orgs.*, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
+  return knex.column(knex.raw('orgs.*, users.id as userId, users.address, users.city, users.state, users.zipcode, users.phone, users.email'))
     .select()
     .from(knex.raw('users, orgs'))
     .where(knex.raw(whereQuery));
@@ -220,64 +204,65 @@ const updateDogInfo = values => knex('dogs')
   .update(values);
 
 const getOrgContacts = async (userId) => {
-  const messages = await knex('messages').select('sender_id', 'dogName')
-    .where('recipient_id', userId);
-  const namesAndDogs = {};
-  messages.forEach((message) => {
-    if (!has(namesAndDogs, message.sender_id)) {
-      namesAndDogs[message.sender_id] = { name: null, dogs: [] };
-    }
-    namesAndDogs[message.sender_id].dogs.push(message.dogName);
-  });
-  const ids = Object.keys(namesAndDogs);
-  const contacts = [];
-  if (ids.length) {
-    const names = await knex.raw('select user_id, name from adopters where user_id in (?)', [ids]);
-    names[0].forEach((obj) => {
-      if (has(namesAndDogs, obj.user_id)) {
-        namesAndDogs[obj.user_id].name = obj.name;
+  const [results] = await knex.raw(`select
+  messages.*, adopters.name from
+    (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages
+    inner join adopters on adopters.user_id = messages.sender_id or adopters.user_id = messages.recipient_id
+    order by messages.id desc`);
+  let contacts = [];
+  if (results[0]) {
+    const contactsObj = {};
+    results.forEach((message) => {
+      const contactId = message.sender_id === +userId ?
+        message.recipient_id : message.sender_id;
+      if (!Object.prototype.hasOwnProperty.call(contactsObj, contactId)) {
+        contactsObj[contactId] = {
+          userId: contactId,
+          name: message.name,
+          dogs: [message.dogName],
+          lastMessage: message.id,
+        };
+      } else {
+        contactsObj[contactId].dogs.push(message.dogName);
       }
     });
-    forEach(namesAndDogs, (innerObj, key) => {
-      contacts.push({ id: key, name: innerObj.name, dogs: innerObj.dogs });
-    });
-  }
-  return contacts; 
-};
-
-const getAdopterContacts = async (userId) => {
-  const messages = await knex('messages').select('recipient_id', 'dogName')
-    .where('sender_id', userId);
-  const namesAndDogs = {};
-  messages.forEach((message) => {
-    if (!has(namesAndDogs, message.recipient_id)) {
-      namesAndDogs[message.recipient_id] = { name: null, dogs: [] };
-    }
-    namesAndDogs[message.recipient_id].dogs.push(message.dogName);
-  });
-  const ids = Object.keys(namesAndDogs);
-  const contacts = [];
-  if (ids.length) {
-    const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
-    names[0].forEach((obj) => {
-      if (has(namesAndDogs, obj.id)) {
-        namesAndDogs[obj.id].name = obj.org_name;
-      }
-    });
-    forEach(namesAndDogs, (innerObj, key) => {
-      contacts.push({
-        id: key,
-        name: innerObj.name,
-        dogs: innerObj.dogs,
-      });
-    });
+    contacts = orderBy(contactsObj, 'lastMessage', 'desc');
   }
   return contacts;
 };
 
-const updateForgotPassword = async (email, token) => {
-  await knex('users').where('email', email).update('forgot_pw_link', token);
+const getAdopterContacts = async (userId) => {
+  const [results] = await knex.raw(`select
+    messages.*, orgs.org_name from
+    (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages 
+    inner join (select * from users where org_id > 1) as users 
+    on users.id = messages.sender_id or users.id = messages.recipient_id inner join orgs
+    on users.org_id = orgs.id order by messages.id desc`);
+  let contacts = [];
+  if (results[0]) {
+    const contactsObj = {};
+    results.forEach((message) => {
+      const contactId = message.sender_id === +userId ?
+        message.recipient_id : message.sender_id;
+      if (!Object.prototype.hasOwnProperty.call(contactsObj, contactId)) {
+        contactsObj[contactId] = {
+          userId: contactId,
+          name: message.org_name,
+          dogs: [message.dogName],
+          lastMessage: message.id,
+        };
+      } else {
+        contactsObj[contactId].dogs.push(message.dogName);
+      }
+    });
+    contacts = orderBy(contactsObj, 'lastMessage', 'desc');
+  }
+  return contacts;
 };
+
+const updateForgotPassword = (email, token) => knex('users')
+  .where('email', email)
+  .update('forgot_pw_link', token);
 
 const updatePassword = (token, hash) =>
   knex('users')
@@ -291,6 +276,7 @@ const checkEmail = email => knex('users').where('email', email);
 
 const checkLinkExists = token => knex('users').where('forgot_pw_link', token);
 
+
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
 module.exports = {
@@ -302,7 +288,6 @@ module.exports = {
   createDog,
   createUser,
   checkCredentials,
-  // searchOrgsByName,
   getDogById,
   searchOrgDogs,
   getUserById,
@@ -324,7 +309,4 @@ module.exports = {
   updatePassword,
   checkEmail,
   checkLinkExists,
-  // getAllOrganizations,
-  // getAdopterContacts,
-  // getAllDogs,
 };
