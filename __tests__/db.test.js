@@ -15,7 +15,6 @@ const {
   getFavoriteDogs,
   removeFavoriteDog,
   getOrgName,
-  searchOrgsByName,
   checkCredentials,
   getOrgProfile,
   searchOrgDogs,
@@ -308,11 +307,6 @@ describe('users', () => {
   it('should retrieve the org name', async () => {
     const [info] = await getOrgName(org.org_id);
     expect(info).toEqual({ org_name: 'definitelyNotYaBoisOrg' });
-  });
-
-  it('should find the org by name', async () => {
-    const [info] = await searchOrgsByName('definitelyNotYaBoisOrg');
-    expect(info).toHaveProperty('id', org.org_id);
   });
 
   it('should retrieve the org\'s profile', async () => {
