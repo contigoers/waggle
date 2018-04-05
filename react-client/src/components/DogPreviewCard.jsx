@@ -61,8 +61,15 @@ class DogCard extends React.Component {
     return (
       <Card
         hoverable
-        style={{ width: 300, margin: 30 }}
-        cover={<img alt="pupper" onClick={this.onClick} src={photo} style={{ height: 300, width: 300, objectFit: 'cover' }} />}
+        style={{
+          width: 300, margin: 30, borderRadius: 2, boxShadow: '0 4px 6px 0 hsla(0, 0%, 0%, 0.2)',
+      }}
+        cover={<img
+          alt="pupper"
+          onClick={this.onClick}
+          src={photo}
+          style={{ height: 300, width: 300, objectFit: 'cover' }}
+        />}
         actions={
           (this.props.user && this.props.user.org_id === 1 &&
           [(favorites && favorites[id] ?

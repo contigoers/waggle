@@ -65,7 +65,7 @@ class LandingModal extends Component {
     return (
       <Modal
         id="adopter"
-        width="40%"
+        width="50%"
         title={`Register${(adopter && ' as an Adopter') || (org && ' as an Organization') || ''}`}
         visible={landing}
         onCancel={this.props.toggleRegistrationModal}

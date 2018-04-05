@@ -135,7 +135,7 @@ const WrappedOrgRegistration = Form.create()(class extends Component {
         >
           {getFieldDecorator('phone', {
             rules: [{
-              validator: this.validateNumber,
+              required: true, validator: this.validateNumber,
             }],
           })(<Input
             onChange={this.handleChange}
