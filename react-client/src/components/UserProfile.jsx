@@ -15,31 +15,24 @@ class UserProfile extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      type: this.props.user.org_id === 1 ? 'adopter' : 'org',
-      menuSelection: 'profile',
-    };
+    const { user } = this.props;
+
+    this.state = { menuSelection: 'profile' };
 
     if (this.props.location.state) {
       const { menuSelection } = this.props.location.state;
-      this.state = {
-        type: this.props.user.org_id === 1 ? 'adopter' : 'org',
-        menuSelection,
-      };
-    } else {
-      this.state = {
-        type: this.props.user.org_id === 1 ? 'adopter' : 'org',
-        menuSelection: 'profile',
-      };
+      this.state = { menuSelection };
     }
 
-    if (this.state.type === 'org') {
+    if (!user.adopterId) {
       const value = this.props.user.org_id;
       this.getOrgDogs({ value });
+      this.props.getContacts(this.props.user.id, 'org');
     } else if (!Object.keys(this.props.favorites).length) {
       this.getFavorites();
+      this.props.getContacts(this.props.user.id, 'adopter');
     }
-    this.props.getContacts(this.props.user.id, this.state.type);
+
     this.updateMenu = this.updateMenu.bind(this);
   }
 
@@ -63,7 +56,7 @@ class UserProfile extends Component {
     const { user } = this.props;
     const { results } = this.props;
     const { menuSelection } = this.state;
-    const { favoriteDogs, adopter } = this.props.favorites;
+    const { favoriteDogs } = this.props.favorites;
 
     return (
       <CSSTransitionGroup
@@ -81,11 +74,11 @@ class UserProfile extends Component {
             <Menu.Item key="messages">
               <Icon type="mail" />Messages
             </Menu.Item>
-            {this.state.type === 'adopter' &&
+            {user.adopterId &&
             <Menu.Item key="favorites">
               <Icon type="heart" />Favorites
             </Menu.Item>}
-            {this.state.type === 'org' &&
+            {!user.adopterId &&
             <Menu.Item key="dogs">
               <Icon type="bars" />Dogs
             </Menu.Item>}
@@ -93,26 +86,22 @@ class UserProfile extends Component {
           <Row>
             {menuSelection === 'profile' &&
             <div>
-              {(adopter || (results.org && !!Object.keys(results.org).length)) ? (
-                <Row style={{ marginTop: 30 }} >
-                  <Col span={15} offset={3}>
-                    {this.state.type === 'org' &&
-                      <OrgCard org={results.org} orgUser={user} />}
-                    {this.state.type === 'adopter' &&
-                      <OrgCard org={adopter} adopterUser={user} />}
-                  </Col>
-                </Row>
-              ) : (
-                <div>Loading...</div>
-              )}
+              <Row style={{ marginTop: 30 }} >
+                <Col span={15} offset={3}>
+                  {!user.adopterId &&
+                    <OrgCard />}
+                  {user.adopterId &&
+                    <OrgCard />}
+                </Col>
+              </Row>
             </div>}
             {(menuSelection === 'favorites' || menuSelection === 'dogs') &&
             <div>
-              {this.state.type === 'org' &&
+              {!user.adopterId &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
                   {Object.keys(results.dogs).length ? map(results.dogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no dogs'}
                 </div>}
-              {this.state.type === 'adopter' &&
+              {user.adopterId &&
                 <div className="search-results-grid" style={{ marginTop: 30 }}>
                   {Object.keys(favoriteDogs).length ? map(favoriteDogs, dog => (<SearchResult key={dog.id} dog={dog} />)) : 'You have no favorite dogs'}
                 </div>}
@@ -134,11 +123,11 @@ const mapStateToProps = ({ search, storeUser }) => (
     favorites: search.favorites,
     user: storeUser.user,
     adopterParams: {
-      adopterId: !storeUser.user ? null : storeUser.user.adopterId,
+      adopterId: storeUser.user.adopterId,
     },
     orgParams: {
       type: 'orgId',
-      value: !storeUser.user ? 1 : storeUser.user.org_id,
+      value: storeUser.user.org_id,
     },
   }
 );
