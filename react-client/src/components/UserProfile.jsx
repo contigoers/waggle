@@ -93,7 +93,7 @@ class UserProfile extends Component {
           <Row>
             {menuSelection === 'profile' &&
             <div>
-              {adopter || results.org ? (
+              {(adopter || (results.org && !!Object.keys(results.org).length)) ? (
                 <Row style={{ marginTop: 30 }} >
                   <Col span={15} offset={3}>
                     {this.state.type === 'org' &&
