@@ -227,7 +227,7 @@ class DogProfile extends React.Component {
               </Row>
             </Col>
             <Col span={8} offset={1}>
-              <Row style={{ marginTop: 30 }}>
+              <Row style={{ marginTop: 30, marginBottom: 50 }}>
                 <Card
                   style={{ width: 350, backgroundColor: 'rgba(205, 83, 96, 0.05)' }}
                   cover={<img
