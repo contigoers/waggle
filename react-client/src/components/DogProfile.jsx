@@ -81,7 +81,7 @@ class DogProfile extends React.Component {
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
     const { adopted } = dog;
-    dog.photo = Buffer.from(dog.photo);
+    const photo = Buffer.from(dog.photo);
 
     let org;
 
@@ -198,7 +198,7 @@ class DogProfile extends React.Component {
                 style={{ width: 350 }}
                 cover={<img
                   alt="pupper"
-                  src={dog.photo}
+                  src={photo}
                 />}
                 actions={cardActions}
               />
