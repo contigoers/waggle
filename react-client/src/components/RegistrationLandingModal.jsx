@@ -45,10 +45,14 @@ class LandingModal extends Component {
 
             if (status === 500 || info === 'error at creation') {
               message.error('Sorry, an unknown error occurred.', 5);
-            } else if (status === 418 && info === 'email exists') {
+            } else if (status === 418 && info === 'email taken') {
               message.error('Sorry, this email is already in use.', 5);
-            } else if (status === 418 && info === 'username already exists') {
-              message.error('Sorry, this username is already taken.', 5);
+            } else if (status === 418 && info === 'username taken') {
+              message.error('Sorry, this username is already in use.', 5);
+            } else if (status === 418 && info === 'username and email taken') {
+              message.error('Sorry, this username and email are already in use.', 5);
+            } else if (status === 418 && info === 'org name taken') {
+              message.error('Sorry, this organization name already in use.', 5);
             }
           });
       }
