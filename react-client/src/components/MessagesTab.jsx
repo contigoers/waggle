@@ -142,15 +142,15 @@ class MessagesTab extends React.Component {
               <Form onSubmit={this.sendMessageAndRender}>
                 <Form.Item>
                   <Input.TextArea
-                    rows={2}
+                    rows={3}
                     value={this.state.messageInput}
                     onChange={this.onInput}
                     placeholder="write message..."
-                    style={{ width: '50%', marginLeft: 'auto' }}
+                    style={{ width: '50%', marginLeft: '200px', marginTop: '30px' }}
                   />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit"> Send </Button>
+                  <Button type="primary" htmlType="submit" style={{ marginLeft: '200px' }}> Send </Button>
                 </Form.Item>
               </Form>
             </Row>

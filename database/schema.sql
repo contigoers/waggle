@@ -271,17 +271,3 @@ INSERT INTO `dogs` (`name`,`breed`,`mix`,`male`,`size`,`aggressive`,`anxious`,`l
 ('Marley', 'Dutch Shepherd', true, true, 'huge', true, false, 'adolescent', 3, false, true, true, 'high', 'https://i.redd.it/uwptaiy07xn01.jpg', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Cooper', 'Yellow Labrador Retriever', true, true, 'tiny', false, true, 'adolescent', 12, false, false, false, 'high', 'https://i.redd.it/uwptaiy07xn01.jpg', 'INSERT_DESCRIPTION_HERE', false, 3),
 ('Lexi', 'Feist', true, false, 'large', false, false, 'senior', 6, true, false, true, 'high', 'https://i.redd.it/uwptaiy07xn01.jpg', 'INSERT_DESCRIPTION_HERE', true, 2);
-
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'hi', true, 'Manik');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'take me to your leader', false, 'Lexi');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'how do you write a for loop?', false, 'Cooper');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'give me all your dogs', false, 'Marley');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'whats a dog', false, 'Rocco');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'sah dude', false, 'Ace');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('4', '5', 'You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose. Youre on your own. And you know what you know. And YOU are the one wholl decide where to go...', false, 'Annie');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '4', 'my spoon is too big', true, 'Dexter');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '4', 'i am a banana', false, 'Bandit');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '4', 'so take a nap and zen fire ze missiles', false, 'Ella');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '4', 'dogs dogs dogs dogs dogs', false, 'Harley');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '4', 'yabois back', false, 'Tyson');
-INSERT INTO messages (sender_id, recipient_id, message, deleted, dogName) VALUES ('5', '4', 'we should have a balcony', false, 'Hank');

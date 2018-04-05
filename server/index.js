@@ -499,20 +499,8 @@ router.get('/contacts/org', async (ctx) => {
   };
 });
 
-// gets list of organization contacts and associated dogs for an adopter
-// router.get('/contacts/adopter', async (ctx) => {
-//   const contacts = await db.getAdopterContacts(ctx.request.query.id);
-//   ctx.status = 201;
-//   ctx.body = {
-//     status: 'success',
-//     contacts,
-//   };
-// });
-
 router.get('/contacts/adopter', async (ctx) => {
-  console.log('testing');
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
-  console.log('contacts', contacts, 'end');
   ctx.status = 201;
   ctx.body = {
     status: 'success',
