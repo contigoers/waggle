@@ -187,7 +187,13 @@ const WrappedAdopterRegistration = Form.create()(class extends Component {
                 required: true,
                 message: 'Please enter your state!',
               }],
-              })(<Select style={{ width: 120 }}>
+              })(<Select
+                style={{ width: 120 }}
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                optionFilterProp="children"
+                showSearch
+              >
                 {states.map(state => <Option key={state} value={state}>{state}</Option>)}
               </Select>) /* eslint-disable-line */}
         </FormItem>
