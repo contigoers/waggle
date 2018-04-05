@@ -25,6 +25,7 @@ const getContacts = async (userId, type) => {
 
 const getMessages = async (userId, contactId) => {
   const { data } = await axios.get('/messages/fetch', { params: { userId, contactId } });
+  console.log('data', data)
   return {
     type: GET_MESSAGES,
     data,
@@ -32,6 +33,7 @@ const getMessages = async (userId, contactId) => {
 };
 
 const deleteMessage = async (messageId, userId, contactId) => {
+  console.log('deleting', messageId, 'hi', userId, contactId);
   await axios.patch('/messages/delete', { messageId });
   const { data } = await axios.get('/messages/fetch', { params: { userId, contactId } });
   return {
@@ -41,7 +43,6 @@ const deleteMessage = async (messageId, userId, contactId) => {
 };
 
 const sendMessage = async (senderId, recipientId, recipientType, message) => {
-  console.log('action', senderId, recipientId, recipientType, message);
   await axios.post('/messages/post', {
     senderId,
     recipientId,

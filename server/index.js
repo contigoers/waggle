@@ -482,7 +482,6 @@ router.get('/messages/fetch', async (ctx) => {
   const { userId } = ctx.request.query;
   const { contactId } = ctx.request.query;
   const messages = await db.getMessagesForChat(userId, contactId);
-  console.log(messages);
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -501,8 +500,19 @@ router.get('/contacts/org', async (ctx) => {
 });
 
 // gets list of organization contacts and associated dogs for an adopter
+// router.get('/contacts/adopter', async (ctx) => {
+//   const contacts = await db.getAdopterContacts(ctx.request.query.id);
+//   ctx.status = 201;
+//   ctx.body = {
+//     status: 'success',
+//     contacts,
+//   };
+// });
+
 router.get('/contacts/adopter', async (ctx) => {
+  console.log('testing');
   const contacts = await db.getAdopterContacts(ctx.request.query.id);
+  console.log('contacts', contacts, 'end');
   ctx.status = 201;
   ctx.body = {
     status: 'success',
@@ -536,17 +546,6 @@ router.post('/imageUpload', (ctx) => {
       message: 'Sorry, an error has occurred.',
     };
   }
-});
-
-router.get('/test', async (ctx) => {
-  console.log('testing');
-  const contacts = await db.getContacts(ctx.request.query.userId);
-  console.log('contacts', contacts);
-  ctx.status = 201;
-  ctx.body = {
-    status: 'success',
-    contacts,
-  };
 });
 
 

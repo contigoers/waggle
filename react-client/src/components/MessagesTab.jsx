@@ -174,10 +174,10 @@ class MessagesTab extends React.Component {
                           key={msg.id}
                           style={isMine ? userStyle : contactStyle}
                           title={isMine ? this.props.user.name : this.state.currentContact.name}
-                          extra={msg.deleted ? null : (
+                          extra={msg.deleted || !isMine ? null : (
                             <span
                               className="hoverable"
-                              id={msg.idd}
+                              id={msg.id}
                               style={{ fontSize: 'smaller' }}
                               tabIndex={msg.id}
                               role="button"

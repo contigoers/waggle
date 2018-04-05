@@ -1,6 +1,6 @@
 const has = require('lodash/has');
 const orderBy = require('lodash/orderBy');
-const forEach = require('lodash/forEach');
+// const forEach = require('lodash/forEach');
 
 const config = {
   client: 'mysql',
@@ -265,45 +265,68 @@ const checkLinkExists = token => knex('users').where('forgot_pw_link', token);
 
 /* *********************  END OF TESTED AND APPROVED DB QUERIES ********************************* */
 
+// const getAdopterContacts = async (userId) => {
+//   const messages = await knex('messages').select('recipient_id', 'dogName')
+//     .where('sender_id', userId);
+//   const namesAndDogs = {};
+//   messages.forEach((message) => {
+//     if (!has(namesAndDogs, message.recipient_id)) {
+//       namesAndDogs[message.recipient_id] = { name: null, dogs: [] };
+//     }
+//     namesAndDogs[message.recipient_id].dogs.push(message.dogName);
+//   });
+//   const ids = Object.keys(namesAndDogs);
+//   const contacts = [];
+//   if (ids.length) {
+//     const names =
+//     await knex.raw('select users.id, orgs.org_name from
+//     (select * from users where id in (?)) as users
+//     inner join orgs on users.org_id = orgs.id', [ids]);
+//     names[0].forEach((obj) => {
+//       if (has(namesAndDogs, obj.id)) {
+//         namesAndDogs[obj.id].name = obj.org_name;
+//       }
+//     });
+//     forEach(namesAndDogs, (innerObj, key) => {
+//       contacts.push({
+//         id: key,
+//         name: innerObj.name,
+//         dogs: innerObj.dogs,
+//       });
+//     });
+//   }
+//   return contacts;
+// };
+
 const getAdopterContacts = async (userId) => {
-  const messages = await knex('messages').select('recipient_id', 'dogName')
-    .where('sender_id', userId);
-  const namesAndDogs = {};
-  messages.forEach((message) => {
-    if (!has(namesAndDogs, message.recipient_id)) {
-      namesAndDogs[message.recipient_id] = { name: null, dogs: [] };
-    }
-    namesAndDogs[message.recipient_id].dogs.push(message.dogName);
-  });
-  const ids = Object.keys(namesAndDogs);
-  const contacts = [];
-  if (ids.length) {
-    const names = await knex.raw('select users.id, orgs.org_name from (select * from users where id in (?)) as users inner join orgs on users.org_id = orgs.id', [ids]);
-    names[0].forEach((obj) => {
-      if (has(namesAndDogs, obj.id)) {
-        namesAndDogs[obj.id].name = obj.org_name;
+  let results = await knex.raw(`select
+    messages.*, orgs.org_name from
+    (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages 
+    inner join (select * from users where org_id > 1) as users 
+    on users.id = messages.sender_id or users.id = messages.recipient_id inner join orgs
+    on users.org_id = orgs.id`);
+  [results] = results;
+  let contacts = [];
+  if (results[0]) {
+    const contactsObj = {};
+    results.forEach((message) => {
+      const contactId = message.sender_id === parseInt(userId, 10) ?
+        message.recipient_id : message.sender_id;
+      if (!has(contactsObj, contactId)) {
+        contactsObj[contactId] = {
+          userId: contactId,
+          name: message.org_name,
+          dogs: [message.dogName],
+          lastMessage: message.id,
+        };
+      } else {
+        contactsObj[contactId].dogs.push(message.dogName);
       }
     });
-    forEach(namesAndDogs, (innerObj, key) => {
-      contacts.push({
-        id: key,
-        name: innerObj.name,
-        dogs: innerObj.dogs,
-      });
-    });
+    contacts = orderBy(contactsObj, 'lastMessage', 'desc');
   }
   return contacts;
 };
-
-const getContacts = async (userId)=> {
-  console.log('getting contacts')
-  const results = await knex.raw(
-    `select messages.*, orgs.org_name from (select * from messages where sender_id = ${userId} or recipient_id = ${userId}) as messages inner join users on users.id = messages.sender_id or users.id = messages.recipient_id inner join orgs on users.org_id = orgs.id`);
-  console.log('results', results)
-  return results;
-}
-
-
 
 module.exports = {
   getAdopterProfile,
@@ -339,5 +362,4 @@ module.exports = {
   // getAllOrganizations,
   // getAdopterContacts,
   // getAllDogs,
-  getContacts,
 };
