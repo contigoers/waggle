@@ -74,6 +74,7 @@ describe('getUserById()', () => {
       state: 'TX',
       zipcode: 78766,
       phone: '5126997244',
+      forgot_pw_link: null,
     });
   });
 });
