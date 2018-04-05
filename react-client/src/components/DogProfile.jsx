@@ -81,7 +81,7 @@ class DogProfile extends React.Component {
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
     const { adopted } = dog;
-    dog.photo = Buffer.from(dog.photo);
+    const photo = Buffer.from(dog.photo);
 
     let org;
 
@@ -131,11 +131,11 @@ class DogProfile extends React.Component {
     let cardActions = null;
     let button = null;
     if (this.props.user && this.props.user.org_id > 1 && this.state.prevPath === '/profile') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}>Back to dogs list</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}><Icon type="left" />Back to dogs list</Button>;
     } else if (this.props.user && this.props.user.org_id === 1 && this.state.prevPath === '/profile') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}>Back to favorite dogs</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}><Icon type="left" />Back to favorite dogs</Button>;
     } else if (this.state.prevPath === '/search') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}>Back to search</Button>;
+      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px' }}><Icon type="left" />Back to search</Button>;
     }
 
     if (this.props.user && dog.org_id === this.props.user.org_id) {
@@ -205,7 +205,7 @@ class DogProfile extends React.Component {
                   style={{ width: 350 }}
                   cover={<img
                     alt="pupper"
-                    src={dog.photo}
+                    src={photo}
                   />}
                   actions={cardActions}
                 />
