@@ -14,9 +14,9 @@ import RegistrationLandingModal from './RegistrationLandingModal';
 const NavBar = (props) => {
   const logout = () => {
     axios.post('/logout').then(() => {
+      props.history.push('/');
       message.info('You have been logged out!');
       props.logoutUser();
-      props.history.push('/');
     });
   };
 
