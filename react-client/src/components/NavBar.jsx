@@ -86,9 +86,11 @@ const mapStateToProps = state => (
   }
 );
 
-export default connect(
-  mapStateToProps,
-  {
-    toggleLoginModal, toggleRegistrationModal, storeUserId, logoutUser,
-  },
-)(withRouter(NavBar));
+const mapDispatchToProps = {
+  toggleLoginModal,
+  toggleRegistrationModal,
+  storeUserId,
+  logoutUser,
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));
