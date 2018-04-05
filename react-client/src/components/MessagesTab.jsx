@@ -183,9 +183,7 @@ class MessagesTab extends React.Component {
                   {
                     this.state.visibleMessages.map((msg) => {
                       const isMine = msg.sender_id === this.props.user.id;
-                      const { sent } = msg;
-                      const datetime = `${sent.slice(5, 7)}/${sent.slice(8, 10)}/${sent.slice(0, 4)}, ${sent.slice(11, 19)}`;
-
+                      const datetime = new Date(msg.sent);
                       return (
                         <Card
                           key={msg.id}
@@ -206,7 +204,7 @@ class MessagesTab extends React.Component {
                         }
                         >
                           <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
-                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime} </div>
+                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime.toUTCString()} </div>
                         </Card>
                       );
                     })
@@ -242,7 +240,19 @@ class MessagesTab extends React.Component {
                 <List.Item>
                   <List.Item.Meta
                     avatar={<Avatar icon={contact.hasUnreads ? 'folder' : 'folder-open'} />}
-                    title={<div className="hoverable" id={contact.userId} data-name={contact.name} data-unreads={contact.hasUnreads} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
+                    title={
+                      <div
+                        className="hoverable"
+                        id={contact.userId}
+                        data-name={contact.name}
+                        data-unreads={contact.hasUnreads}
+                        tabIndex={contact.id}
+                        role="link"
+                        style={{ color: 'green' }}
+                        onClick={this.renderMessageFeed}
+                      >
+                        {contact.name}
+                      </div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)
