@@ -22,6 +22,7 @@ class DogProfile extends React.Component {
     }
     this.state = {
       fetching: false,
+      prevPath,
     };
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.toggleAdopted = this.toggleAdopted.bind(this);
