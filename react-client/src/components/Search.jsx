@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, BackTop, Divider, Collapse } from 'antd';
-import { forOwn, keys, some } from 'lodash';
+import { some } from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
 import { clearSearchQuery, updateSearchQuery, dogsSearch, getFavorites, getRandomDog, getOrgDogs } from '../actions/searchActions';
@@ -56,7 +56,8 @@ class Search extends React.Component {
   submitData() {
     const searchObject = {};
     const { params } = this.props;
-    forOwn(params, (value, key) => {
+    Object.keys(params).forEach((key) => {
+      const value = params[key];
       if (value.length) {
         searchObject[key] = value;
       }
@@ -166,14 +167,14 @@ class Search extends React.Component {
           <Divider />
           <div className="search-results">
             <div className="results-number">
-              {keys(this.props.results).length > 0 ? `${keys(this.props.results.dogs).length} Results Found` : ''}
+              {Object.keys(this.props.results).length ? `${Object.keys(this.props.results.dogs).length} Results Found` : ''}
             </div>
             <CSSTransitionGroup
               transitionName="fade-enter"
               transitionEnterTimeout={500}
               transitionLeaveTimeout={500}
             >
-              {keys(this.props.results).length > 0 && <SearchResults />}
+              {Object.keys(this.props.results).length && <SearchResults />}
             </CSSTransitionGroup>
           </div>
           <BackTop />

@@ -31,7 +31,7 @@ class DogProfile extends React.Component {
 
   async componentWillMount() {
     const { id } = this.props.match.params;
-    if (!this.props.results[id]) {
+    if (!this.props.results.dogs[id]) {
       this.setState({
         fetching: true,
       });

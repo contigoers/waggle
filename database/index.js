@@ -1,5 +1,4 @@
-const has = require('lodash/has');
-const orderBy = require('lodash/orderBy');
+const { orderBy } = require('lodash');
 
 const config = {
   client: 'mysql',
@@ -217,7 +216,7 @@ const getOrgContacts = async (userId) => {
     results.forEach((message) => {
       const contactId = message.sender_id === parseInt(userId, 10) ?
         message.recipient_id : message.sender_id;
-      if (!has(contactsObj, contactId)) {
+      if (!Object.prototype.hasOwnProperty.call(contactsObj, contactId)) {
         contactsObj[contactId] = {
           userId: contactId,
           name: message.name,
@@ -247,7 +246,7 @@ const getAdopterContacts = async (userId) => {
     results.forEach((message) => {
       const contactId = message.sender_id === parseInt(userId, 10) ?
         message.recipient_id : message.sender_id;
-      if (!has(contactsObj, contactId)) {
+      if (!Object.prototype.hasOwnProperty.call(contactsObj, contactId)) {
         contactsObj[contactId] = {
           userId: contactId,
           name: message.org_name,
