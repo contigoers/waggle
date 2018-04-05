@@ -52,16 +52,16 @@ const getRandomDog = async () => {
   };
 };
 
-const getOrgDogs = async (orgObject) => {
-  const { data } = await axios.get('/orgInfo', orgObject);
+const getOrgDogs = async (orgId) => {
+  const { data } = await axios.get('/orgInfo', { params: { orgId } });
   return {
     type: SEARCH_DOGS,
     data: data.orgDogs,
   };
 };
 
-const getFavorites = async (adopterObject) => {
-  const { data } = await axios.get('/adopterInfo', adopterObject);
+const getFavorites = async (adopterId) => {
+  const { data } = await axios.get('/adopterInfo', { params: { adopterId } });
   return {
     type: GET_FAVORITES,
     data: data.adopterFavoriteDogs,
