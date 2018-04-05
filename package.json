@@ -10,7 +10,8 @@
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon -r dotenv/config server/index.js",
     "test": "jest",
-    "webpack-build": "webpack --config ./webpack.config.js --progress"
+    "webpack-build": "webpack --config ./webpack.config.js --progress",
+    "start": "pm2 start server/index.js -- --production"
   },
   "author": "Jean-Paul Angelle, Andrew Dibble, Krisha Mehta, Shannon Pearson",
   "license": "ISC",
@@ -51,7 +52,7 @@
     "koa-session": "^5.5.1",
     "koa-static": "^4.0.2",
     "lodash": "^4.17.5",
-    "mysql": "^2.13.0",
+    "mysql": "^2.15.0",
     "node-sass": "^4.7.2",
     "nodemailer": "^4.6.4",
     "passport-local": "^1.0.0",

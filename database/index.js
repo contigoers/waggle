@@ -82,7 +82,6 @@ const createDog = dog => knex('dogs').insert({
 const getDogById = dogId => knex('dogs').where('id', dogId);
 
 // get organization ID from organization name query
-// const searchOrgsByName = orgName => knex('orgs').select('id').where('org_name', orgName);
 
 const getOrgProfile = orgId => knex.column(knex.raw('users.id as userId, users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*')).select()
   .from(knex.raw('users, orgs'))
@@ -128,20 +127,6 @@ const removeFavoriteDog = async (adopterId, dogId) => {
   return getFavoriteDogs(adopterId);
 };
 
-/*
-// get all organizations in orgs
-const getAllOrganizations = () =>
-  knex.column(knex.raw
-    ('users.address, users.city, users.state, users.zipcode, users.phone, users.email, orgs.*'))
-    .select()
-  .from(knex.raw('users, orgs'))
-  .where(knex.raw('users.org_id = orgs.id'));
-
-// get all dogs and info
-const getAllDogs = () => knex.column(knex.raw('dogs.*, orgs.org_name')).select()
-  .from(knex.raw('dogs, orgs'))
-  .where(knex.raw('orgs.id = dogs.org_id'));
-*/
 const getUserById = userId => knex('users').where('id', userId);
 
 const getUserByEmail = email => knex('users').where('email', email);
@@ -278,9 +263,9 @@ const getAdopterContacts = async (userId) => {
   return contacts;
 };
 
-const updateForgotPassword = async (email, token) => {
-  await knex('users').where('email', email).update('forgot_pw_link', token);
-};
+const updateForgotPassword = (email, token) => knex('users')
+  .where('email', email)
+  .update('forgot_pw_link', token);
 
 const updatePassword = (token, hash) =>
   knex('users')
@@ -306,7 +291,6 @@ module.exports = {
   createDog,
   createUser,
   checkCredentials,
-  // searchOrgsByName,
   getDogById,
   searchOrgDogs,
   getUserById,
@@ -328,7 +312,4 @@ module.exports = {
   updatePassword,
   checkEmail,
   checkLinkExists,
-  // getAllOrganizations,
-  // getAdopterContacts,
-  // getAllDogs,
 };
