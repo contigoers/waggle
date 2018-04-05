@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import axios from 'axios';
 import { CSSTransitionGroup } from 'react-transition-group';
 import Logo from '../assets/logo.png';
@@ -13,11 +13,10 @@ import RegistrationLandingModal from './RegistrationLandingModal';
 
 const NavBar = (props) => {
   const logout = () => {
-    axios.post('/logout').then((response) => {
-      console.log(response);
-      // props.storeUserId({ user: null });
-      props.logoutUser();
+    axios.post('/logout').then(() => {
       props.history.push('/');
+      message.info('You have been logged out!');
+      props.logoutUser();
     });
   };
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+<<<<<<< HEAD
 import { map, isEmpty } from 'lodash';
 import { Pagination } from 'antd';
 import DogCard from './DogPreviewCard';
@@ -45,6 +46,16 @@ class SearchResults extends Component {
     );
   }
 }
+=======
+import { map } from 'lodash';
+import DogCard from './DogPreviewCard';
+
+const SearchResults = props => (
+  <div className="search-results-grid" style={{ marginTop: 30 }} >
+    {Object.keys(props.dogs).length ? map(props.dogs, dog => (<DogCard key={dog.id} dog={dog} />)) : 'No Results'}
+  </div>
+);
+>>>>>>> f4d4d48ae192f910beca5df5d69c8f2ccfca4a5f
 
 const mapStateToProps = state => (
   {
