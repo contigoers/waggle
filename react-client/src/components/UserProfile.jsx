@@ -97,9 +97,9 @@ class UserProfile extends Component {
                 <Row style={{ marginTop: 30 }} >
                   <Col span={15} offset={3}>
                     {this.state.type === 'org' &&
-                    <div>{Object.keys(results.org).length ? <OrgCard org={results.org} orgUser={user} /> : 'Loading...'} </div>}
+                      <OrgCard org={results.org} orgUser={user} />}
                     {this.state.type === 'adopter' &&
-                    <div>{Object.keys(adopter).length ? <OrgCard org={adopter} adopterUser={user} /> : 'Loading...'} </div>}
+                      <OrgCard org={adopter} adopterUser={user} />}
                   </Col>
                 </Row>
               ) : (
