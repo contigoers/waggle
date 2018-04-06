@@ -84,7 +84,6 @@ class DogForm extends React.Component {
           this.props.form.resetFields();
           this.setState(this.defaultState);
           alert('Successfully added dog!');
-          // response.data.newDog.id
           return response;
         }).then((response) => {
           console.log('second response')
