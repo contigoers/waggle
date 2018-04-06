@@ -8,8 +8,8 @@ const OrgCard = (props) => {
   return (
     <Col>
       <Card style={{ borderRadius: 2, boxShadow: '0 4px 6px 0 hsla(0, 0%, 0%, 0.2)' }}>
-        <h2 style={{ fontWeight: 700 }}> {user.name} </h2>
-        {!user.adopterId &&
+        <h2 style={{ fontWeight: 700 }}> {user.name ? user.name : user.org_name} </h2>
+        {props.user && props.user.org_id > 1 && (!props.org || user.id === props.user.org_id) &&
           <div>
             <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
             Organization Profile
