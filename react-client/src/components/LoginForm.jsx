@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Form, Icon, Input, Button, Modal, message } from 'antd';
 import axios from 'axios';
 
-import { toggleLoginModal, storeUserId } from '../actions/loginActions';
+import { toggleLoginModal, storeUserId, checkForNewMessages } from '../actions/loginActions';
 
 const FormItem = Form.Item;
 
@@ -22,6 +22,8 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.storeUser = this.props.storeUserId.bind(this);
     this.handleForgotPasswordOrGoBack = this.handleForgotPasswordOrGoBack.bind(this);
     this.changeForgotPasswordToFalse = this.changeForgotPasswordToFalse.bind(this);
+    this.checkForNewMessages = this.props.checkForNewMessages.bind(this);
+    this.checkMessages = this.checkMessages.bind(this);
   }
 
   handleForgotPasswordOrGoBack() {
@@ -52,6 +54,17 @@ const WrappedLoginForm = Form.create()(class extends Component {
     });
   }
 
+  checkMessages() {
+    const checkInbox = this.checkForNewMessages.bind(this);
+    const inboxUpdate = setInterval(() => {
+      if (this.props.user) {
+        checkInbox(this.props.user.id);
+      } else {
+        clearInterval(inboxUpdate);
+      }
+    }, 5000);
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -59,11 +72,13 @@ const WrappedLoginForm = Form.create()(class extends Component {
         this.setState({ loading: true });
         axios.post('/login', values)
           .then((response) => {
+            this.checkForNewMessages(response.data.user.id);
             this.toggleModal();
             this.storeUser({ user: response.data.user });
             this.props.form.resetFields();
             this.setState({ loading: false });
             this.props.history.push('/profile');
+            this.checkMessages();
           })
           .catch((error) => {
             this.setState({ loading: false });
@@ -153,11 +168,10 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = state => (
-  {
-    visible: state.loginModal.visible,
-    user: state.storeUser.user,
-  }
-);
+const mapStateToProps = state => ({
+  visible: state.loginModal.visible,
+  user: state.storeUser.user,
+  newMessages: state.newMessages.newMessages,
+});
 
-export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId })(WrappedLoginForm)); // eslint-disable-line
+export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId, checkForNewMessages })(WrappedLoginForm)); // eslint-disable-line

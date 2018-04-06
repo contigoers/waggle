@@ -43,7 +43,7 @@ class LandingModal extends Component {
             const { status } = error.response;
             const info = error.response.data;
 
-            if (status === 500 || info === 'error at creation') {
+            if (status === 500) {
               message.error('Sorry, an unknown error occurred.', 5);
             } else if (status === 418 && info === 'email taken') {
               message.error('Sorry, this email is already in use.', 5);
