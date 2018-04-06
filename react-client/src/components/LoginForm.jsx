@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Form, Icon, Input, Button, Modal, message } from 'antd';
 import axios from 'axios';
 
-import { toggleLoginModal, storeUserId } from '../actions/loginActions';
+import { toggleLoginModal, storeUserId, checkForNewMessages } from '../actions/loginActions';
 
 const FormItem = Form.Item;
 
@@ -22,6 +22,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.storeUser = this.props.storeUserId.bind(this);
     this.handleForgotPasswordOrGoBack = this.handleForgotPasswordOrGoBack.bind(this);
     this.changeForgotPasswordToFalse = this.changeForgotPasswordToFalse.bind(this);
+    this.checkForNewMessages = this.checkForNewMessages.bind(this);
   }
 
   handleForgotPasswordOrGoBack() {
@@ -52,6 +53,10 @@ const WrappedLoginForm = Form.create()(class extends Component {
     });
   }
 
+  checkMessages() {
+    this.checkForNewMessages(this.props.user.id)
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -64,6 +69,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
             this.props.form.resetFields();
             this.setState({ loading: false });
             this.props.history.push('/profile');
+            const checkInbox = setInterval(checkMessages, 100000);
           })
           .catch((error) => {
             this.setState({ loading: false });
@@ -160,4 +166,4 @@ const mapStateToProps = state => (
   }
 );
 
-export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId })(WrappedLoginForm)); // eslint-disable-line
+export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId, checkForNewMessages })(WrappedLoginForm)); // eslint-disable-line
