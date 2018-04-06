@@ -1,6 +1,6 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
+// const FacebookStrategy = require('passport-facebook').Strategy;
 const bcrypt = require('bcrypt');
 const db = require('../database/index');
 
@@ -17,19 +17,19 @@ module.exports = () => {
     done(null, users[0]);
   });
 
-  passport.use('facebook', new FacebookStrategy({
-    clientID: process.env.FB_CLIENT_ID,
-    clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3000/auth/callback',
-    profileFields: ['id', 'email', 'address', 'name'],
-  }, async (aToken, rToken, profile, cb) => {
-    const username = `${profile.name.givenName} ${profile.name.familyName}`;
-    const [user] = await db.getUserByUsername(username);
-    if (!user) {
-      await db.createFacebookUser(profile);
-    }
-    cb(null, profile);
-  }));
+  // passport.use('facebook', new FacebookStrategy({
+  //   clientID: process.env.FB_CLIENT_ID,
+  //   clientSecret: process.env.FB_CLIENT_SECRET,
+  //   callbackURL: 'http://localhost:3000/auth/callback',
+  //   profileFields: ['id', 'email', 'address', 'name'],
+  // }, async (aToken, rToken, profile, cb) => {
+  //   const username = `${profile.name.givenName} ${profile.name.familyName}`;
+  //   const [user] = await db.getUserByUsername(username);
+  //   if (!user) {
+  //     await db.createFacebookUser(profile);
+  //   }
+  //   cb(null, profile);
+  // }));
 
   // LOCAL LOGIN STRATEGY
   passport.use('local-login', new LocalStrategy(async (username, password, cb) => {
