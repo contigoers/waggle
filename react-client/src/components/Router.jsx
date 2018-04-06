@@ -37,18 +37,19 @@ class Router extends Component {
   }
 
   render() {
+    const { user, store } = this.props;
     return (
       <BrowserRouter>
-        <Provider store={this.props.store}>
+        <Provider store={store}>
           <React.Fragment>
             <ScrollToTop>
-              <Route exact path="/" render={() => !this.props.user && <Splash />} />
+              <Route exact path="/" render={() => !user && <Splash />} />
               <NavBar />
               <Switch>
                 <Route path="/auth" component={Callback} />
                 <Route path="/search" component={Search} />
-                <Route path="/create" render={() => (this.props.user && !this.props.user.adopterId ? <CreateDogForm /> : <Redirect to="/" />)} />
-                <Route path="/profile" render={() => (!this.props.user ? <Redirect to="/" /> : this.props.user.email ? <UserProfile /> : <Redirect to="/auth" />)} />
+                <Route path="/create" render={() => (user && !user.adopterId ? <CreateDogForm /> : <Redirect to="/" />)} />
+                <Route path="/profile" render={() => (!user ? <Redirect to="/" /> : user.email ? <UserProfile /> : <Redirect to="/auth" />)} />
                 <Route path="/searchResults" component={SearchResults} />
                 <Route path="/dog/:id" component={DogProfile} />
                 <Route path="/about" component={About} />
