@@ -42,25 +42,33 @@ const createUser = async (user, username, password) => {
   return knex('users').where('id', userId);
 };
 
+const getFacebookUserUserId = profileId => knex.select('user_id')
+  .from('fbUsers')
+  .where('profile_id', profileId);
+
 const createFacebookUser = async (profile) => {
-  let { name } = profile;
-  name = `${name.givenName} ${name.familyName}`;
   await knex('users').insert({
-    username: name,
-    password: +profile.id,
+    username: profile.id,
+    password: null,
     email: null,
-    address: '1234 Placeholder St.',
-    city: 'Austin',
-    state: 'TX',
-    zipcode: '78701',
-    phone: '5128675309',
+    address: null,
+    city: null,
+    state: null,
+    zipcode: null,
+    phone: null,
     org_id: 1,
   });
-  const userId = (await knex.select('id').from('users').where('username', name))[0].id;
+  const userId = (await getUserByUsername(profile.id))[0].id;
+  let { name } = profile;
+  name = `${name.givenName} ${name.familyName}`;
   await knex('adopters').insert({
     name,
     pets: 0,
-    house_type: 'house',
+    house_type: null,
+    user_id: userId,
+  });
+  await knex('fbUsers').insert({
+    profile_id: profile.id,
     user_id: userId,
   });
   return knex('users').where('id', userId);
@@ -344,4 +352,5 @@ module.exports = {
   markAllRead,
   createFacebookUser,
   getUserByUsername,
+  getFacebookUserUserId,
 };

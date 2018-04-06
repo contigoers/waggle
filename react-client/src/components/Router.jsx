@@ -25,7 +25,6 @@ class Router extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { go: false };
     if (!this.props.user) {
       axios.get('/login/check')
         .then(({ data }) => {
@@ -33,7 +32,6 @@ class Router extends Component {
             this.props.storeUserId({ user: data.user });
             if (data.user.adopterId) this.props.getFavorites(data.user.adopterId);
           }
-          this.setState({ go: true });
         });
     }
   }
@@ -43,15 +41,14 @@ class Router extends Component {
       <BrowserRouter>
         <Provider store={this.props.store}>
           <React.Fragment>
-            {this.state.go &&
             <ScrollToTop>
               <Route exact path="/" render={() => !this.props.user && <Splash />} />
               <NavBar />
               <Switch>
                 <Route path="/auth" component={Callback} />
                 <Route path="/search" component={Search} />
-                <Route path="/create" render={() => (this.props.user ? <CreateDogForm /> : <Redirect to="/" />)} />
-                <Route path="/profile" render={() => (this.props.user ? <UserProfile /> : <Redirect to="/" />)} />
+                <Route path="/create" render={() => (this.props.user && !this.props.user.adopterId ? <CreateDogForm /> : <Redirect to="/" />)} />
+                <Route path="/profile" render={() => (!this.props.user ? <Redirect to="/" /> : this.props.user.email ? <UserProfile /> : <Redirect to="/auth" />)} />
                 <Route path="/searchResults" component={SearchResults} />
                 <Route path="/dog/:id" component={DogProfile} />
                 <Route path="/about" component={About} />
@@ -60,7 +57,7 @@ class Router extends Component {
                 <Route path="/" component={NotFound} />
               </Switch>
               <Footer />
-            </ScrollToTop>}
+            </ScrollToTop>
           </React.Fragment>
         </Provider>
       </BrowserRouter>
