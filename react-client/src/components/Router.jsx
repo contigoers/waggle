@@ -16,6 +16,7 @@ import ScrollToTop from './ScrollToTop';
 import About from './About';
 import ResetPass from './ResetPass';
 import NotFound from './404';
+import Callback from './Callback';
 
 import { storeUserId } from '../actions/loginActions';
 import { getFavorites } from '../actions/searchActions';
@@ -47,6 +48,7 @@ class Router extends Component {
               <Route exact path="/" render={() => !this.props.user && <Splash />} />
               <NavBar />
               <Switch>
+                <Route path="/auth" component={Callback} />
                 <Route path="/search" component={Search} />
                 <Route path="/create" render={() => (this.props.user ? <CreateDogForm /> : <Redirect to="/" />)} />
                 <Route path="/profile" render={() => (this.props.user ? <UserProfile /> : <Redirect to="/" />)} />
