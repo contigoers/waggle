@@ -375,12 +375,11 @@ router.get('/auth/facebook', passport.authenticate('facebook'));
 router.get('/auth/callback', passport.authenticate('facebook'));
 
 router.patch('/auth/facebook', async (ctx) => {
-  console.log(ctx.request.body);
-  const { username, email, id } = ctx.request.body;
-  const users = db.checkCredentials(username, email);
+  const { username, email } = ctx.request.body;
+  const users = await db.checkCredentials(username, email);
   if (users.length) {
     let info;
-    if (users.length === 2) {
+    if (users.length > 1) {
       info = 'username and email taken';
       ctx.throw(418, info);
     }
@@ -392,16 +391,13 @@ router.patch('/auth/facebook', async (ctx) => {
   } catch (error) {
     ctx.throw(500);
   }
-  const [user] = db.checkCredentials(id);
+  const [user] = await db.checkCredentials(username);
   let adopterId;
   let name;
   if (user.org_id === 1) {
     const [adopter] = await db.getAdopterId(user.id);
     adopterId = adopter.id;
     ({ name } = adopter);
-  } else {
-    const [org] = await db.getOrgName(user.org_id);
-    name = org.org_name;
   }
   const userInfo = {
     ...user,
