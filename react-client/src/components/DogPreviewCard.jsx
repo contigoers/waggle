@@ -73,7 +73,7 @@ class DogCard extends React.Component {
         actions={
           (this.props.user && this.props.user.org_id === 1 &&
           [(favorites && favorites[id] ?
-            <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+            <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" style={{ color: 'rgba(205, 83, 96)' }} onClick={this.toggleFavorite} /></Tooltip> :
             <Tooltip title={`Add ${dog.name} to favorites`}><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>)]) ||
           (!this.props.user &&
             [<Tooltip title={`Log in to add ${dog.name} to favorites`}><Icon type="heart-o" /></Tooltip>])
