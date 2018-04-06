@@ -74,6 +74,26 @@ const createFacebookUser = async (profile) => {
   return knex('users').where('id', userId);
 };
 
+const updateFacebookUser = async (values) => {
+  await knex('users')
+    .where('id', values.id)
+    .update({
+      username: values.username,
+      email: values.email,
+      address: values.address,
+      city: values.city,
+      state: values.state,
+      zipcode: values.zipcode,
+      phone: values.phone,
+    });
+  await knex('adopters')
+    .where('user_id', values.id)
+    .update({
+      pets: values.pets === 'yes',
+      house_type: values.house,
+    });
+};
+
 const getAdopterId = userId => knex('adopters').select('id', 'name').where('user_id', userId);
 
 const getOrgName = orgId => knex('orgs').select('org_name').where('id', orgId);
@@ -353,4 +373,5 @@ module.exports = {
   createFacebookUser,
   getUserByUsername,
   getFacebookUserUserId,
+  updateFacebookUser,
 };
