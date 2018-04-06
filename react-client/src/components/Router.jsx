@@ -31,8 +31,8 @@ class Router extends Component {
           if (data.user) {
             this.props.storeUserId({ user: data.user });
             if (data.user.adopterId) this.props.getFavorites(data.user.adopterId);
-            this.setState({ go: true });
           }
+          this.setState({ go: true });
         });
     }
   }
