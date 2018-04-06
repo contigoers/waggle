@@ -64,6 +64,15 @@ CREATE TABLE `orgs` (
   PRIMARY KEY (`id`)
 );
 
+DROP TABLE IF EXISTS `fbUsers`;
+
+CREATE TABLE `fbUsers` (
+  `profile_id` VARCHAR(20) NOT NULL,
+  `user_id` INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES `users` (`id`),
+  PRIMARY KEY (`profile_id`)
+);
+
 -- ---  
 -- Table 'dogs'
 --  
