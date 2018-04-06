@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { map, isEmpty } from 'lodash';
 import { Pagination } from 'antd';
 import DogCard from './DogPreviewCard';
 
@@ -8,35 +7,36 @@ class SearchResults extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visibleIds: [],
+      curr: 0,
     };
-    this.onPageChange = this.onPageChange.bind(this);
+
+    this.ids = Object.keys(this.props.dogs);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  componentWillMount() {
-    this.setState({ visibleIds: Object.keys(this.props.dogs).slice(0, 12) });
+  componentWillReceiveProps(props) {
+    this.ids = Object.keys(props.dogs);
   }
 
-  onPageChange(page, pageSize) {
+  handleChange(pageNum) {
     this.setState({
-      visibleIds: [Object.keys(this.props.dogs).slice((page * pageSize) - 1, ((page * pageSize) - 1) + pageSize)],
+      curr: (pageNum - 1),
     });
   }
 
   render() {
+    const ids = this.ids.slice(this.state.curr * 12, (this.state.curr * 12) + 12);
     const { dogs } = this.props;
-    const ids = Object.keys(this.props.dogs);
-    const { visibleIds } = this.state;
-    console.log(visibleIds);
     return (
       <div>
         <div className="search-results-grid" style={{ marginTop: 30 }} >
-          {!isEmpty(dogs) ? map(visibleIds, dogId => (<DogCard key={dogs[dogId].id} dog={dogs[dogId]} />)) : 'No Results'}
+          {ids.length ? ids.map(dogId => <DogCard key={dogs[dogId].id} dog={dogs[dogId]} />) : 'No Results'}
         </div>
         <Pagination
-          defaultPageSize={12}
-          total={ids.length}
-          onChange={this.onPageChange}
+          current={this.state.curr + 1}
+          pageSize={12}
+          total={this.ids.length}
+          onChange={this.handleChange}
         />
       </div>
     );

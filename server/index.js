@@ -370,6 +370,48 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
+router.get('/auth/facebook', passport.authenticate('facebook'));
+
+router.get('/auth/callback', passport.authenticate('facebook'));
+
+router.patch('/auth/facebook', async (ctx) => {
+  const { username, email } = ctx.request.body;
+  const users = await db.checkCredentials(username, email);
+  if (users.length) {
+    let info;
+    if (users.length > 1) {
+      info = 'username and email taken';
+      ctx.throw(418, info);
+    }
+    info = users[0].email === email ? 'email taken' : 'username taken';
+    ctx.throw(418, info);
+  }
+  try {
+    await db.updateFacebookUser(ctx.request.body);
+  } catch (error) {
+    ctx.throw(500);
+  }
+  const [user] = await db.checkCredentials(username);
+  let adopterId;
+  let name;
+  if (user.org_id === 1) {
+    const [adopter] = await db.getAdopterId(user.id);
+    adopterId = adopter.id;
+    ({ name } = adopter);
+  }
+  const userInfo = {
+    ...user,
+    adopterId,
+    name,
+  };
+  delete userInfo.password;
+  delete userInfo.forgot_pw_link;
+  ctx.body = {
+    success: true,
+    user: userInfo,
+  };
+});
+
 router.post('/register', async ctx =>
   passport.authenticate('local-signup', async (error, user, info) => {
     if (error) {
@@ -403,6 +445,35 @@ router.post('/register', async ctx =>
       return ctx.login(user);
     }
   })(ctx));
+
+router.get('/login/check', async (ctx) => {
+  if (ctx.state.user) {
+    const { user } = ctx.state;
+    let adopterId;
+    let name;
+    if (user.org_id === 1) {
+      const [adopter] = await db.getAdopterId(user.id);
+      adopterId = adopter.id;
+      ({ name } = adopter);
+    } else {
+      const [org] = await db.getOrgName(user.org_id);
+      name = org.org_name;
+    }
+    const userInfo = {
+      ...user,
+      adopterId,
+      name,
+    };
+    delete userInfo.password;
+    delete userInfo.forgot_pw_link;
+    ctx.body = { user: userInfo };
+    return ctx.login(userInfo);
+  }
+  ctx.body = {
+    status: 200,
+    msg: 'not logged in',
+  };
+});
 
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {

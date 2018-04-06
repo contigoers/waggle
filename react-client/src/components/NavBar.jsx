@@ -4,12 +4,13 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button, Icon, message } from 'antd';
 import axios from 'axios';
 import { CSSTransitionGroup } from 'react-transition-group';
+
 import Logo from '../assets/logo.png';
 import WrappedLoginForm from './LoginForm';
-import { toggleLoginModal, storeUserId, logoutUser } from '../actions/loginActions';
-import { toggleRegistrationModal } from '../actions/registrationActions';
 import RegistrationLandingModal from './RegistrationLandingModal';
 
+import { toggleLoginModal, logoutUser } from '../actions/loginActions';
+import { toggleRegistrationModal } from '../actions/registrationActions';
 
 const NavBar = (props) => {
   const logout = () => {
@@ -20,6 +21,7 @@ const NavBar = (props) => {
     });
   };
 
+  const { user } = props;
   return (
     <CSSTransitionGroup
       transitionName="fade-appear"
@@ -42,12 +44,12 @@ const NavBar = (props) => {
           <div className="about-div nav-item">
             <Link className="nav-link" to="/about">About Us</Link>
           </div>
-          {props.user && props.user.org_id > 1 &&
+          {user && user.org_id > 1 &&
           <div className="create-dog nav-item">
             <Link className="nav-link" to="/create">Add a Dog</Link>
           </div>
           }
-          {props.user && props.user.org_id > 1 &&
+          {user && user.org_id > 1 &&
           <div className="profile nav-item">
             <Link className="nav-link" to="/profile">Org Profile</Link>
           </div>
@@ -63,17 +65,22 @@ const NavBar = (props) => {
             <Link className="nav-link" to="/profile">Adopter Profile</Link>
           </div>
           }
-          {props.user ?
+          {user ?
             <div className="logout nav-item">
-              <Button className="logout-button user-button" onClick={() => { logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>
+              <Button className="logout-button user-button" onClick={() => logout()} size="large" type="primary" icon="idcard">Log Out</Button>
             </div> :
             <div className="login nav-item">
               <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
             </div>
           }
-          {!props.user &&
+          {!user &&
             <div className="signup nav-item">
               <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
+            </div>
+          }
+          {!user &&
+            <div className="signup nav-item">
+              <a href="/auth/facebook">Facebook</a>
             </div>
           }
         </div>
@@ -93,9 +100,10 @@ const mapStateToProps = state => (
   }
 );
 
-export default connect(
-  mapStateToProps,
-  {
-    toggleLoginModal, toggleRegistrationModal, storeUserId, logoutUser,
-  },
-)(withRouter(NavBar));
+const mapDispatchToProps = {
+  toggleLoginModal,
+  toggleRegistrationModal,
+  logoutUser,
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));
