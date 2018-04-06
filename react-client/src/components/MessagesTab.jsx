@@ -95,6 +95,9 @@ class MessagesTab extends React.Component {
     if (this.state.messageInput.length > 0) {
       const { id } = this.props.user;
       await this.props.sendMessage(id, this.state.currentContact.id, this.state.messageInput);
+      if (this.props.messages.length > this.state.visibleMessages.length) {
+        message.success('Message sent!');
+      }
       this.setState({
         visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1),
         messageInput: '',
