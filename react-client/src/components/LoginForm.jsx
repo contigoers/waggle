@@ -167,13 +167,10 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = (state) => {
-  console.log('state', state)
-  return {
-    visible: state.loginModal.visible,
-    user: state.storeUser.user,
-    newMessages: state.newMessages.newMessages,
-  };
-};
+const mapStateToProps = state => ({
+  visible: state.loginModal.visible,
+  user: state.storeUser.user,
+  newMessages: state.newMessages.newMessages,
+});
 
 export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId, checkForNewMessages })(WrappedLoginForm)); // eslint-disable-line

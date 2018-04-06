@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, message } from 'antd';
+import { Button, Icon, message } from 'antd';
 import axios from 'axios';
 import { CSSTransitionGroup } from 'react-transition-group';
 import Logo from '../assets/logo.png';
@@ -57,6 +57,7 @@ const NavBar = (props) => {
             <Link className="nav-link" to="/profile">Adopter Profile</Link>
           </div>
           }
+          {props.user && props.newMessages && <Icon type="mail" />}
           {props.user ?
             <div className="logout nav-item">
               <Button className="logout-button user-button" onClick={() => { logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>
