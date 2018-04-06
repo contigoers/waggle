@@ -404,6 +404,35 @@ router.post('/register', async ctx =>
     }
   })(ctx));
 
+router.get('/login/check', async (ctx) => {
+  if (ctx.state.user) {
+    const { user } = ctx.state;
+    let adopterId;
+    let name;
+    if (user.org_id === 1) {
+      const [adopter] = await db.getAdopterId(user.id);
+      adopterId = adopter.id;
+      ({ name } = adopter);
+    } else {
+      const [org] = await db.getOrgName(user.org_id);
+      name = org.org_name;
+    }
+    const userInfo = {
+      ...user,
+      adopterId,
+      name,
+    };
+    delete userInfo.password;
+    delete userInfo.forgot_pw_link;
+    ctx.body = { user: userInfo };
+    return ctx.login(userInfo);
+  }
+  ctx.body = {
+    status: 200,
+    msg: 'not logged in',
+  };
+});
+
 router.post('/login', async ctx =>
   passport.authenticate('local-login', async (error, user, info) => {
     if (error) {
