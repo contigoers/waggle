@@ -370,12 +370,51 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
-router.get('/auth/facebook', async ctx =>
-  passport.authenticate('facebook', async (error, profile) => {
-    console.log(profile);
-  })(ctx));
+router.get('/auth/facebook', passport.authenticate('facebook'));
 
 router.get('/auth/callback', passport.authenticate('facebook'));
+
+router.patch('/auth/facebook', async (ctx) => {
+  console.log(ctx.request.body);
+  const { username, email, id } = ctx.request.body;
+  const users = db.checkCredentials(username, email);
+  if (users.length) {
+    let info;
+    if (users.length === 2) {
+      info = 'username and email taken';
+      ctx.throw(418, info);
+    }
+    info = users[0].email === email ? 'email taken' : 'username taken';
+    ctx.throw(418, info);
+  }
+  try {
+    await db.updateFacebookUser(ctx.request.body);
+  } catch (error) {
+    console.log(error);
+  }
+  const [user] = db.checkCredentials(id);
+  let adopterId;
+  let name;
+  if (user.org_id === 1) {
+    const [adopter] = await db.getAdopterId(user.id);
+    adopterId = adopter.id;
+    ({ name } = adopter);
+  } else {
+    const [org] = await db.getOrgName(user.org_id);
+    name = org.org_name;
+  }
+  const userInfo = {
+    ...user,
+    adopterId,
+    name,
+  };
+  delete userInfo.password;
+  delete userInfo.forgot_pw_link;
+  ctx.body = {
+    success: true,
+    user: userInfo,
+  };
+});
 
 router.post('/register', async ctx =>
   passport.authenticate('local-signup', async (error, user, info) => {
