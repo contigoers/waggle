@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select, Radio, Button } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { Form, Input, Select, Radio, Button, message } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import axios from 'axios';
 
 import states from '../assets/states';
+
+import { storeUserId } from '../actions/loginActions';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -23,6 +26,7 @@ const Callback = Form.create()(class extends Component {
 
     this.handleBlur = this.handleBlur.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.storeUser = this.props.storeUserId.bind(this);
     this.validateNumber = this.validateNumber.bind(this);
   }
 
@@ -32,7 +36,29 @@ const Callback = Form.create()(class extends Component {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
         console.log('Received values of form: ', values);
-        axios.patch('/auth/facebook', { ...values, id: this.props.user.id });
+        axios.patch('/auth/facebook', { ...values, id: this.props.user.id })
+          .then(({ data }) => {
+            this.storeUser({ user: data.user });
+            this.props.getFavorites(data.user.adopterId);
+            this.props.form.resetFields();
+            this.props.history.replace('/profile');
+          })
+          .catch((error) => {
+            const { status } = error.response;
+            const info = error.response.data;
+
+            if (status === 500) {
+              message.error('Sorry, an unknown error occurred.', 5);
+            } else if (status === 418 && info === 'email taken') {
+              message.error('Sorry, this email is already in use.', 5);
+            } else if (status === 418 && info === 'username taken') {
+              message.error('Sorry, this username is already in use.', 5);
+            } else if (status === 418 && info === 'username and email taken') {
+              message.error('Sorry, this username and email are already in use.', 5);
+            } else if (status === 418 && info === 'org name taken') {
+              message.error('Sorry, this organization name already in use.', 5);
+            }
+          });
       }
     });
   }
@@ -223,4 +249,4 @@ const Callback = Form.create()(class extends Component {
 
 const mapStateToProps = state => ({ user: state.storeUser.user });
 
-export default connect(mapStateToProps, null)(Callback);
+export default withRouter(connect(mapStateToProps, { storeUserId })(Callback));
