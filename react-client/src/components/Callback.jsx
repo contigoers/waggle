@@ -32,7 +32,7 @@ const Callback = Form.create()(class extends Component {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
         console.log('Received values of form: ', values);
-        axios.patch('/auth/facebook', values);
+        axios.patch('/auth/facebook', { ...values, id: this.props.user.id });
       }
     });
   }
