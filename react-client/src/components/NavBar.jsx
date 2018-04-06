@@ -21,6 +21,10 @@ const NavBar = (props) => {
     });
   };
 
+  const facebook = () => {
+    axios.get('/auth/register');
+  };
+
   const { user } = props;
   return (
     <CSSTransitionGroup
@@ -61,7 +65,7 @@ const NavBar = (props) => {
           }
           {user ?
             <div className="logout nav-item">
-              <Button className="logout-button user-button" onClick={() => { logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>
+              <Button className="logout-button user-button" onClick={() => logout()} size="large" type="primary" icon="idcard">Log Out</Button>
             </div> :
             <div className="login nav-item">
               <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
@@ -70,6 +74,11 @@ const NavBar = (props) => {
           {!user &&
             <div className="signup nav-item">
               <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
+            </div>
+          }
+          {!user &&
+            <div className="signup nav-item">
+              <a href="/auth/facebook">Facebook</a>
             </div>
           }
         </div>

@@ -370,6 +370,13 @@ router.get('/randomDog', async (ctx) => {
   };
 });
 
+router.get('/auth/facebook', async ctx =>
+  passport.authenticate('facebook', async (error, profile) => {
+    console.log(profile);
+  })(ctx));
+
+router.get('/auth/callback', passport.authenticate('facebook'));
+
 router.post('/register', async ctx =>
   passport.authenticate('local-signup', async (error, user, info) => {
     if (error) {
