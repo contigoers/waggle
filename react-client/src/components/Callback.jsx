@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { Form, Input, Select, Radio, Button, message } from 'antd';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import axios from 'axios';
 import states from '../assets/states';
 
 import { storeUserId } from '../actions/loginActions';
+import { getFavorites } from '../actions/searchActions';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -28,20 +29,20 @@ const Callback = Form.create()(class extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.storeUser = this.props.storeUserId.bind(this);
     this.validateNumber = this.validateNumber.bind(this);
+    this.getFavorites = this.props.getFavorites.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
-        console.log('Received values of form: ', values);
         axios.patch('/auth/facebook', { ...values, id: this.props.user.id })
           .then(({ data }) => {
             this.storeUser({ user: data.user });
-            this.props.getFavorites(data.user.adopterId);
-            this.props.form.resetFields();
-            this.props.history.replace('/profile');
+            this.getFavorites(data.user.adopterId);
+            form.resetFields();
           })
           .catch((error) => {
             const { status } = error.response;
@@ -82,6 +83,7 @@ const Callback = Form.create()(class extends Component {
   }
 
   render() {
+    if (this.props.user && this.props.user.email) return <Redirect to="/profile" />;
     const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {
@@ -240,7 +242,7 @@ const Callback = Form.create()(class extends Component {
             </RadioGroup>) /* eslint-disable-line */}
         </FormItem>
         <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">Register</Button>
+          <Button type="primary" htmlType="submit">Update info</Button>
         </FormItem>
       </Form>
     );
@@ -249,4 +251,4 @@ const Callback = Form.create()(class extends Component {
 
 const mapStateToProps = state => ({ user: state.storeUser.user });
 
-export default withRouter(connect(mapStateToProps, { storeUserId })(Callback));
+export default withRouter(connect(mapStateToProps, { storeUserId, getFavorites })(Callback));
