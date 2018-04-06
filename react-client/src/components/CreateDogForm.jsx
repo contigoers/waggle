@@ -83,15 +83,13 @@ class DogForm extends React.Component {
         .then((response) => {
           this.props.form.resetFields();
           this.setState(this.defaultState);
-          alert('Successfully added dog!');
-          // response.data.newDog.id
+          message.success('Successfully added dog!');
           return response;
         }).then((response) => {
-          console.log('second response')
           this.setState({ newDog: response.data.newDog.id });
         })
         .catch((error) => {
-          alert('Error adding dog', error);
+          message.error('Error adding dog', error);
         });
       return dog;
     });
@@ -136,7 +134,7 @@ class DogForm extends React.Component {
         transitionLeave={false}
       >
 
-        <div style={{ margin: 50 }}>
+        <div style={{ padding: 50, backgroundColor: 'rgba(205, 83, 96, 0.05)' }}>
           <Form layout="inline" onSubmit={this.onSubmit}>
 
             <Row style={rowStyle}>
@@ -327,7 +325,7 @@ class DogForm extends React.Component {
               </Form.Item>
             </Row>
             <Row>
-              <Button type="primary" htmlType="submit" style={{ marginTop: 20 }}> Submit </Button>
+              <Button className="hoverable" type="primary" htmlType="submit" style={{ marginTop: 20, backgroundColor: '#cd5360', borderColor: '#cd5360' }}> Submit </Button>
             </Row>
           </Form>
         </div>
@@ -346,6 +344,3 @@ const mapStateToProps = ({ storeUser }) => (
 
 export default connect(mapStateToProps, null)(CreateDogForm);
 
-// TODO: unfuck falsy validation/checkbox stuff in object
-// TODO: validate on blur
-// TODO: get id of current organization and set to orgId in dog obj
