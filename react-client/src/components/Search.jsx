@@ -200,10 +200,6 @@ const mapStateToProps = ({ search, storeUser }) => (
     results: search.results,
     favorites: search.favorites.favoriteDogs,
     user: storeUser.user,
-    orgParams: {
-      type: 'orgId',
-      value: !storeUser.user ? 1 : storeUser.user.org_id,
-    },
   }
 );
 

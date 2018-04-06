@@ -50,23 +50,22 @@ export default handleActions({
     energy: [],
   }),
   SEARCH_DOGS: (state, action) => ({ ...state, results: action.data }),
-  GET_FAVORITES: (state, action) => {
-    if (Object.keys(state.results).length) {
-      return {
-        ...state,
-        favorites: action.data,
-      };
-    }
-
-    return {
+  GET_FAVORITES: (state, action) => (
+    {
       ...state,
       favorites: action.data,
       results: {
-        dogs: action.data.favoriteDogs,
-        orgs: action.orgs,
+        dogs: {
+          ...state.results.dogs,
+          ...action.data.favoriteDogs,
+        },
+        orgs: {
+          ...state.results.orgs,
+          ...action.orgs,
+        },
       },
-    };
-  },
+    }
+  ),
   UPDATE_FAVORITES: (state, { data }) => (
     {
       ...state,

@@ -11,6 +11,8 @@ const knex = require('knex')(config);
 
 const getOrgByName = name => knex('orgs').where('org_name', name);
 
+const getUserByUsername = name => knex('users').where('username', name);
+
 // creates user and creates either adopter profile or organization profile
 const createUser = async (user, username, password) => {
   await knex('users').insert({
@@ -37,6 +39,30 @@ const createUser = async (user, username, password) => {
     const orgId = (await getOrgByName(user.name))[0].id;
     await knex('users').where('id', userId).update('org_id', orgId);
   }
+  return knex('users').where('id', userId);
+};
+
+const createFacebookUser = async (profile) => {
+  let { name } = profile;
+  name = `${name.givenName} ${name.familyName}`;
+  await knex('users').insert({
+    username: name,
+    password: +profile.id,
+    email: null,
+    address: '1234 Placeholder St.',
+    city: 'Austin',
+    state: 'TX',
+    zipcode: '78701',
+    phone: '5128675309',
+    org_id: 1,
+  });
+  const userId = (await knex.select('id').from('users').where('username', name))[0].id;
+  await knex('adopters').insert({
+    name,
+    pets: 0,
+    house_type: 'house',
+    user_id: userId,
+  });
   return knex('users').where('id', userId);
 };
 
@@ -316,4 +342,6 @@ module.exports = {
   checkLinkExists,
   getOrgByName,
   markAllRead,
+  createFacebookUser,
+  getUserByUsername,
 };
