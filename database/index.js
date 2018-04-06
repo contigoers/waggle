@@ -254,7 +254,6 @@ const checkForNewMessages = async (userId) => {
   let hasUnreads = false;
   results.forEach((result) => {
     if (result.read === 0) {
-      console.log('dis an unread')
       hasUnreads = true;
     }
   });
