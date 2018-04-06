@@ -23,10 +23,12 @@ module.exports = () => {
     callbackURL: 'http://localhost:3000/auth/callback',
     profileFields: ['id', 'email', 'address', 'name'],
   }, async (aToken, rToken, profile, cb) => {
-    const [fbUser] = await db.getFacebookUserUserId(profile.id);
+    let fbUser;
+    [fbUser] = await db.getFacebookUserUserId(profile.id);
     if (!fbUser) {
       await db.createFacebookUser(profile);
     }
+    [fbUser] = await db.getFacebookUserUserId(profile.id);
     const [user] = await db.getUserById(fbUser.user_id);
     cb(null, user);
   }));

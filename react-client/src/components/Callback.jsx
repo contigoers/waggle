@@ -23,6 +23,7 @@ const Callback = Form.create()(class extends Component {
       confirmDirty: false,
       phoneDirty: false,
       numberIsValid: false,
+      first: false,
     };
 
     this.handleBlur = this.handleBlur.bind(this);
@@ -34,15 +35,17 @@ const Callback = Form.create()(class extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { form } = this.props;
+    const { form, history } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
         axios.patch('/auth/facebook', { ...values, id: this.props.user.id })
           .then(({ data }) => {
+            this.setState({ first: true });
             this.storeUser({ user: data.user });
             this.getFavorites(data.user.adopterId);
             form.resetFields();
+            history.push('/profile');
           })
           .catch((error) => {
             const { status } = error.response;
@@ -83,7 +86,7 @@ const Callback = Form.create()(class extends Component {
   }
 
   render() {
-    if (this.props.user && this.props.user.email) return <Redirect to="/profile" />;
+    if (this.props.user && this.props.user.email && !this.state.first) return <Redirect to="/" />;
     const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {

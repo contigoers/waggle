@@ -46,7 +46,7 @@ class Router extends Component {
               <Route exact path="/" render={() => !user && <Splash />} />
               <NavBar />
               <Switch>
-                <Route path="/auth" component={Callback} />
+                <Route path="/auth" render={Callback} />
                 <Route path="/search" component={Search} />
                 <Route path="/create" render={() => (user && !user.adopterId ? <CreateDogForm /> : <Redirect to="/" />)} />
                 <Route path="/profile" render={() => (!user ? <Redirect to="/" /> : user.email ? <UserProfile /> : <Redirect to="/auth" />)} />
