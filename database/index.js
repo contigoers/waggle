@@ -254,7 +254,6 @@ const checkForNewMessages = async (userId) => {
   let hasUnreads = false;
   results.forEach((result) => {
     if (result.read === 0) {
-      console.log('dis an unread')
       hasUnreads = true;
     }
   });
@@ -384,12 +383,9 @@ module.exports = {
   checkLinkExists,
   getOrgByName,
   markAllRead,
-<<<<<<< HEAD
   checkForNewMessages,
-=======
   createFacebookUser,
   getUserByUsername,
   getFacebookUserUserId,
   updateFacebookUser,
->>>>>>> 590fc8c873159725042d54ad88f23efc8247426a
 };
