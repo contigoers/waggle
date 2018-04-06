@@ -45,17 +45,12 @@ class DogProfile extends React.Component {
     const { id } = this.props.match.params;
     const dog = this.props.results.dogs[id];
     const { favorites } = this.props;
-    const { favoriteParams } = this.props;
-
-    const newFavoriteParams = {
-      ...favoriteParams,
-      dogId: id,
-    };
+    const { adopterId } = this.props.user;
 
     if (favorites[id]) {
-      await this.props.removeFavorite(newFavoriteParams);
+      await this.props.removeFavorite({ adopterId, dogId: id });
     } else {
-      await this.props.addFavorite(newFavoriteParams);
+      await this.props.addFavorite({ adopterId, dogId: id });
     }
 
     message.info(!favorites[id] ?
@@ -252,9 +247,6 @@ const mapStateToProps = ({ search, storeUser }) => (
     results: search.results,
     favorites: search.favorites.favoriteDogs,
     user: storeUser.user,
-    favoriteParams: {
-      adopterId: !storeUser.user ? 1 : storeUser.user.adopterId,
-    },
   }
 );
 

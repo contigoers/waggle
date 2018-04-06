@@ -15,19 +15,19 @@ class UserProfile extends Component {
   constructor(props) {
     super(props);
 
-    const { user } = this.props;
+    const { user, location } = this.props;
 
     this.state = { menuSelection: 'profile' };
 
-    if (this.props.location.state) {
-      const { menuSelection } = this.props.location.state;
+    if (location.state) {
+      const { menuSelection } = location.state;
       this.state = { menuSelection };
     }
 
     if (!user.adopterId) {
       this.props.getOrgDogs(+user.org_id);
       this.props.getContacts(user.id, 'org');
-    } else if (!Object.keys(this.props.favorites).length) {
+    } else {
       this.props.getFavorites(user.adopterId);
       this.props.getContacts(user.id, 'adopter');
     }
