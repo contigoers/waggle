@@ -247,6 +247,19 @@ const getMessagesForChat = async (userId, contactId) => {
   return messages;
 };
 
+const checkForNewMessages = async (userId) => {
+  const results = await knex.select('read')
+    .from('messages')
+    .where('recipient_id', userId);
+  let hasUnreads = false;
+  results.forEach((result) => {
+    if (result.read === 0) {
+      hasUnreads = true;
+    }
+  });
+  return hasUnreads;
+};
+
 const getOrgContacts = async (userId) => {
   const [results] = await knex.raw(`select
   messages.*, adopters.name from
@@ -370,6 +383,7 @@ module.exports = {
   checkLinkExists,
   getOrgByName,
   markAllRead,
+  checkForNewMessages,
   createFacebookUser,
   getUserByUsername,
   getFacebookUserUserId,

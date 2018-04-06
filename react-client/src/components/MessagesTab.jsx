@@ -4,6 +4,7 @@ import { Row, List, Icon, Card, Button, Spin, Avatar, message, Form, Input } fro
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { getMessages, deleteMessage, sendMessage, updateReadStatus } from '../actions/messagingActions';
+import { checkForNewMessages } from '../actions/loginActions';
 
 const userStyle = {
   margin: '10px',
@@ -50,6 +51,7 @@ class MessagesTab extends React.Component {
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
     this.getMessages = this.props.getMessages.bind(this);
     this.updateReadStatus = this.props.updateReadStatus.bind(this);
+    this.checkForNewMessages = this.props.checkForNewMessages.bind(this);
   }
 
   onInput(e) {
@@ -93,6 +95,9 @@ class MessagesTab extends React.Component {
     if (this.state.messageInput.length > 0) {
       const { id } = this.props.user;
       await this.props.sendMessage(id, this.state.currentContact.id, this.state.messageInput);
+      if (this.props.messages.length > this.state.visibleMessages.length) {
+        message.success('Message sent!');
+      }
       this.setState({
         visibleMessages: this.props.messages.slice(0, this.props.messages.length + 1),
         messageInput: '',
@@ -119,6 +124,7 @@ class MessagesTab extends React.Component {
   }
 
   async renderMessageFeed(e) {
+    this.checkForNewMessages(this.props.user.id);
     const { id } = e.target;
     const { name } = e.target.dataset;
     const { unreads } = e.target.dataset;
@@ -183,9 +189,7 @@ class MessagesTab extends React.Component {
                   {
                     this.state.visibleMessages.map((msg) => {
                       const isMine = msg.sender_id === this.props.user.id;
-                      const { sent } = msg;
-                      const datetime = `${sent.slice(5, 7)}/${sent.slice(8, 10)}/${sent.slice(0, 4)}, ${sent.slice(11, 19)}`;
-
+                      const datetime = new Date(msg.sent);
                       return (
                         <Card
                           key={msg.id}
@@ -206,7 +210,7 @@ class MessagesTab extends React.Component {
                         }
                         >
                           <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
-                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime} </div>
+                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime.toUTCString()} </div>
                         </Card>
                       );
                     })
@@ -242,7 +246,19 @@ class MessagesTab extends React.Component {
                 <List.Item>
                   <List.Item.Meta
                     avatar={<Avatar icon={contact.hasUnreads ? 'folder' : 'folder-open'} />}
-                    title={<div className="hoverable" id={contact.userId} data-name={contact.name} data-unreads={contact.hasUnreads} tabIndex={contact.id} role="link" style={{ color: 'green' }} onClick={this.renderMessageFeed}> {contact.name} </div>}
+                    title={
+                      <div
+                        className="hoverable"
+                        id={contact.userId}
+                        data-name={contact.name}
+                        data-unreads={contact.hasUnreads}
+                        tabIndex={contact.id}
+                        role="link"
+                        style={{ color: 'green' }}
+                        onClick={this.renderMessageFeed}
+                      >
+                        {contact.name}
+                      </div>}
                     description={contact.dogs.join(', ')}
                   />
                 </List.Item>)
@@ -269,6 +285,7 @@ const mapDispatchToProps = {
   sendMessage,
   deleteMessage,
   updateReadStatus,
+  checkForNewMessages,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessagesTab);

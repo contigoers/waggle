@@ -27,7 +27,6 @@ class SearchResults extends Component {
   render() {
     const ids = this.ids.slice(this.state.curr * 12, (this.state.curr * 12) + 12);
     const { dogs } = this.props;
-
     return (
       <div>
         <div className="search-results-grid" style={{ marginTop: 30 }} >

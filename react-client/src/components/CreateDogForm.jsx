@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
 import { Form, Row, Input, Select, Checkbox, InputNumber, Button, Upload, Icon, message } from 'antd';
 import breeds from '../../../database/breeds';
@@ -40,6 +41,7 @@ class DogForm extends React.Component {
       hasMedical: false,
       loading: false,
       imageUrl: null,
+      newDog: null,
     };
     this.state = this.defaultState;
     this.onSubmit = this.onSubmit.bind(this);
@@ -53,6 +55,7 @@ class DogForm extends React.Component {
   }
 
   onSubmit(e) {
+    let redirectDog;
     e.preventDefault();
     this.props.form.validateFieldsAndScroll({}, (errors, values) => {
       if (errors) {
@@ -80,11 +83,13 @@ class DogForm extends React.Component {
         .then((response) => {
           this.props.form.resetFields();
           this.setState(this.defaultState);
-          alert('Successfully added dog!');
+          message.success('Successfully added dog!');
           return response;
+        }).then((response) => {
+          this.setState({ newDog: response.data.newDog.id });
         })
         .catch((error) => {
-          alert('Error adding dog', error);
+          message.error('Error adding dog', error);
         });
       return dog;
     });
@@ -113,6 +118,13 @@ class DogForm extends React.Component {
 
     const rowStyle = { marginBottom: 10 };
     const { getFieldDecorator } = this.props.form;
+
+    console.log('state new dog:', this.state.newDog);
+    if (this.state.newDog) {
+      const url = `/dog/${this.state.newDog.toString()}`;
+      return <Redirect to={url} />;
+    }
+
     return (
       <CSSTransitionGroup
         transitionName="fade-appear"
@@ -122,7 +134,7 @@ class DogForm extends React.Component {
         transitionLeave={false}
       >
 
-        <div style={{ margin: 50 }}>
+        <div style={{ padding: 50, backgroundColor: 'rgba(205, 83, 96, 0.05)' }}>
           <Form layout="inline" onSubmit={this.onSubmit}>
 
             <Row style={rowStyle}>
@@ -161,7 +173,7 @@ class DogForm extends React.Component {
                     <Option value={breed} key={breed}> {breed} </Option>
                   ))
                   }
-                </Select>)}
+                   </Select>)}
 
               </Form.Item>
 
@@ -185,7 +197,7 @@ class DogForm extends React.Component {
                   <Option value="true"> Good boy </Option>
                   <Option value="false"> Good girl </Option>
                   <Option value="null"> Unknown </Option>
-                </Select>)}
+                   </Select>)}
 
               </Form.Item>
 
@@ -200,7 +212,7 @@ class DogForm extends React.Component {
                   <Option value={1}> Yes </Option>
                   <Option value={0}> No </Option>
                   <Option value="null"> Unknown </Option>
-                </Select>)}
+                   </Select>)}
               </Form.Item>
             </Row>
 
@@ -218,7 +230,7 @@ class DogForm extends React.Component {
                   <Option value="adult"> Adult </Option>
                   <Option value="senior"> Senior </Option>
                   <Option value="null"> Unknown </Option>
-                </Select>)}
+                   </Select>)}
               </Form.Item>
 
               <Form.Item label="Age (if known)">
@@ -242,7 +254,7 @@ class DogForm extends React.Component {
                   <Option value="large"> Large </Option>
                   <Option value="huge"> Huge </Option>
                   <Option value="null"> Unknown </Option>
-                </Select>)}
+                   </Select>)}
               </Form.Item>
             </Row>
 
@@ -258,7 +270,7 @@ class DogForm extends React.Component {
                   <Option value="medium"> Medium </Option>
                   <Option value="high"> High </Option>
                   <Option value="null"> Unknown </Option>
-                </Select>)}
+                   </Select>)}
               </Form.Item>
             </Row>
             <div style={{ marginLeft: 10, fontWeight: 700 }}> Temperament: </div>
@@ -313,7 +325,7 @@ class DogForm extends React.Component {
               </Form.Item>
             </Row>
             <Row>
-              <Button type="primary" htmlType="submit" style={{ marginTop: 20 }}> Submit </Button>
+              <Button className="hoverable" type="primary" htmlType="submit" style={{ marginTop: 20, backgroundColor: '#cd5360', borderColor: '#cd5360' }}> Submit </Button>
             </Row>
           </Form>
         </div>
@@ -332,6 +344,3 @@ const mapStateToProps = ({ storeUser }) => (
 
 export default connect(mapStateToProps, null)(CreateDogForm);
 
-// TODO: unfuck falsy validation/checkbox stuff in object
-// TODO: validate on blur
-// TODO: get id of current organization and set to orgId in dog obj

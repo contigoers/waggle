@@ -1,5 +1,7 @@
 @import '~antd/dist/antd.css';
 @import '~animate.css/animate.min.css';
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400');
+
 $primary: #cd5360;
 $primary-dark: #972036;
 
@@ -9,6 +11,10 @@ $z-index: (
   splash-items: 1,
   splash-media: 0,
 );
+
+* {
+  font-family: 'Quicksand', sans-serif;
+}
 
 #app {
   height: 100%;

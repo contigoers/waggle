@@ -567,6 +567,16 @@ router.patch('/messages/read', async (ctx) => {
   };
 });
 
+// checks to see if user has unread messages
+router.get('/messages/unread', async (ctx) => {
+  const hasNewMessages = await db.checkForNewMessages(ctx.request.query.userId);
+  ctx.status = 201;
+  ctx.body = {
+    status: 'success',
+    hasNewMessages,
+  };
+});
+
 // gets list of adopter contacts and associated dogs for an organization
 router.get('/contacts/org', async (ctx) => {
   const contacts = await db.getOrgContacts(ctx.request.query.id);
