@@ -22,7 +22,8 @@ const WrappedLoginForm = Form.create()(class extends Component {
     this.storeUser = this.props.storeUserId.bind(this);
     this.handleForgotPasswordOrGoBack = this.handleForgotPasswordOrGoBack.bind(this);
     this.changeForgotPasswordToFalse = this.changeForgotPasswordToFalse.bind(this);
-    this.checkForNewMessages = this.checkForNewMessages.bind(this);
+    this.checkForNewMessages = this.props.checkForNewMessages.bind(this);
+    this.checkMessages = this.checkMessages.bind(this);
   }
 
   handleForgotPasswordOrGoBack() {
@@ -54,7 +55,10 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 
   checkMessages() {
-    this.checkForNewMessages(this.props.user.id)
+    if (this.props.user.id) {
+      this.checkForNewMessages(this.props.user.id);
+    }
+    console.log('props', this.props)
   }
 
   handleSubmit(e) {
@@ -69,7 +73,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
             this.props.form.resetFields();
             this.setState({ loading: false });
             this.props.history.push('/profile');
-            const checkInbox = setInterval(checkMessages, 100000);
+            const checkInbox = setInterval(this.checkMessages, 10000);
           })
           .catch((error) => {
             this.setState({ loading: false });
@@ -159,11 +163,13 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 });
 
-const mapStateToProps = state => (
-  {
+const mapStateToProps = (state) => {
+  console.log('state', state)
+  return {
     visible: state.loginModal.visible,
     user: state.storeUser.user,
-  }
-);
+    newMessages: state.newMessages.newMessages,
+  };
+};
 
 export default withRouter(connect(mapStateToProps, { toggleLoginModal, storeUserId, checkForNewMessages })(WrappedLoginForm)); // eslint-disable-line

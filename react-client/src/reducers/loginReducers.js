@@ -23,16 +23,16 @@ const storeUser = (state = { user: null }, action) => {
   }
 };
 
-const newMessage = (state = { newMessage: false }, action) => {
+const newMessages = (state = { newMessage: false }, action) => {
   switch (action.type) {
     case CHECK_MESSAGES:
       return {
         ...state,
-        newMessage: action.hasNewMessages,
+        newMessages: action.data.hasNewMessages,
       };
     default:
       return state;
   }
-}
+};
 
-export { loginModal, storeUser, newMessage };
+export { loginModal, storeUser, newMessages };
