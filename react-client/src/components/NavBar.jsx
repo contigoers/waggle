@@ -33,7 +33,7 @@ const NavBar = (props) => {
       <div className="nav-bar-container">
         <div name="nav-bar" className="nav-bar">
           <div className="logo-div nav-item">
-            <img src={Logo} alt="waggl-logo" />
+            <img src="https://i.imgur.com/FCiswFq.png" alt="waggl-logo" />
           </div>
           <div className="home-div nav-item">
             <Link className="nav-link" to="/">Home</Link>
@@ -79,8 +79,8 @@ const NavBar = (props) => {
             </div>
           }
           {!user &&
-            <div className="signup nav-item">
-              <a href="/auth/facebook">Facebook</a>
+            <div className="facebook nav-item">
+              <Button className="facebook button" size="large" type="primary" icon="facebook"><a href="/auth/facebook" style={{ color: 'white' }}>Login via Facebook</a></Button>
             </div>
           }
         </div>
