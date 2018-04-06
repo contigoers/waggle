@@ -4,14 +4,12 @@ import { Col, Card, Divider } from 'antd';
 
 const OrgCard = (props) => {
   const user = props.org ? props.org : props.user;
-  console.log(props);
-  console.log(props.user);
   const phone = `(${user.phone.slice(0, 3)}) ${user.phone.slice(3, 6)}-${user.phone.slice(6)}`;
   return (
     <Col>
       <Card style={{ borderRadius: 2, boxShadow: '0 4px 6px 0 hsla(0, 0%, 0%, 0.2)' }}>
         <h2 style={{ fontWeight: 700 }}> {user.name ? user.name : user.org_name} </h2>
-        {props.user && !props.user.adopterId &&
+        {props.user && props.user.org_id > 1 && (!props.org || user.id === props.user.org_id) &&
           <div>
             <span style={{ fontWeight: 600, fontSize: 16, marginLeft: 5 }} >
             Organization Profile

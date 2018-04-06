@@ -142,12 +142,12 @@ class DogProfile extends React.Component {
     }
 
     const adoptIcon = adopted ?
-      <Tooltip title={`Mark ${dog.name} not adopted`}><Icon type="check-circle" onClick={this.toggleAdopted} /></Tooltip> :
-      <Tooltip title={`Mark ${dog.name} adopted`}><Icon type="check-circle-o" onClick={this.toggleAdopted} /></Tooltip>;
+      <Tooltip title={`Mark ${dog.name} not adopted`}><Icon style={{ color: 'rgba(205, 83, 96)' }} type="check-circle" onClick={this.toggleAdopted} /></Tooltip> :
+      <Tooltip title={`Mark ${dog.name} adopted`}><Icon style={{ color: '#00db19' }} type="check-circle" onClick={this.toggleAdopted} /></Tooltip>;
     const favoriteIcon = !favorites ? // eslint-disable-line
       null :
       favorites[id] ?
-        <Tooltip title={`Remove ${dog.name} from favorites`}><Icon type="heart" onClick={this.toggleFavorite} /></Tooltip> :
+        <Tooltip title={`Remove ${dog.name} from favorites`}><Icon style={{ color: 'rgba(205, 83, 96)' }} type="heart" onClick={this.toggleFavorite} /></Tooltip> :
         <Tooltip title={`Add ${dog.name} to favorites`}><Icon type="heart-o" onClick={this.toggleFavorite} /></Tooltip>;
     const inquiryIcon =
       <Tooltip title={`Ask about ${dog.name}`}><Icon type="message" onClick={this.props.toggleInquiryModal} /></Tooltip>;
