@@ -390,7 +390,7 @@ router.patch('/auth/facebook', async (ctx) => {
   try {
     await db.updateFacebookUser(ctx.request.body);
   } catch (error) {
-    console.log(error);
+    ctx.throw(500);
   }
   const [user] = db.checkCredentials(id);
   let adopterId;
