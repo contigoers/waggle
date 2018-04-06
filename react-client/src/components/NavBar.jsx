@@ -52,12 +52,17 @@ const NavBar = (props) => {
             <Link className="nav-link" to="/profile">Org Profile</Link>
           </div>
           }
-          {props.user && props.user.org_id === 1 &&
+          {props.user && props.user.org_id === 1 && props.newMessages &&
+          <div className="profile nav-item">
+            <Link className="nav-link" to="/profile">Adopter Profile</Link>
+            <Icon style={{ marginLeft: '-2px' }} type="mail" />
+          </div>
+          }
+          {props.user && props.user.org_id === 1 && !props.newMessages &&
           <div className="profile nav-item">
             <Link className="nav-link" to="/profile">Adopter Profile</Link>
           </div>
           }
-          {props.user && props.newMessages && <Icon type="mail" />}
           {props.user ?
             <div className="logout nav-item">
               <Button className="logout-button user-button" onClick={() => { logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>

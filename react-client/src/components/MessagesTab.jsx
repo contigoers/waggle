@@ -4,6 +4,7 @@ import { Row, List, Icon, Card, Button, Spin, Avatar, message, Form, Input } fro
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { getMessages, deleteMessage, sendMessage, updateReadStatus } from '../actions/messagingActions';
+import { checkForNewMessages } from '../actions/loginActions';
 
 const userStyle = {
   margin: '10px',
@@ -50,6 +51,7 @@ class MessagesTab extends React.Component {
     this.renderMessageFeed = this.renderMessageFeed.bind(this);
     this.getMessages = this.props.getMessages.bind(this);
     this.updateReadStatus = this.props.updateReadStatus.bind(this);
+    this.checkForNewMessages = this.props.checkForNewMessages.bind(this);
   }
 
   onInput(e) {
@@ -119,6 +121,7 @@ class MessagesTab extends React.Component {
   }
 
   async renderMessageFeed(e) {
+    this.checkForNewMessages(this.props.user.id);
     const { id } = e.target;
     const { name } = e.target.dataset;
     const { unreads } = e.target.dataset;
@@ -279,6 +282,7 @@ const mapDispatchToProps = {
   sendMessage,
   deleteMessage,
   updateReadStatus,
+  checkForNewMessages,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessagesTab);
