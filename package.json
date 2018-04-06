@@ -52,6 +52,7 @@
     "koa-session": "^5.5.1",
     "koa-static": "^4.0.2",
     "lodash": "^4.17.5",
+    "moment-timezone": "^0.5.14",
     "mysql": "^2.15.0",
     "node-sass": "^4.7.2",
     "nodemailer": "^4.6.4",

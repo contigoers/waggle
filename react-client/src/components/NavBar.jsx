@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, message } from 'antd';
+import { Button, Icon, message } from 'antd';
 import axios from 'axios';
 import { CSSTransitionGroup } from 'react-transition-group';
 
@@ -19,10 +19,6 @@ const NavBar = (props) => {
       message.info('You have been logged out!');
       props.logoutUser();
     });
-  };
-
-  const facebook = () => {
-    axios.get('/auth/register');
   };
 
   const { user } = props;
@@ -58,7 +54,13 @@ const NavBar = (props) => {
             <Link className="nav-link" to="/profile">Org Profile</Link>
           </div>
           }
-          {user && user.org_id === 1 &&
+          {props.user && props.user.org_id === 1 && props.newMessages &&
+          <div className="profile nav-item">
+            <Link className="nav-link" to="/profile">Adopter Profile</Link>
+            <Icon style={{ marginLeft: '-2px' }} type="mail" />
+          </div>
+          }
+          {props.user && props.user.org_id === 1 && !props.newMessages &&
           <div className="profile nav-item">
             <Link className="nav-link" to="/profile">Adopter Profile</Link>
           </div>
@@ -94,6 +96,7 @@ const mapStateToProps = state => (
     visible: state.loginModal.visible,
     landing: state.registrationModal.landing,
     user: state.storeUser.user,
+    newMessages: state.newMessages.newMessages,
   }
 );
 

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import registrationModal from './registrationReducers';
 import search from './searchReducers';
-import { loginModal, storeUser } from './loginReducers';
+import { loginModal, storeUser, newMessages } from './loginReducers';
 import { inquiryModal, fetchContacts, fetchMessages } from './messagingReducers';
 import editModal from './editReducers';
 
@@ -14,6 +14,7 @@ const appReducer = combineReducers({
   fetchContacts,
   fetchMessages,
   editModal,
+  newMessages,
 });
 
 const rootReducer = (state, action) => {
