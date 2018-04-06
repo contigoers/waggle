@@ -26,7 +26,6 @@ const logoutUser = () => (
 
 const checkForNewMessages = async (userId) => {
   const { data } = await axios.get('/messages/unread', { params: { userId } });
-  console.log('has new messages?', data)
   return {
     type: CHECK_MESSAGES,
     data,

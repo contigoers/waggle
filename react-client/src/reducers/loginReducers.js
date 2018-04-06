@@ -23,7 +23,7 @@ const storeUser = (state = { user: null }, action) => {
   }
 };
 
-const newMessages = (state = { newMessage: false }, action) => {
+const newMessages = (state = { newMessages: false }, action) => {
   switch (action.type) {
     case CHECK_MESSAGES:
       return {

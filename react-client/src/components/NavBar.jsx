@@ -83,6 +83,7 @@ const mapStateToProps = state => (
     visible: state.loginModal.visible,
     landing: state.registrationModal.landing,
     user: state.storeUser.user,
+    newMessages: state.newMessages.newMessages,
   }
 );
 

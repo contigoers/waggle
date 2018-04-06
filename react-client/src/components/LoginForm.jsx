@@ -55,10 +55,14 @@ const WrappedLoginForm = Form.create()(class extends Component {
   }
 
   checkMessages() {
-    if (this.props.user.id) {
-      this.checkForNewMessages(this.props.user.id);
-    }
-    console.log('props', this.props)
+    const checkInbox = this.checkForNewMessages.bind(this);
+    const inboxUpdate = setInterval(() => {
+      if (this.props.user) {
+        checkInbox(this.props.user.id);
+      } else {
+        clearInterval(inboxUpdate);
+      }
+    }, 5000);
   }
 
   handleSubmit(e) {
@@ -73,7 +77,7 @@ const WrappedLoginForm = Form.create()(class extends Component {
             this.props.form.resetFields();
             this.setState({ loading: false });
             this.props.history.push('/profile');
-            const checkInbox = setInterval(this.checkMessages, 10000);
+            this.checkMessages();
           })
           .catch((error) => {
             this.setState({ loading: false });
