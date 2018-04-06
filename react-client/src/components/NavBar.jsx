@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, message } from 'antd';
@@ -11,72 +11,88 @@ import { toggleRegistrationModal } from '../actions/registrationActions';
 import RegistrationLandingModal from './RegistrationLandingModal';
 
 
-const NavBar = (props) => {
-  const logout = () => {
-    axios.post('/logout').then(() => {
-      props.history.push('/');
-      message.info('You have been logged out!');
-      props.logoutUser();
-    });
-  };
+class NavBar extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <CSSTransitionGroup
-      transitionName="fade-appear"
-      transitionAppear
-      transitionAppearTimeout={500}
-      transitionEnter={false}
-      transitionLeave={false}
-    >
-      <div className="nav-bar-container">
-        <div name="nav-bar" className="nav-bar">
-          <div className="logo-div nav-item">
-            <img src={Logo} alt="waggl-logo" />
-          </div>
-          <div className="home-div nav-item">
-            <Link className="nav-link" to="/">Home</Link>
-          </div>
-          <div className="find-dog-div nav-item">
-            <Link className="nav-link" to="/search">Find A Dog</Link>
-          </div>
-          <div className="about-div nav-item">
-            <Link className="nav-link" to="/about">About Us</Link>
-          </div>
-          {props.user && props.user.org_id > 1 &&
-          <div className="create-dog nav-item">
-            <Link className="nav-link" to="/create">Add a Dog</Link>
-          </div>
+    if (!this.props.user) {
+      axios.get('/login/check')
+        .then(({ data }) => {
+          if (data.user) {
+            this.props.storeUserId({ user: data.user });
           }
-          {props.user && props.user.org_id > 1 &&
-          <div className="profile nav-item">
-            <Link className="nav-link" to="/profile">Org Profile</Link>
-          </div>
-          }
-          {props.user && props.user.org_id === 1 &&
-          <div className="profile nav-item">
-            <Link className="nav-link" to="/profile">Adopter Profile</Link>
-          </div>
-          }
-          {props.user ?
-            <div className="logout nav-item">
-              <Button className="logout-button user-button" onClick={() => { logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>
-            </div> :
-            <div className="login nav-item">
-              <Button className="login-button user-button" onClick={props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
+        });
+    }
+  }
+
+  logout() {
+    axios.post('/logout').then(() => {
+      this.props.history.push('/');
+      message.info('You have been logged out!');
+      this.props.logoutUser();
+    });
+  }
+
+  render() {
+    const { user } = this.props;
+    return (
+      <CSSTransitionGroup
+        transitionName="fade-appear"
+        transitionAppear
+        transitionAppearTimeout={500}
+        transitionEnter={false}
+        transitionLeave={false}
+      >
+        <div className="nav-bar-container">
+          <div name="nav-bar" className="nav-bar">
+            <div className="logo-div nav-item">
+              <img src={Logo} alt="waggl-logo" />
             </div>
-          }
-          {!props.user &&
-            <div className="signup nav-item">
-              <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
+            <div className="home-div nav-item">
+              <Link className="nav-link" to="/">Home</Link>
             </div>
-          }
+            <div className="find-dog-div nav-item">
+              <Link className="nav-link" to="/search">Find A Dog</Link>
+            </div>
+            <div className="about-div nav-item">
+              <Link className="nav-link" to="/about">About Us</Link>
+            </div>
+            {user && user.org_id > 1 &&
+            <div className="create-dog nav-item">
+              <Link className="nav-link" to="/create">Add a Dog</Link>
+            </div>
+            }
+            {user && user.org_id > 1 &&
+            <div className="profile nav-item">
+              <Link className="nav-link" to="/profile">Org Profile</Link>
+            </div>
+            }
+            {user && user.org_id === 1 &&
+            <div className="profile nav-item">
+              <Link className="nav-link" to="/profile">Adopter Profile</Link>
+            </div>
+            }
+            {user ?
+              <div className="logout nav-item">
+                <Button className="logout-button user-button" onClick={() => { this.logout(); }} size="large" type="primary" icon="idcard">Log Out</Button>
+              </div> :
+              <div className="login nav-item">
+                <Button className="login-button user-button" onClick={this.props.toggleLoginModal} size="large" type="primary" icon="idcard">Log In</Button>
+              </div>
+            }
+            {!user &&
+              <div className="signup nav-item">
+                <Button className="signup-button user-button" onClick={this.props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
+              </div>
+            }
+          </div>
+          <WrappedLoginForm />
+          <RegistrationLandingModal />
         </div>
-        <WrappedLoginForm />
-        <RegistrationLandingModal />
-      </div>
-    </CSSTransitionGroup>
-  );
-};
+      </CSSTransitionGroup>
+    );
+  }
+}
 
 const mapStateToProps = state => (
   {
