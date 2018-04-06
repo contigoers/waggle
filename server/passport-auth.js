@@ -13,7 +13,6 @@ module.exports = () => {
     return done(null, username);
   });
   passport.deserializeUser(async (username, done) => {
-    console.log(username);
     const users = await db.getUserByUsername(username);
     done(null, users[0]);
   });
@@ -24,7 +23,7 @@ module.exports = () => {
     callbackURL: 'http://localhost:3000/auth/callback',
     profileFields: ['id', 'email', 'address', 'name'],
   }, async (aToken, rToken, profile, cb) => {
-    const username = `${profile.name.givenName} ${profile.name.familyName}`;    
+    const username = `${profile.name.givenName} ${profile.name.familyName}`;
     const [user] = await db.getUserByUsername(username);
     if (!user) {
       await db.createFacebookUser(profile);
