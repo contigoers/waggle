@@ -21,10 +21,6 @@ const NavBar = (props) => {
     });
   };
 
-  const facebook = () => {
-    axios.get('/auth/register');
-  };
-
   const { user } = props;
   return (
     <CSSTransitionGroup
@@ -77,8 +73,8 @@ const NavBar = (props) => {
             </div>
           }
           {!user &&
-            <div className="signup nav-item">
-              <a href="/auth/facebook">Facebook</a>
+            <div className="facebook nav-item">
+              <Button className="facebook button" size="large" type="primary" icon="facebook"><a href="/auth/facebook" style={{ color: 'white' }}>Login via Facebook</a></Button>
             </div>
           }
         </div>
