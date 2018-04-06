@@ -384,12 +384,9 @@ module.exports = {
   checkLinkExists,
   getOrgByName,
   markAllRead,
-<<<<<<< HEAD
   checkForNewMessages,
-=======
   createFacebookUser,
   getUserByUsername,
   getFacebookUserUserId,
   updateFacebookUser,
->>>>>>> 590fc8c873159725042d54ad88f23efc8247426a
 };
