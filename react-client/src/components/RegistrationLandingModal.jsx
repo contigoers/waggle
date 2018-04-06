@@ -87,8 +87,8 @@ class LandingModal extends Component {
         {!org && !adopter && (
           <div className="type-button">
             <div>I would like to register as:</div>
-            <Button onClick={() => this.props.updateModalView('adopter')}>an adopter</Button>
-            <Button onClick={() => this.props.updateModalView('org')}>an organization</Button>
+            <Button style={{ backgroundColor: 'rgba(205, 83, 96, 0.1)' }} onClick={() => this.props.updateModalView('adopter')}>an adopter</Button>
+            <Button style={{ backgroundColor: 'rgba(151, 32, 54, 0.1)' }} onClick={() => this.props.updateModalView('org')}>an organization</Button>
           </div>
         )}
         {org && !adopter && (

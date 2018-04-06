@@ -1,5 +1,7 @@
 @import '~antd/dist/antd.css';
 @import '~animate.css/animate.min.css';
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400');
+
 $primary: #cd5360;
 $primary-dark: #972036;
 
@@ -9,6 +11,10 @@ $z-index: (
   splash-items: 1,
   splash-media: 0,
 );
+
+* {
+  font-family: 'Quicksand', sans-serif;
+}
 
 #app {
   height: 100%;
@@ -109,7 +115,7 @@ $z-index: (
 .nav-bar {
   height: 85px;
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   background: $primary;
   color: white;
   border-bottom: 4px solid $primary-dark;

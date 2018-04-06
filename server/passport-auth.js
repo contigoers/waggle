@@ -20,7 +20,7 @@ module.exports = () => {
   passport.use('facebook', new FacebookStrategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3000/auth/callback',
+    callbackURL: 'http://www.waggl.dog/auth/callback',
     profileFields: ['id', 'email', 'address', 'name'],
   }, async (aToken, rToken, profile, cb) => {
     let fbUser;

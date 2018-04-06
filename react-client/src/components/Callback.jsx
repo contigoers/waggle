@@ -35,7 +35,7 @@ const Callback = Form.create()(class extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { form, history } = this.props;
+    const { form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       this.setState({ phoneDirty: true });
       if (!err && this.state.numberIsValid) {
@@ -45,7 +45,6 @@ const Callback = Form.create()(class extends Component {
             this.storeUser({ user: data.user });
             this.getFavorites(data.user.adopterId);
             form.resetFields();
-            history.push('/profile');
           })
           .catch((error) => {
             const { status } = error.response;
@@ -86,7 +85,7 @@ const Callback = Form.create()(class extends Component {
   }
 
   render() {
-    if (this.props.user && this.props.user.email && !this.state.first) return <Redirect to="/" />;
+    if (this.props.user && this.props.user.email) return <Redirect to="/" />;
     const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {
