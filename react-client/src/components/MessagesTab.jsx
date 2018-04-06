@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, List, Icon, Card, Button, Spin, Avatar, message, Form, Input } from 'antd';
+import { Row, List, Icon, Button, Spin, Avatar, message, Form, Input } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { getMessages, deleteMessage, sendMessage, updateReadStatus } from '../actions/messagingActions';
@@ -12,6 +12,9 @@ const userStyle = {
   backgroundColor: '#ffeded',
   width: '500px',
   float: 'right',
+  padding: '5px',
+  paddingLeft: '7px',
+  borderRadius: '8px',
 };
 const contactStyle = {
   margin: '10px',
@@ -19,12 +22,16 @@ const contactStyle = {
   backgroundColor: '#edf6ff',
   width: '500px',
   float: 'left',
+  padding: '5px',
+  paddingLeft: '7px',
+  borderRadius: '8px',
 };
 const infiniteStyle = {
+  backgroundColor: 'white',
   border: '1px solid black',
   overflow: 'auto',
   padding: '8px 24px',
-  height: '400px',
+  height: '500px',
   width: '80%',
   margin: 'auto',
   marginTop: '15px',
@@ -150,32 +157,41 @@ class MessagesTab extends React.Component {
               <Button className="hoverable" onClick={this.renderContactsList} style={{ margin: '10px' }}> <Icon type="left" /> Return to contacts list </Button>
             </Row>
             <Row>
-              <div
-                style={{
-                  margin: 'auto',
-                  width: '80%',
-                  border: '1px solid #1a4672',
-                  padding: '10px',
-                }}
+              <div style={{
+                width: '80%',
+                margin: 'auto',
+                marginTop: '10px',
+                marginBottom:
+                '0px',
+              }}
               >
-                Messages with {this.state.currentContact.name}
+                <Form onSubmit={this.sendMessageAndRender}>
+                  <Form.Item>
+                    <Input.TextArea
+                      rows={2}
+                      value={this.state.messageInput}
+                      onChange={this.onInput}
+                      placeholder="write message..."
+                    />
+                  </Form.Item>
+                  <div style={{ width: '80%', margin: 'auto', marginTop: '0px' }}>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit" style={{ float: 'right', marginRight: '0px' }}> Send </Button>
+                    </Form.Item>
+                  </div>
+                </Form>
               </div>
             </Row>
             <Row>
-              <Form onSubmit={this.sendMessageAndRender}>
-                <Form.Item>
-                  <Input.TextArea
-                    rows={3}
-                    value={this.state.messageInput}
-                    onChange={this.onInput}
-                    placeholder="write message..."
-                    style={{ width: '50%', marginLeft: '200px' }}
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" style={{ marginLeft: '200px' }}> Send </Button>
-                </Form.Item>
-              </Form>
+              <div
+                style={{
+                      margin: 'auto',
+                      width: '80%',
+                      padding: '10px',
+                    }}
+              >
+                    Messages with {this.state.currentContact.name}
+              </div>
             </Row>
             <Row>
               <div style={infiniteStyle}>
@@ -190,28 +206,28 @@ class MessagesTab extends React.Component {
                     this.state.visibleMessages.map((msg) => {
                       const isMine = msg.sender_id === this.props.user.id;
                       const datetime = new Date(msg.sent);
+                      const nameColor = isMine ? '#872320' : '#1a4672';
                       return (
-                        <Card
-                          key={msg.id}
-                          style={isMine ? userStyle : contactStyle}
-                          title={isMine ? this.props.user.name : this.state.currentContact.name}
-                          extra={msg.deleted || !isMine ? null : (
+
+                        <div key={msg.id} style={isMine ? userStyle : contactStyle}>
+                          <div>
+                            <span style={{ fontWeight: '700', color: nameColor }}> {isMine ? this.props.user.name : this.state.currentContact.name} </span>
                             <span
                               className="hoverable"
                               id={msg.id}
-                              style={{ fontSize: 'smaller' }}
+                              style={{ fontSize: 'x-small', float: 'right' }}
                               tabIndex={msg.id}
                               role="button"
                               onClick={this.deleteMessage}
                             >
-                              delete message
+                              {(msg.deleted || !isMine) ? '' : 'delete message'}
                             </span>
-                          )
-                        }
-                        >
-                          <div> {msg.deleted ? 'This message has been deleted.' : msg.message} </div>
-                          <div style={{ fontSize: 'x-small', marginTop: '3px' }}> sent at {datetime.toUTCString()} </div>
-                        </Card>
+                          </div>
+                          <div style={{ fontSize: 'smaller' }}>
+                            {msg.deleted ? 'This message has been deleted.' : msg.message}
+                          </div>
+                          <div style={{ fontSize: 'x-small', marginTop: '3px', color: nameColor }}> sent at {datetime.toUTCString()} </div>
+                        </div>
                       );
                     })
                   }

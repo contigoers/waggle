@@ -55,7 +55,6 @@ class DogForm extends React.Component {
   }
 
   onSubmit(e) {
-    let redirectDog;
     e.preventDefault();
     this.props.form.validateFieldsAndScroll({}, (errors, values) => {
       if (errors) {
@@ -173,7 +172,7 @@ class DogForm extends React.Component {
                     <Option value={breed} key={breed}> {breed} </Option>
                   ))
                   }
-                   </Select>)}
+                </Select>)}
 
               </Form.Item>
 
@@ -197,7 +196,7 @@ class DogForm extends React.Component {
                   <Option value="true"> Good boy </Option>
                   <Option value="false"> Good girl </Option>
                   <Option value="null"> Unknown </Option>
-                   </Select>)}
+                </Select>)}
 
               </Form.Item>
 
@@ -212,7 +211,7 @@ class DogForm extends React.Component {
                   <Option value={1}> Yes </Option>
                   <Option value={0}> No </Option>
                   <Option value="null"> Unknown </Option>
-                   </Select>)}
+                </Select>)}
               </Form.Item>
             </Row>
 
@@ -230,7 +229,7 @@ class DogForm extends React.Component {
                   <Option value="adult"> Adult </Option>
                   <Option value="senior"> Senior </Option>
                   <Option value="null"> Unknown </Option>
-                   </Select>)}
+                </Select>)}
               </Form.Item>
 
               <Form.Item label="Age (if known)">
@@ -254,7 +253,7 @@ class DogForm extends React.Component {
                   <Option value="large"> Large </Option>
                   <Option value="huge"> Huge </Option>
                   <Option value="null"> Unknown </Option>
-                   </Select>)}
+                </Select>)}
               </Form.Item>
             </Row>
 
@@ -270,7 +269,7 @@ class DogForm extends React.Component {
                   <Option value="medium"> Medium </Option>
                   <Option value="high"> High </Option>
                   <Option value="null"> Unknown </Option>
-                   </Select>)}
+                </Select>)}
               </Form.Item>
             </Row>
             <div style={{ marginLeft: 10, fontWeight: 700 }}> Temperament: </div>
