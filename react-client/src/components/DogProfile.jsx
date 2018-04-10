@@ -151,11 +151,11 @@ class DogProfile extends React.Component {
     let cardActions = null;
     let button = null;
     if (this.props.user && this.props.user.org_id > 1 && this.state.prevPath === '/profile') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px', backgroundColor: '#cd5360', borderColor: '#cd5360' }}><Icon type="left" />Back to dogs list</Button>;
+      button = <Button type="primary" className="hoverable back-to" onClick={this.goBack}><Icon type="left" />Back to dogs list</Button>;
     } else if (this.props.user && this.props.user.org_id === 1 && this.state.prevPath === '/profile') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px', backgroundColor: '#cd5360', borderColor: '#cd5360' }}><Icon type="left" />Back to favorite dogs</Button>;
+      button = <Button type="primary" className="hoverable back-to" onClick={this.goBack}><Icon type="left" />Back to favorite dogs</Button>;
     } else if (this.state.prevPath === '/search') {
-      button = <Button type="primary" className="hoverable" onClick={this.goBack} style={{ margin: '20px', backgroundColor: '#cd5360', borderColor: '#cd5360' }}><Icon type="left" />Back to search</Button>;
+      button = <Button type="primary" className="hoverable back-to" onClick={this.goBack}><Icon type="left" />Back to search</Button>;
     }
 
     if (this.props.user && dog.org_id === this.props.user.org_id) {
