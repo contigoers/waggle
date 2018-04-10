@@ -58,9 +58,15 @@ $primary-dark: #972036;
   color: white;
   border-color: $primary;
   margin-top: 30px;
-  &:hover {
+  &:hover, &:focus {
+    color: white;
     border-color: white;
     background: $primary-dark;
+  }
+  &:active {
+    background: $primary;
+    color: white;
+    border-color: $primary;
   }
 }
 
@@ -104,4 +110,22 @@ $primary-dark: #972036;
 .fade-enter-leave.fade-enter-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
+}
+
+.back-to {
+  margin: 20px;
+  background: $primary;
+  color: white;
+  border-color: $primary;
+  &:hover,
+  &:focus {
+    color: white;
+    border-color: white;
+    background: $primary-dark;
+  }
+  &:active {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+  }
 }
