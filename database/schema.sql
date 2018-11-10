@@ -1,9 +1,10 @@
 
-DROP DATABASE IF EXISTS waggl;
+-- DROP DATABASE IF EXISTS waggl;
 
-CREATE DATABASE waggl;
+-- CREATE DATABASE waggl;
 
-USE waggl;
+-- USE waggl;
+USE heroku_bf16c9bdc7fbb1f;
 -- mysql -u root -p < ./database/schema.sql
 -- ---
 -- Globals

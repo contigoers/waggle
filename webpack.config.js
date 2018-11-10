@@ -4,24 +4,14 @@ const SRC_DIR = path.join(__dirname, '/react-client/src');
 const DIST_DIR = path.join(__dirname, '/react-client/dist');
 
 module.exports = {
-  entry: ['babel-polyfill', `${SRC_DIR}/index.jsx`],
-  output: {
-    filename: 'bundle.js',
-    path: DIST_DIR,
-  },
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
+  entry: ['babel-polyfill', './react-client/src/index.jsx'],
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/,
-        include: SRC_DIR,
-        loader: 'babel-loader',
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        query: {
-          presets: ['react', 'es2015', 'es2017', 'stage-2'],
-        },
+        use: ['babel-loader'],
+        include: SRC_DIR,
       },
       {
         test: /\.scss$/,
@@ -39,6 +29,14 @@ module.exports = {
             options: {},
           },
         ],
-      }],
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+  },
+  output: {
+    path: DIST_DIR,
+    filename: 'bundle.js',
   },
 };

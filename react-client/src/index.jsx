@@ -14,7 +14,4 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers(applyMiddleware(promise)));
 /* eslint-enable */
 
-ReactDOM.render(
-  <Router store={store} />
-  , document.getElementById('app'),
-);
+ReactDOM.render(<Router store={store} />, document.getElementById('app'));

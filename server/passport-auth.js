@@ -1,37 +1,36 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
+// const FacebookStrategy = require('passport-facebook').Strategy;
 const bcrypt = require('bcrypt');
 const db = require('../database/index');
 
 module.exports = () => {
-  passport.serializeUser(async (user, done) => { // creating sessions
-    if (user.provider === 'facebook') {
-      const [fbUser] = await db.getFacebookUserUserId(user.id);
-      return done(null, fbUser.user_id);
-    }
-    return done(null, user.id);
-  });
+  passport.serializeUser(async (user, done) => // creating sessions
+    // if (user.provider === 'facebook') {
+    //   const [fbUser] = await db.getFacebookUserUserId(user.id);
+    //   return done(null, fbUser.user_id);
+    // }
+    done(null, user.id));
   passport.deserializeUser(async (id, done) => {
     const [user] = await db.getUserById(id);
     done(null, user);
   });
 
-  passport.use('facebook', new FacebookStrategy({
-    clientID: process.env.FB_CLIENT_ID,
-    clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: 'http://www.waggl.dog/auth/callback',
-    profileFields: ['id', 'email', 'address', 'name'],
-  }, async (aToken, rToken, profile, cb) => {
-    let fbUser;
-    [fbUser] = await db.getFacebookUserUserId(profile.id);
-    if (!fbUser) {
-      await db.createFacebookUser(profile);
-    }
-    [fbUser] = await db.getFacebookUserUserId(profile.id);
-    const [user] = await db.getUserById(fbUser.user_id);
-    cb(null, user);
-  }));
+  // passport.use('facebook', new FacebookStrategy({
+  //   clientID: process.env.FB_CLIENT_ID,
+  //   clientSecret: process.env.FB_CLIENT_SECRET,
+  //   callbackURL: 'http://www.waggl.dog/auth/callback',
+  //   profileFields: ['id', 'email', 'address', 'name'],
+  // }, async (aToken, rToken, profile, cb) => {
+  //   let fbUser;
+  //   [fbUser] = await db.getFacebookUserUserId(profile.id);
+  //   if (!fbUser) {
+  //     await db.createFacebookUser(profile);
+  //   }
+  //   [fbUser] = await db.getFacebookUserUserId(profile.id);
+  //   const [user] = await db.getUserById(fbUser.user_id);
+  //   cb(null, user);
+  // }));
 
   // LOCAL LOGIN STRATEGY
   passport.use('local-login', new LocalStrategy(async (username, password, cb) => {
