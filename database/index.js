@@ -2,7 +2,7 @@ const { orderBy } = require('lodash');
 
 const config = {
   client: 'mysql',
-  connection: process.env.DATABASE_URL,
+  connection: process.env.CLEARDB_DATABASE_URL,
 };
 
 const knex = require('knex')(config);
@@ -42,57 +42,57 @@ const createUser = async (user, username, password) => {
   return knex('users').where('id', userId);
 };
 
-const getFacebookUserUserId = profileId => knex.select('user_id')
-  .from('fbUsers')
-  .where('profile_id', profileId);
+// const getFacebookUserUserId = profileId => knex.select('user_id')
+//   .from('fbUsers')
+//   .where('profile_id', profileId);
 
-const createFacebookUser = async (profile) => {
-  await knex('users').insert({
-    username: profile.id,
-    password: null,
-    email: null,
-    address: null,
-    city: null,
-    state: null,
-    zipcode: null,
-    phone: null,
-    org_id: 1,
-  });
-  const userId = (await getUserByUsername(profile.id))[0].id;
-  let { name } = profile;
-  name = `${name.givenName} ${name.familyName}`;
-  await knex('adopters').insert({
-    name,
-    pets: 0,
-    house_type: null,
-    user_id: userId,
-  });
-  await knex('fbUsers').insert({
-    profile_id: profile.id,
-    user_id: userId,
-  });
-  return knex('users').where('id', userId);
-};
+// const createFacebookUser = async (profile) => {
+//   await knex('users').insert({
+//     username: profile.id,
+//     password: null,
+//     email: null,
+//     address: null,
+//     city: null,
+//     state: null,
+//     zipcode: null,
+//     phone: null,
+//     org_id: 1,
+//   });
+//   const userId = (await getUserByUsername(profile.id))[0].id;
+//   let { name } = profile;
+//   name = `${name.givenName} ${name.familyName}`;
+//   await knex('adopters').insert({
+//     name,
+//     pets: 0,
+//     house_type: null,
+//     user_id: userId,
+//   });
+//   await knex('fbUsers').insert({
+//     profile_id: profile.id,
+//     user_id: userId,
+//   });
+//   return knex('users').where('id', userId);
+// };
 
-const updateFacebookUser = async (values) => {
-  await knex('users')
-    .where('id', values.id)
-    .update({
-      username: values.username,
-      email: values.email,
-      address: values.address,
-      city: values.city,
-      state: values.state,
-      zipcode: values.zipcode,
-      phone: values.phone,
-    });
-  await knex('adopters')
-    .where('user_id', values.id)
-    .update({
-      pets: values.pets === 'yes',
-      house_type: values.house,
-    });
-};
+// const updateFacebookUser = async (values) => {
+//   await knex('users')
+//     .where('id', values.id)
+//     .update({
+//       username: values.username,
+//       email: values.email,
+//       address: values.address,
+//       city: values.city,
+//       state: values.state,
+//       zipcode: values.zipcode,
+//       phone: values.phone,
+//     });
+//   await knex('adopters')
+//     .where('user_id', values.id)
+//     .update({
+//       pets: values.pets === 'yes',
+//       house_type: values.house,
+//     });
+// };
 
 const getAdopterId = userId => knex('adopters').select('id', 'name').where('user_id', userId);
 
@@ -384,8 +384,8 @@ module.exports = {
   getOrgByName,
   markAllRead,
   checkForNewMessages,
-  createFacebookUser,
+  // createFacebookUser,
   getUserByUsername,
-  getFacebookUserUserId,
-  updateFacebookUser,
+  // getFacebookUserUserId,
+  // updateFacebookUser,
 };

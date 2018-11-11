@@ -78,11 +78,11 @@ const NavBar = (props) => {
               <Button className="signup-button user-button" onClick={props.toggleRegistrationModal} size="large" type="primary" icon="solution">Sign Up</Button>
             </div>
           }
-          {!user &&
+          {/*!user &&
             <div className="facebook nav-item">
               <Button className="facebook button" size="large" type="primary" icon="facebook"><a href="/auth/facebook" style={{ color: 'white' }}>Login via Facebook</a></Button>
             </div>
-          }
+          */}
         </div>
         <WrappedLoginForm />
         <RegistrationLandingModal />
